@@ -1,0 +1,127 @@
+{
+  "configurations": {
+    "Jest single run all tests": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest single run all tests",
+        "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "env": {
+          "CI": "true"
+        },
+        "args": [
+          "-c",
+          "${workspaceRoot}/jest.config.js",
+          "--verbose",
+          "-i",
+          "--no-cache"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    },
+    "Jest watch all tests": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest watch all tests",
+        "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "args": [
+          "-c",
+          "${workspaceRoot}/jest.config.js",
+          "--verbose",
+          "-i",
+          "--no-cache",
+          "--watchAll"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    },
+    "Jest watch current file": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest watch current file",
+        "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "cwd": "${fileDirname}",
+        "args": [
+          "${file}",
+          "-c",
+          "${workspaceRoot}/jest.config.js",
+          "--verbose",
+          "-i",
+          "--no-cache",
+          "--watchAll"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    },
+    "node - attach": {
+      "adapter": "vscode-node",
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "uncaught": "N"
+        }
+      },
+      "configuration": {
+        "request": "attach",
+        "type": "node",
+        "skipFiles": ["<node_internals>/**/*.js"],
+        "processId": "${processId}"
+      }
+    },
+    "Chrome - Launch": {
+      "adapter": "chrome",
+      "configuration": {
+        "request": "launch",
+        "stopOnEntry": true,
+        "url": "http://localhost/hub",
+        "webRoot": "${workspaceRoot}",
+        "runtimeExecutable": "/snap/bin/chromium"
+      }
+    },
+    "Chrome - Attach": {
+      "adapter": "chrome",
+      "configuration": {
+        "request": "attach",
+        "webRoot": "${workspaceRoot}",
+        "port": "9222"
+      }
+    },
+    "netcoredbg 3.1": {
+      "adapter": "netcoredbg",
+      "configuration": {
+        "request": "launch",
+        "type": "coreclr",
+        "program": "${workspaceRoot}/bin/Debug/netcoreapp3.1/Waters.Cloud.Hub.dll",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${workspaceRoot}",
+        "env": {}
+      }
+    },
+    "netcoredbg 3.1 attach": {
+      "adapter": "netcoredbg",
+      "configuration": {
+        "request": "attach",
+        "type": "coreclr",
+        "stopAtEntry": true,
+        "env": {},
+        "processId": "${processId}"
+      }
+    },
+    "BASH - Run Current Script": {
+      "adapter": "vscode-bash",
+      "configuration": {
+        "program": "${file}",
+        "args": ["*${CommandLineArgs}"]
+      }
+    }
+  }
+}
