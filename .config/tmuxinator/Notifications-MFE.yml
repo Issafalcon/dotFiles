@@ -1,7 +1,7 @@
 # /home/ukafig/.config/tmuxinator/CloudHub.yml
 
-name: CloudHub
-root: ~/Documents/repos/wcc-cloudhub
+name: Notifications-MFE
+root: ~/Documents/repos/wcc-mfe-notifications
 
 # Optional tmux socket
 # socket_name: foo
@@ -52,8 +52,13 @@ windows:
       layout: tiled
       panes:
         - run:
-          - cd ~/Documents/repos/wcc-cloudhub/Waters.Cloud.Hub
+          - cd WebApi
           - dotnet run
+        - serve:
+          - cd notifications-mfe
+          - ng serve
+        - package:
+          - cd notifications-mfe
   <%- if !@settings["dev-proxy-args"].nil? %>
   - Dev-Proxy:
     - dev-proxy <%= @settings["dev-proxy-args"] %>
