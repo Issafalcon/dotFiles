@@ -1,6 +1,7 @@
 -- General settings, config and utilities
 require("plugins")
 require("utils")
+require("utils/global-functions")
 require("settings")
 require("colourscheme")
 require("keymappings")

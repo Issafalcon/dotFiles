@@ -47,11 +47,11 @@ end
 -- jump to prev/next snippet's placeholder
 _G.tab_complete = function()
     if vim.fn.pumvisible() == 1 then
-        return utils.t"<C-n>"
+        return t"<C-n>"
     elseif vim.fn.call("vsnip#available", {1}) == 1 then
-        return utils.t"<Plug>(vsnip-expand-or-jump)"
+        return t"<Plug>(vsnip-expand-or-jump)"
     elseif check_back_space() then
-        return utils.t"<Tab>"
+        return t"<Tab>"
     else
         return vim.fn['compe#complete']()
     end
@@ -59,11 +59,11 @@ end
 
 _G.s_tab_complete = function()
     if vim.fn.pumvisible() == 1 then
-        return utils.t"<C-p>"
+        return t"<C-p>"
     elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
-        return utils.t"<Plug>(vsnip-jump-prev)"
+        return t"<Plug>(vsnip-jump-prev)"
     else
-        return utils.t"<S-Tab>"
+        return t"<S-Tab>"
     end
 end
 
