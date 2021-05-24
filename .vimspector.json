@@ -83,7 +83,7 @@
         "stopOnEntry": true,
         "url": "http://localhost/hub",
         "webRoot": "${workspaceRoot}",
-        "runtimeExecutable": "/snap/bin/chromium"
+        "runtimeExecutable": "/usr/bin/google-chrome"
       }
     },
     "Chrome - Attach": {

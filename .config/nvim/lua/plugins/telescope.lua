@@ -39,7 +39,8 @@ require("telescope").setup {
       "--line-number",
       "--column",
       "--smart-case",
-      "--hidden"
+      "-u",
+      "-u"
     },
     prompt_position = "top",
     prompt_prefix = " ",
