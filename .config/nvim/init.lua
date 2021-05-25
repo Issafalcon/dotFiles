@@ -10,10 +10,11 @@ require("keymappings")
 require("lsp")
 
 -- Plugin customizations
+-- require("plugins/nvim-tree")
+require("plugins/nerd-tree")
 require("plugins/comment")
 require("plugins/which-key")
 require("plugins/compe")
-require("plugins/nvim-tree")
 require("plugins/telescope")
 require("plugins/treesitter")
 require("plugins/undotree")

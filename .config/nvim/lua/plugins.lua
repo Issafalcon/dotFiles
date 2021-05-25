@@ -32,8 +32,13 @@ return require("packer").startup(
     use {"tpope/vim-unimpaired"}
     use {"kevinhwang91/nvim-bqf"}
     use {'junegunn/fzf'}
+
     -- Filesystem navigation
-    use {"kyazdani42/nvim-tree.lua"}
+    -- use {"kyazdani42/nvim-tree.lua"} -- Toggle hidden files and refresh tree aren't working currently (25/05/21)
+    use 'preservim/nerdtree'
+    use 'Xuyuanp/nerdtree-git-plugin'
+    use 'tiagofumo/vim-nerdtree-syntax-highlight'
+    use 'PhilRunninger/nerdtree-visual-selection'
 
     -- Colours and fonts and icons
     use "ryanoasis/vim-devicons"
