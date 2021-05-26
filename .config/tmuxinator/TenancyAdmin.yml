@@ -58,9 +58,11 @@ windows:
       layout: tiled
       panes:
         - run:
-          - cd TenancyAdmin
+          - cd ~/Documents/repos/wcc-tenancyadmin/TenancyAdmin
           - dotnet run
         - serve:
+          - cd ~/Documents/repos/wcc-tenancyadmin/TenancyAdmin/ClientApp
+          - ng serve
   <%- if !@settings["dev-proxy-args"].nil? %>
   - Dev-Proxy:
     - dev-proxy <%= @settings["dev-proxy-args"] %>
