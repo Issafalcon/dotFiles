@@ -1,7 +1,7 @@
 # /home/ukafig/.config/tmuxinator/CloudHub.yml
 
 name: TenancyAdmin
-root: ~/Documents/repos/wcc-tenancyadmin
+root: ~/repos/wcc-tenancyadmin
 
 # Optional tmux socket
 # socket_name: foo
@@ -46,7 +46,7 @@ startup_window: ClientApp
 
 windows:
   - ClientApp:
-      root: ~/Documents/repos/wcc-tenancyadmin/TenancyAdmin/ClientApp
+      root: ~/repos/wcc-tenancyadmin/TenancyAdmin/ClientApp
       panes:
       - nvim
   - Api:
@@ -58,10 +58,10 @@ windows:
       layout: tiled
       panes:
         - run:
-          - cd ~/Documents/repos/wcc-tenancyadmin/TenancyAdmin
+          - cd ~/repos/wcc-tenancyadmin/TenancyAdmin
           - dotnet run
         - serve:
-          - cd ~/Documents/repos/wcc-tenancyadmin/TenancyAdmin/ClientApp
+          - cd ~/repos/wcc-tenancyadmin/TenancyAdmin/ClientApp
           - ng serve
   <%- if !@settings["dev-proxy-args"].nil? %>
   - Dev-Proxy:
