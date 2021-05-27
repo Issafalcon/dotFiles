@@ -59,11 +59,15 @@ windows:
       panes:
         - run:
           - cd ~/repos/wcc-tenancyadmin/TenancyAdmin
+            <%- if @settings["run"] %>
           - dotnet run
+            <%- end %>
         - serve:
           - cd ~/repos/wcc-tenancyadmin/TenancyAdmin/ClientApp
+            <%- if @settings["run"] %>
           - ng serve
-  <%- if !@settings["dev-proxy-args"].nil? %>
+            <%- end %>
+  <%- if !@settings["dp"].nil? %>
   - Dev-Proxy:
-    - dev-proxy <%= @settings["dev-proxy-args"] %>
+    - dev-proxy <%= @settings["dp"] %>
   <%- end %>

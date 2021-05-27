@@ -1,7 +1,7 @@
 # /home/ukafig/.config/tmuxinator/CloudHub.yml
 
 name: Notifications-MFE
-root: ~/Documents/repos/wcc-mfe-notifications
+root: ~/repos/wcc-mfe-notifications
 
 # Optional tmux socket
 # socket_name: foo
@@ -59,7 +59,7 @@ windows:
           - ng serve
         - package:
           - cd notifications-mfe
-  <%- if !@settings["dev-proxy-args"].nil? %>
+  <%- if !@settings["dp"].nil? %>
   - Dev-Proxy:
-    - dev-proxy <%= @settings["dev-proxy-args"] %>
+    - dev-proxy <%= @settings["dp"] %>
   <%- end %>

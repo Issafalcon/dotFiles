@@ -1,7 +1,7 @@
 # /home/ukafig/.config/tmuxinator/CloudHub.yml
 
 name: CloudHub
-root: ~/Documents/repos/wcc-cloudhub
+root: ~/repos/wcc-cloudhub
 
 # Optional tmux socket
 # socket_name: foo
@@ -52,9 +52,11 @@ windows:
       layout: tiled
       panes:
         - run:
-          - cd ~/Documents/repos/wcc-cloudhub/Waters.Cloud.Hub
+          - cd ~/repos/wcc-cloudhub/Waters.Cloud.Hub
+            <%- if @settings["run"] %>
           - dotnet run
-  <%- if !@settings["dev-proxy-args"].nil? %>
+            <%- end %>
+  <%- if !@settings["dp"].nil? %>
   - Dev-Proxy:
-    - dev-proxy <%= @settings["dev-proxy-args"] %>
+    - dev-proxy <%= @settings["dp"] %>
   <%- end %>
