@@ -50,10 +50,9 @@ windows:
       panes:
       - nvim
   - Api:
-    panes:
-      - nvim:
-        - cd TenancyAdmin/ClientApp
-        - nvim 
+      root: ~/repos/wcc-tenancyadmin/TenancyAdmin
+      panes:
+        - nvim
   - Terminals: 
       layout: tiled
       panes:
