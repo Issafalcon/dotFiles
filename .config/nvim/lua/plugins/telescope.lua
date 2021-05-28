@@ -19,7 +19,7 @@ utils.map(
   {noremap = true}
 )
 utils.map("n", "<C-p>", ":lua require('telescope.builtin').git_files()<CR>", {noremap = true})
-utils.map("n", "<Leader>sf", ":lua require('telescope.builtin').find_files()<CR>", {noremap = true})
+utils.map("n", "<Leader>sf", ":lua require('telescope.builtin').find_files({hidden = true})<CR>", {noremap = true})
 utils.map("n", "<Leader>sw", ':lua require(\'telescope.builtin\').grep_string { search = vim.fn.expand("<cword>") }<CR>', {noremap = true})
 utils.map("n", "<Leader>sb", ":lua require('telescope.builtin').buffers()<CR>", {noremap = true})
 utils.map("n", "<Leader>sh", ":lua require('telescope.builtin').help_tags()<CR>", {noremap = true})
@@ -33,14 +33,13 @@ require("telescope").setup {
   defaults = {
     vimgrep_arguments = {
       "rg",
+      "-uu",
       "--color=never",
       "--no-heading",
       "--with-filename",
       "--line-number",
       "--column",
       "--smart-case",
-      "-u",
-      "-u"
     },
     prompt_position = "top",
     prompt_prefix = " ",
