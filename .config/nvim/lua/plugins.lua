@@ -28,6 +28,9 @@ return require("packer").startup(
     use "glepnir/lspsaga.nvim" -- Adds nice UIs and shortcut keys for LSP interactions
     use "kosayoda/nvim-lightbulb" -- Adds the code actions lightbulb with integration with codeaction menu
 
+    -- EditorConfig
+    use 'editorconfig/editorconfig-vim'
+
     -- Quickfix / Location list tools
     use {"tpope/vim-unimpaired"}
     use {"kevinhwang91/nvim-bqf"}
