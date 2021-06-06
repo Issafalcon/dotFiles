@@ -17,25 +17,14 @@ local function custom_attach(client)
   -- Native lsp
   if vim.bo.filetype == "cs" then
     --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>ost <Plug>(omnisharp_type_lookup)]]
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osd <Plug>(omnisharp_documentation)]]
     --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osfs <Plug>(omnisharp_find_symbol)]]
     --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osfx <Plug>(omnisharp_fix_usings)]]
     --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <C-\> <Plug>(omnisharp_signature_help)]]
     --     vim.api.nvim_command [[autocmd FileType cs imap <silent> <buffer> <C-\> <Plug>(omnisharp_signature_help)]]
     --
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osgcc <Plug>(omnisharp_global_code_check)]]
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)]]
-    --     vim.api.nvim_command [[autocmd FileType cs xmap <silent> <buffer> <Leader>osca <Plug>(omnisharp_code_actions)]]
     --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>os. <Plug>(omnisharp_code_action_repeat)]]
     --     vim.api.nvim_command [[autocmd FileType cs xmap <silent> <buffer> <Leader>os. <Plug>(omnisharp_code_action_repeat)]]
     --
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>os= <Plug>(omnisharp_code_format)]]
-    --
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osnm <Plug>(omnisharp_rename)]]
-    --
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osre <Plug>(omnisharp_restart_server)]]
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>osst <Plug>(omnisharp_start_server)]]
-    --     vim.api.nvim_command [[autocmd FileType cs nmap <silent> <buffer> <Leader>ossp <Plug>(omnisharp_stop_server)]]
     --     vim.api.nvim_command [[augroup END]]
     vimp.add_buffer_maps(
       function()
@@ -46,6 +35,12 @@ local function custom_attach(client)
         vimp.nmap({"silent"}, "<leader>gpi", "<Plug>(omnisharp_preview_implementations)")
         vimp.nmap({"silent"}, "gtd", "<Plug>(omnisharp_type_lookup)")
         vimp.nmap({"silent"}, "<leader>ac", "<Plug>(omnisharp_global_code_check)")
+        vimp.nmap({"silent"}, "<leader>ca", "<Plug>(omnisharp_code_actions)")
+        vimp.xmap({"silent"}, "<leader>ca", "<Plug>(omnisharp_code_actions)")
+        vimp.nmap({"silent"}, "K", "<Plug>(omnisharp_documentation)")
+        vimp.nmap({"silent"}, "rn", "<Plug>(omnisharp_rename)")
+        vimp.nmap({"silent"}, "<leader>f", "<Plug>(omnisharp_code_format)")
+        vimp.nmap({"silent"}, "<C-o>", "<Plug>(omnisharp_find_members)")
       end
     )
   else
@@ -66,12 +61,13 @@ local function custom_attach(client)
     buf_set_keymap("n", "<leader>ca", ":Lspsaga code_action<CR>", opts)
     buf_set_keymap("n", "<C-f>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>", opts)
     buf_set_keymap("n", "<C-b>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>", opts)
-  end
-  if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<Leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  end
-  if client.resolved_capabilities.document_range_formatting then
-    buf_set_keymap("v", "<Leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+
+    if client.resolved_capabilities.document_formatting then
+      buf_set_keymap("n", "<Leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    end
+    if client.resolved_capabilities.document_range_formatting then
+      buf_set_keymap("v", "<Leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+    end
   end
 
   -- Set autocommands conditional on server_capabilities
