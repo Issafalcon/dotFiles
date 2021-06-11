@@ -35,12 +35,12 @@ local function custom_attach(client)
         vimp.nmap({"silent"}, "<leader>gpi", "<Plug>(omnisharp_preview_implementations)")
         vimp.nmap({"silent"}, "gtd", "<Plug>(omnisharp_type_lookup)")
         vimp.nmap({"silent"}, "<leader>ac", "<Plug>(omnisharp_global_code_check)")
-        vimp.nmap({"silent"}, "<leader>ca", "<Plug>(omnisharp_code_actions)")
-        vimp.xmap({"silent"}, "<leader>ca", "<Plug>(omnisharp_code_actions)")
-        vimp.nmap({"silent"}, "K", "<Plug>(omnisharp_documentation)")
+        -- vimp.nmap({"silent"}, "<leader>ca", "<Plug>(omnisharp_code_actions)")
+        -- vimp.xmap({"silent"}, "<leader>ca", "<Plug>(omnisharp_code_actions)")
+        -- vimp.nmap({"silent"}, "K", "<Plug>(omnisharp_documentation)")
         vimp.nmap({"silent"}, "rn", "<Plug>(omnisharp_rename)")
         vimp.nmap({"silent"}, "<leader>f", "<Plug>(omnisharp_code_format)")
-        vimp.nmap({"silent"}, "<C-o>", "<Plug>(omnisharp_find_members)")
+        vimp.nmap({"silent"}, "gm", "<Plug>(omnisharp_find_members)")
       end
     )
   else
@@ -53,14 +53,6 @@ local function custom_attach(client)
     buf_set_keymap("n", "<Leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
     buf_set_keymap("n", "<Leader>l", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
 
-    -- LspSaga
-    buf_set_keymap("n", "<leader>gh", ":Lspsaga lsp_finder<CR>", opts)
-    buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
-    buf_set_keymap("n", "[g", ":Lspsaga diagnostic_jump_prev<CR>", opts)
-    buf_set_keymap("n", "]g", ":Lspsaga diagnostic_jump_next<CR>", opts)
-    buf_set_keymap("n", "<leader>ca", ":Lspsaga code_action<CR>", opts)
-    buf_set_keymap("n", "<C-f>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>", opts)
-    buf_set_keymap("n", "<C-b>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>", opts)
 
     if client.resolved_capabilities.document_formatting then
       buf_set_keymap("n", "<Leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
@@ -69,6 +61,15 @@ local function custom_attach(client)
       buf_set_keymap("v", "<Leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
   end
+
+  -- LspSaga
+  buf_set_keymap("n", "<leader>gh", ":Lspsaga lsp_finder<CR>", opts)
+  buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
+  buf_set_keymap("n", "[g", ":Lspsaga diagnostic_jump_prev<CR>", opts)
+  buf_set_keymap("n", "]g", ":Lspsaga diagnostic_jump_next<CR>", opts)
+  buf_set_keymap("n", "<leader>ca", ":Lspsaga code_action<CR>", opts)
+  buf_set_keymap("n", "<C-f>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>", opts)
+  buf_set_keymap("n", "<C-b>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>", opts)
 
   -- Set autocommands conditional on server_capabilities
   if client.resolved_capabilities.document_highlight then
