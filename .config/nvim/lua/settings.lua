@@ -32,7 +32,6 @@ o.cmdheight       = 2                          -- more space for displaying mess
 o.splitbelow      = true                       -- horizontal splits will automatically be below
 o.splitright      = true                       -- vertical splits will automatically be to the right
 o.termguicolors   = true                       -- set term giu colors most terminals support this
-o.t_co            = "256"                      -- support 256 colors
 o.conceallevel    = 0                          -- so that i can see `` in markdown files
 o.showtabline     = 2                          -- always show tabs
 o.backup          = false                      -- this is recommended by coc
