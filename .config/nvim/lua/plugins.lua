@@ -116,7 +116,7 @@ return require("packer").startup(
     use {"iamcco/markdown-preview.nvim", run = "cd app && npm install"}
 
     -- Wiki and Note taking
-    use 'vimwiki/vimwiki'
+    use 'lervag/vimtex'
 
     -- Utility
     use {"terrortylor/nvim-comment"}
