@@ -6,6 +6,13 @@ local markdownWiki =   {
   ext = '.md'
 };
 
-wikiLists[1] = markdownWiki;
+local default =   {
+  path = '~/vimwiki/',
+  syntax = 'default',
+  ext = '.wiki'
+};
+
+wikiLists[1] = default;
+wikiLists[2] = markdownWiki;
 
 vim.g.vimwiki_list = wikiLists;

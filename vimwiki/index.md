@@ -1,5 +1,0 @@
-# Wiki
-
-## Math
-
-* [Trigonometry](Trigonometry)
