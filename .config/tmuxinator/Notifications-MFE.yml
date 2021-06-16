@@ -48,11 +48,11 @@ windows:
   - NotificationsCenter:
       root: ~/repos/wcc-mfe-notifications/notifications-center
       panes:
-      - nvim
+        - nvim
   - MFEs:
       root: ~/repos/wcc-mfe-notifications/notifications-mfe
       panes:
-      - nvim
+        - nvim
   - Terminals: 
       layout: tiled
       panes:

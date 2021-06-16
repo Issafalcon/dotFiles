@@ -48,11 +48,11 @@ windows:
   - ClientApp:
       root: ~/repos/wcc-auditlog/Waters.Cloud.AuditLog/ClientApp
       panes:
-      - nvim
+        - nvim
   - API:
       root: ~/repos/wcc-auditlog/Waters.Cloud.AuditLog
       panes:
-      - nvim
+        - nvim
   - Terminals: 
       layout: tiled
       panes:

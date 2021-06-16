@@ -36,7 +36,7 @@ root: ~/repos/wcc-cloudhub
 # tmux_command: byobu
 
 # Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
-startup_window: App
+startup_window: ClientApp
 
 # Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
 # startup_pane: 1
@@ -45,9 +45,14 @@ startup_window: App
 # attach: false
 
 windows:
-  - App:
+  - ClientApp:
+      root: ~/repos/wcc-cloudhub/Waters.Cloud.Hub/ClientApp
       panes:
-      - nvim
+        - nvim
+  - API:
+      root: ~/repos/wcc-cloudhub/Waters.Cloud.Hub
+      panes:
+        - nvim
   - Terminals: 
       layout: tiled
       panes:
