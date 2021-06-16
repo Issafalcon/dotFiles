@@ -2,6 +2,7 @@ local custom_attach = require("lsp.custom_attach")
 local lsp_installer = require("nvim-lsp-installer")
 local efmConfig = require("lsp.lsp-servers.efm-ls")
 local stylelintConfig = require("lsp.lsp-servers.stylelint-ls")
+local texlabConfig = require("lsp.lsp-servers.texlab-ls")
 
 -- symbols for autocomplete
 vim.lsp.protocol.CompletionItemKind = {
@@ -82,6 +83,8 @@ servers.omnisharp = require("lsp.lsp-servers.omnisharp-ls").getConfig()
 servers.efm = efmConfig
 
 servers.stylelint_lsp = stylelintConfig
+
+servers.texlab = texlabConfig
 
 for server, config in pairs(servers) do
   require("lspconfig")[server].setup(vim.tbl_deep_extend("force", {capabilities = clientCapabilities}, config))
