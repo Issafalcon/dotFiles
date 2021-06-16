@@ -46,15 +46,13 @@ startup_window: ClientApp
 
 windows:
   - ClientApp:
+      root: ~/repos/wcc-auditlog/Waters.Cloud.AuditLog/ClientApp
       panes:
-      - nvim:
-        - cd ~/repos/wcc-auditlog/Waters.Cloud.AuditLog/ClientApp
-        - nvim
+      - nvim
   - API:
+      root: ~/repos/wcc-auditlog/Waters.Cloud.AuditLog
       panes:
-      - nvim:
-        - cd ~/repos/wcc-auditlog/Waters.Cloud.AuditLog 
-        - nvim
+      - nvim
   - Terminals: 
       layout: tiled
       panes:
