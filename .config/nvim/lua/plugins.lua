@@ -117,6 +117,7 @@ return require("packer").startup(
 
     -- Wiki and Note taking
     use 'lervag/vimtex'
+    use 'vimwiki/vimwiki'
 
     -- Utility
     use {"terrortylor/nvim-comment"}
