@@ -4,8 +4,6 @@ require('vimp')
 -- Mapping for paste (Paste over visually selected text with whatever is in unnamed register)
 utils.map('v', '<Leader>p', '"_dP', { noremap = true })
 
-vimp.inoremap('<C-d>', '<Esc>')
-
 -- Copying to shared clipboard slots in register
 utils.map('v', '<Leader>y', '"+y', { noremap = true })
 utils.map('n', '<Leader>y', '"+y', { noremap = true })

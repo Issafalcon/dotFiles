@@ -23,6 +23,14 @@ local colors = {
 }
 local condition = require('galaxyline.condition')
 local gls = gl.section
+
+local buffer_not_empty = function()
+  if vim.fn.empty(vim.fn.expand("%:t")) ~= 1 then
+    return true
+  end
+  return false
+end
+
 gl.short_line_list = {'NvimTree', 'vista', 'dbui', 'packer'}
 
 gls.left[1] = {
@@ -81,7 +89,6 @@ gls.left[3] = {
         highlight = {colors.grey, colors.bg}
     }
 }
-
 gls.left[4] = {
     DiffAdd = {
         provider = 'DiffAdd',
@@ -105,6 +112,18 @@ gls.left[6] = {
         icon = '  ',
         highlight = {colors.red, colors.bg}
     }
+}
+gls.left[7] = {
+  FileName = {
+    -- provider = "FileName",
+    provider = function()
+      return vim.fn.expand("%:F")
+    end,
+    condition = buffer_not_empty,
+    separator = " ",
+    separator_highlight = {'NONE', colors.bg},
+    highlight = {colors.purple, colors.bg}
+  }
 }
 
 gls.right[1] = {
