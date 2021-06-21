@@ -11,7 +11,8 @@ wikiList[1] = defaultWiki
 vim.g.vimwiki_list = wikiList
 
 local ext2SyntaxSettings = {}
-ext2SyntaxSettings[".wiki"] = 'markdown'
+local wikiExt = '.wiki'
+ext2SyntaxSettings[wikiExt] = 'markdown'
 
 vim.g.vimwiki_ext2syntax = ext2SyntaxSettings
 
