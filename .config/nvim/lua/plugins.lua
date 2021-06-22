@@ -102,6 +102,7 @@ return require("packer").startup(
     use "hrsh7th/vim-vsnip-integ"
     use "rafamadriz/friendly-snippets"
     use "J0rgeSerran0/vscode-csharp-snippets"
+    use "robole/vscode-markdown-snippets"
 
     -- Treesitter
     use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}

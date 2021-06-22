@@ -2,19 +2,17 @@
 local wikiList = {}
 
 local defaultWiki = {
-  path = '~/Repos/wiki/',
+  path = '~/repos/wiki/',
   syntax = 'markdown',
-  ext = '.wiki'
+  ext = '.md'
 }
 
 wikiList[1] = defaultWiki
 vim.g.vimwiki_list = wikiList
 
-local ext2SyntaxSettings = {}
-local wikiExt = '.wiki'
-ext2SyntaxSettings[wikiExt] = 'markdown'
-
-vim.g.vimwiki_ext2syntax = ext2SyntaxSettings
+vim.g.vimwiki_table_mappings = 0
+vim.g.vimwiki_global_ext = 0 -- Prevents vimwiki from treating every .md file as a wiki
+vim.g.vimwiki_hl_headers = 1
 
 -- VimTex settings
 vim.g.vimtex_view_method = 'zathura'

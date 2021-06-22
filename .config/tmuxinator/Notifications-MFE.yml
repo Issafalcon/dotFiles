@@ -46,12 +46,14 @@ startup_window: NotificationsCenter
 
 windows:
   - NotificationsCenter:
-      root: ~/repos/wcc-mfe-notifications/notifications-center
       panes:
+      - nvim:
+        - cd ~/repos/wcc-mfe-notifications/notifications-center
         - nvim
   - MFEs:
-      root: ~/repos/wcc-mfe-notifications/notifications-mfe
       panes:
+      - nvim:
+        - cd ~/repos/wcc-mfe-notifications/notifications-mfe
         - nvim
   - Terminals: 
       layout: tiled
