@@ -1,3 +1,10 @@
+require('vimp')
+
+-- Call the global function AutoCommit for .wiki. files
+vimp.nnoremap('<leader>cg', ':lua AutoCommit()<CR>')
+
+-- vim.cmd "autocmd BufWritePost */wiki/* call AutoCommit"
+
 -- VimWiki settings
 local wikiList = {}
 
