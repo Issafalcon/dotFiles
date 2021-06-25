@@ -36,7 +36,7 @@ root: ~/repos/wcc-mfe-notifications
 # tmux_command: byobu
 
 # Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
-startup_window: NotificationsCenter
+# startup_window: NotificationsCenter
 
 # Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
 # startup_pane: 1
@@ -47,29 +47,29 @@ startup_window: NotificationsCenter
 windows:
   - NotificationsCenter:
       panes:
-      - nvim:
-        - cd ~/repos/wcc-mfe-notifications/notifications-center
-        - nvim
+        - nvim:
+          - cd ./notifications-center
+          - nvim
   - MFEs:
       panes:
-      - nvim:
-        - cd ~/repos/wcc-mfe-notifications/notifications-mfe
-        - nvim
+        - nvim:
+          - cd ./notifications-mfe
+          - nvim
   - Terminals: 
       layout: tiled
       panes:
         - run:
-          - cd ~/repos/wcc-mfe-notifications/notifications-center/Waters.Cloud.NotificationsCenter
+          - cd ./notifications-center/Waters.Cloud.NotificationsCenter
             <%- if @settings["run"] %>
           - dotnet run
             <%- end %>
         - serve:
-          - cd ~/repos/wcc-mfe-notifications/notifications-mfe
+          - cd ./notifications-mfe
             <%- if @settings["run"] %>
           - ng serve
             <%- end %>
         - package:
-          - cd ~/repos/wcc-mfe-notifications/notifications-mfe
+          - cd ./notifications-mfe
             <%- if @settings["build-mfe"] %>
           - npm run build:all-mfe
             <%- end %>

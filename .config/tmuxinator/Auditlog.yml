@@ -1,7 +1,6 @@
 # /home/ukafig/.config/tmuxinator/AuditLog.yml
 
 name: Auditlog
-root: ~/repos/wcc-auditlog
 
 # Optional tmux socket
 # socket_name: foo
