@@ -15,4 +15,4 @@ require'nvim-web-devicons'.setup {
 
 -- Workaround for a bug in nerd-tree devicons where tex files move across the screen
 vim.cmd('let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}')
-vim.cmd('let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols["tex"] = "ƛ"')
+vim.cmd('let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols["tex"] = ""')
