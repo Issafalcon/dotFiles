@@ -2,7 +2,6 @@
     "Template": {
         "prefix": ["template", "\\template"], 
         "body": [
-            "%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Define Article %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
             "\\documentclass{article}", 
             "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
             "", 
@@ -72,7 +71,6 @@
     "Template_wiki": {
         "prefix": ["template_wiki", "\\template_wiki"], 
         "body": [
-            "%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Define Report %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
             "\\documentclass{report}", 
             "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
             "", 
@@ -91,12 +89,13 @@
             "\\usepackage{geometry}",
             "\\usepackage{hyperref}",
             "\\usepackage{pdflscape}",
+            "\\usepackage{minted}",
             "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
             "", 
             "${3:% Other Settings}", 
             "", 
             "% This sets page margins to .5in",
-            "{ \\geometry{top=.5in,left=.5in,right=.5in,bottom=.5in}",
+            "\\geometry{top=.5in,left=.5in,right=.5in,bottom=.5in}",
             "",
             "% Turn off header and footer",
             "\\pagestyle{empty}",
@@ -107,6 +106,9 @@
             "",
             "% Don't print section numbers",
             "\\setcounter{secnumdepth}{0}",
+            "",
+            "% Set toc counter to go to depth of subsubsection",
+            "\\setcounter{tocdepth}{3}",
             "",
             "",
             "\\setlength{\\parindent}{0pt}",
@@ -132,7 +134,7 @@
             "", 
             "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title & Author %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
             "\\title{${1:Title}}", 
-            "\\author{${Adam Figgins}}", 
+            "\\author{${2:Adam Figgins}}", 
             "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
             "", 
             "\\begin{document}",
@@ -142,6 +144,18 @@
             "\\end{document}"
         ],
         "description": "Template for a wiki root page. Sets to screen geometry utilising maximum page real estate. Comes with subset of useful packages"
+    },
+    "Template_wiki_subpage": {
+        "prefix": ["template_wiki_subpage", "\\template_wiki_subpage"], 
+        "body": [
+            "\\documentclass[${1:root_file.tex}]{subfiles}", 
+            "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
+            "", 
+            "\\begin{document}",
+            "    $0",
+            "\\end{document}"
+        ],
+        "description": "Template for a new subpage that can be inserted into a root_file.tex page"
     },
     "Large Summation": {
         "prefix": ["sumlarge", "\\sumlarge"],

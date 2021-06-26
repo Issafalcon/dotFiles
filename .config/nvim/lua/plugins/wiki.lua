@@ -28,3 +28,34 @@ vim.g.vimwiki_hl_headers = 1
 -- VimTex settings
 vim.g.vimtex_view_method = 'zathura'
 vim.g.vimtex_view_general_viewer = 'zathura'
+
+local latexmkOptions = {
+  '-verbose', '-file-line-error', '-synctex=1', '-interaction=nonstopmode', '-shell-escape'
+}
+
+vim.g.vimtex_compiler_latexmk = {
+  build_dir = '',
+  callback = 1,
+  continuous = 1,
+  executable = 'latexmk',
+  hooks = {},
+  options = latexmkOptions
+}
+
+-- vim.cmd([[
+-- let g:vimtex_compiler_latexmk = {
+--               \ 'build_dir' : '',
+--               \ 'callback' : 1,
+--               \ 'continuous' : 1,
+--               \ 'executable' : 'latexmk',
+--               \ 'hooks' : [],
+--               \ 'options' : [
+--               \   '-verbose',
+--               \   '-file-line-error',
+--               \   '-synctex=1',
+--               \   '-interaction=nonstopmode',
+--               \   '-shell-escape'
+--               \ ],
+--               \}
+--   ]]
+-- )
