@@ -14,8 +14,3 @@ vim.g.NERDTreeGitStatusIndicatorMapCustom = {
   Clean     = '✔︎',
   Unknown   = '?',
 }
-
--- Workaround for a bug in nerd-tree devicons where tex files move across the screen
-vim.cmd('let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}')
-vim.cmd('let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols["tex"] = "ƛ"')
-
