@@ -55,3 +55,6 @@ complete -o nospace -C /usr/bin/terraform terraform
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 export EDITOR="nvim"
+
+# set DISPLAY variable to the IP automatically assigned to WSL2
+export DISPLAY=$(route.exe print | grep 0.0.0.0 | head -1 | awk '{print $4}'):0.0
