@@ -438,6 +438,45 @@
         "body": ["\\textit{ Sol. }"],
         "description": "Insert italic 'Sol.'"
     },
+    "Glossary Entry": {
+        "prefix": ["glossary", "\\glossary"],
+        "body": [
+            "\\newglossaryentry{$1}",
+            "{",
+            "   name=$2,",
+            "   description={$3}",
+            "   plural=$4",
+            "}"
+        ],
+        "description": "Adds new glossary entry without symbol or sorting"
+    },
+    "Glossary Entry With Sort": {
+        "prefix": ["glossary_sort", "\\glossary_sort"],
+        "body": [
+            "\\newglossaryentry{$1}",
+            "{",
+            "   name=$2,",
+            "   description={$3}",
+            "   plural=$4",
+            "   sort=$5",
+            "}"
+        ],
+        "description": "Adds new glossary entry with sort"
+    },
+    "Glossary Entry With Sort and Symbol": {
+        "prefix": ["glossary_sort_symbol", "\\glossary_sort_symbol"],
+        "body": [
+            "\\newglossaryentry{$1}",
+            "{",
+            "   name=$2,",
+            "   description={$3}",
+            "   plural=$4",
+            "   sort=$5",
+            "   symbol={$6}",
+            "}"
+        ],
+        "description": "Adds new glossary entry with sort and symbol"
+    },
     "Table 2x2 Border": {
         "prefix": ["table2x2_bs"],
         "body": [
