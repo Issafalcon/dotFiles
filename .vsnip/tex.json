@@ -437,5 +437,34 @@
         "prefix": ["solution", "\\solution"],
         "body": ["\\textit{ Sol. }"],
         "description": "Insert italic 'Sol.'"
+    },
+    "Table 2x2 Border": {
+        "prefix": ["table2x2_bs"],
+        "body": [
+            "\\begin{center}", 
+            "   \\begin{tabular}{| l | c |}",
+            "       \\hline",
+            "       \\multicolumn{1}{|c|}{\\textbf{$1}} & \\multicolumn{1}{|c|}{\\textbf{$2}} \\\\\\",
+            "       $3 & $4 \\\\\\ \\hline",
+            "       $5 & $6 \\\\\\ \\hline",
+            "   \\end{tabular}",
+            "\\end{center}"
+            ],
+        "description": "Simple 2x2 bordered table with centered column headers"
+    },
+    "Table 3x3 Border": {
+        "prefix": ["table3x3_bs"],
+        "body": [
+            "\\begin{center}", 
+            "   \\begin{tabular}{| l | c | c |}",
+            "       \\hline",
+            "       \\multicolumn{1}{|c|}{\\textbf{$1}} & \\multicolumn{1}{|c|}{\\textbf{$2}}",
+            "       & \\multicolumn{1}{|c|}{\\textbf{$4}} \\\\\\ \\hline",
+            "       $5 & $6 & $7 \\\\\\ \\hline",
+            "       $8 & $9 & $10 \\\\\\ \\hline",
+            "   \\end{tabular}",
+            "\\end{center}"
+            ],
+        "description": "Simple 3x3 bordered table with centered column headers"
     }
 }
