@@ -127,5 +127,6 @@ return require("packer").startup(
     use "junegunn/vim-easy-align"
     use "folke/which-key.nvim" -- Key binding support
     use "windwp/nvim-autopairs"
+    use {"tpope/vim-dispatch"}
   end
 )
