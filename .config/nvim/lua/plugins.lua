@@ -73,7 +73,7 @@ return require("packer").startup(
     use {"fabi1cazenave/suckless.vim"}
     use {"szw/vim-maximizer"}
 
-    -- Fuzzy searching
+    -- File navigation and searching
     use {"nvim-telescope/telescope-fzy-native.nvim"}
     use {
       "nvim-telescope/telescope.nvim",
@@ -82,6 +82,7 @@ return require("packer").startup(
         {"nvim-lua/plenary.nvim"}
       }
     }
+    use {"kevinhwang91/rnvimr"}
 
     -- .NET Development
     use {"OmniSharp/omnisharp-vim"} -- Omnisharpe (.NET LSP interface) - Use to install omnisharpe-rosyln LSP

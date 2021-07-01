@@ -41,7 +41,6 @@ require("telescope").setup {
       "--column",
       "--smart-case",
     },
-    prompt_position = "top",
     prompt_prefix = " ",
     selection_caret = " ",
     file_sorter = require "telescope.sorters".get_fzy_sorter,
