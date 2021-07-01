@@ -42,6 +42,8 @@ vim.g.vimtex_compiler_latexmk = {
   options = latexmkOptions
 }
 
+vimp.nnoremap({"silent"}, "\\lg", [[:Start latexmk-custom-launch.sh %:p<CR>]])
+
 -- vim.cmd([[
 -- let g:vimtex_compiler_latexmk = {
 --               \ 'build_dir' : '',
