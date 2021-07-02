@@ -444,8 +444,9 @@
             "\\newglossaryentry{$1}",
             "{",
             "   name=$2,",
-            "   description={$3}",
-            "   plural=$4",
+            "   text=$3,",
+            "   description={$4}",
+            "   plural=$5",
             "}"
         ],
         "description": "Adds new glossary entry without symbol or sorting"
@@ -456,9 +457,10 @@
             "\\newglossaryentry{$1}",
             "{",
             "   name=$2,",
-            "   description={$3}",
-            "   plural=$4",
-            "   sort=$5",
+            "   text=$3,",
+            "   description={$4}",
+            "   plural=$5",
+            "   sort=$6",
             "}"
         ],
         "description": "Adds new glossary entry with sort"
@@ -469,10 +471,11 @@
             "\\newglossaryentry{$1}",
             "{",
             "   name=$2,",
-            "   description={$3}",
-            "   plural=$4",
-            "   sort=$5",
-            "   symbol={$6}",
+            "   text=$3,",
+            "   description={$4}",
+            "   plural=$5",
+            "   sort=$6",
+            "   symbol={$7}",
             "}"
         ],
         "description": "Adds new glossary entry with sort and symbol"
