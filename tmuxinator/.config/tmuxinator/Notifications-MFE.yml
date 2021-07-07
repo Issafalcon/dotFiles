@@ -36,10 +36,10 @@ root: ~/repos/wcc-mfe-notifications
 # tmux_command: byobu
 
 # Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
-# startup_window: NotificationsCenter
+startup_window: NotificationsCenter
 
 # Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
-# startup_pane: 1
+startup_pane: 1
 
 # Controls whether the tmux session should be attached to automatically. Defaults to true.
 # attach: false
@@ -47,32 +47,32 @@ root: ~/repos/wcc-mfe-notifications
 windows:
   - NotificationsCenter:
       panes:
-        - nvim:
-          - cd ./notifications-center
-          - nvim
+      - nvim:
+        - cd notifications-center
+        - nvim
   - MFEs:
       panes:
-        - nvim:
-          - cd ./notifications-mfe
-          - nvim
+      - nvim:
+        - cd notifications-mfe
+        - nvim
   - Terminals: 
       layout: tiled
       panes:
-        - run:
-          - cd ./notifications-center/Waters.Cloud.NotificationsCenter
-            <%- if @settings["run"] %>
-          - dotnet run
-            <%- end %>
-        - serve:
-          - cd ./notifications-mfe
-            <%- if @settings["run"] %>
-          - ng serve
-            <%- end %>
-        - package:
-          - cd ./notifications-mfe
-            <%- if @settings["build-mfe"] %>
-          - npm run build:all-mfe
-            <%- end %>
+      - run:
+        - cd notifications-center/Waters.Cloud.NotificationsCenter
+          <%- if @settings["run"] %>
+        - dotnet run
+          <%- end %>
+      - serve:
+        - cd notifications-center/Waters.Cloud.NotificationsCenter/ClientApp
+          <%- if @settings["run"] %>
+        - ng serve
+          <%- end %>
+      - package:
+        - cd ./notifications-mfe
+          <%- if @settings["build-mfe"] %>
+        - npm run build-package:all-mfe
+          <%- end %>
   <%- if !@settings["dp"].nil? %>
   - Dev-Proxy:
     - dev-proxy <%= @settings["dp"] %>

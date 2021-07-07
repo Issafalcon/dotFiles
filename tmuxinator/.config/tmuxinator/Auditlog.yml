@@ -1,6 +1,7 @@
 # /home/ukafig/.config/tmuxinator/AuditLog.yml
 
 name: Auditlog
+root: ~/repos/wcc-auditlog
 
 # Optional tmux socket
 # socket_name: foo
@@ -38,33 +39,35 @@ name: Auditlog
 startup_window: ClientApp
 
 # Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
-# startup_pane: 1
+startup_pane: 1
 
 # Controls whether the tmux session should be attached to automatically. Defaults to true.
 # attach: false
 
 windows:
   - ClientApp:
-      root: ~/repos/wcc-auditlog/Waters.Cloud.AuditLog/ClientApp
       panes:
+      - nvim:
+        - cd Waters.Cloud.AuditLog/ClientApp
         - nvim
   - API:
-      root: ~/repos/wcc-auditlog/Waters.Cloud.AuditLog
       panes:
+      - nvim:
+        - cd Waters.Cloud.AuditLog
         - nvim
   - Terminals: 
       layout: tiled
       panes:
-        - run:
-          - cd ~/repos/wcc-auditlog/Waters.Cloud.AuditLog 
-            <%- if @settings["run"] %>
-          - dotnet run
-            <%- end %>
-        - serve:
-          - cd ~/repos/wcc-auditlog/Waters.Cloud.AuditLog/ClientApp
-            <%- if @settings["run"] %>
-          - ng serve
-            <%- end %>
+      - run:
+        - cd ~/repos/wcc-auditlog/Waters.Cloud.AuditLog 
+          <%- if @settings["run"] %>
+        - dotnet run
+          <%- end %>
+      - serve:
+        - cd ~/repos/wcc-auditlog/Waters.Cloud.AuditLog/ClientApp
+          <%- if @settings["run"] %>
+        - ng serve
+          <%- end %>
   <%- if !@settings["dp"].nil? %>
   - Dev-Proxy:
     - dev-proxy <%= @settings["dp"] %>
