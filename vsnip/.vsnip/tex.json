@@ -78,6 +78,7 @@
             "\\input{${1:../..}/modules/core-packages.tex}",
             "\\input{${1:../..}/modules/hyperlink-setup.tex}",
             "\\input{${1:../..}/modules/custom-commands.tex}",
+            "\\input{${1:../..}/modules/custom-environments.tex}",
             "\\input{${1:../..}/modules/colours.tex}",
             "\\input{${1:../..}/modules/wiki-page-settings.tex}",
             "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
