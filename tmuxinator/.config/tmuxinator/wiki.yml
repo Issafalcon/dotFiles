@@ -1,5 +1,3 @@
-# /home/ukafig/.config/tmuxinator/dotFiles.yml
-
 name: wiki
 root: ~/repos/wiki
 

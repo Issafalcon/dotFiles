@@ -60,14 +60,14 @@ windows:
       panes:
         - run:
           - cd TenancyAdmin
-          <%- if @settings["run"] %>
+            <%- if @settings["run"] %>
           - dotnet run
-          <%- end %>
+            <%- end %>
         - serve:
           - cd TenancyAdmin/ClientApp
-          <%- if @settings["run"] %>
+            <%- if @settings["run"] %>
           - ng serve
-          <%- end %>
+            <%- end %>
   <%- if !@settings["dp"].nil? %>
   - Dev-Proxy:
     - dev-proxy <%= @settings["dp"] %>

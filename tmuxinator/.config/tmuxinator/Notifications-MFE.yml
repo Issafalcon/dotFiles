@@ -1,7 +1,7 @@
 # /home/ukafig/.config/tmuxinator/CloudHub.yml
 
 name: Notifications-MFE
-root: ~/repos/wcc-mfe-notifications
+root: ~/repos/wcc-mfe-notifications/
 
 # Optional tmux socket
 # socket_name: foo
@@ -64,14 +64,14 @@ windows:
         - dotnet run
           <%- end %>
       - serve:
-        - cd notifications-center/Waters.Cloud.NotificationsCenter/ClientApp
+        - cd notifications-mfe
           <%- if @settings["run"] %>
         - ng serve
           <%- end %>
       - package:
-        - cd ./notifications-mfe
-          <%- if @settings["build-mfe"] %>
-        - npm run build-package:all-mfe
+        - cd notifications-mfe
+          <%- if @settings["buildmfe"] %>
+        - npm run build:all-mfe
           <%- end %>
   <%- if !@settings["dp"].nil? %>
   - Dev-Proxy:
