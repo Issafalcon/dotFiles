@@ -73,15 +73,19 @@ fi
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-source $ZSH/oh-my-zsh.sh
-
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(aws)
-source ~/.oh-my-zsh/plugins/git/git.plugin.zsh # Git plugin in plugin array doesn't seem to work properly
+plugins=(
+  git 
+  aws 
+  zsh-syntax-highlighting
+)
+
+# Sourcing oh-my-zsh needs to go after the plugins array
+source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
