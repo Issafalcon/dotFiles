@@ -5,8 +5,9 @@ local utils = require("utils")
 function _G.search_dev_config()
   require("telescope.builtin").find_files(
     {
-      prompt_title = "< Nvim Config Files >",
-      cwd = "$HOME/.config"
+      prompt_title = "< Config Files >",
+      search_dirs = {"$HOME/dotFiles"},
+      hidden = true
     }
   )
 end
