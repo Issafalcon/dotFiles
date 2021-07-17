@@ -1,7 +1,7 @@
 # /home/ukafig/.config/tmuxinator/CloudHub.yml
 
 name: Notifications-MFE
-root: ~/repos/wcc-mfe-notifications/
+root: ~/repos/wcc-mfe-notifications
 
 # Optional tmux socket
 # socket_name: foo
