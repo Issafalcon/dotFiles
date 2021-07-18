@@ -3,6 +3,7 @@ local lsp_installer = require("nvim-lsp-installer")
 local efmConfig = require("lsp.lsp-servers.efm-ls")
 local stylelintConfig = require("lsp.lsp-servers.stylelint-ls")
 local texlabConfig = require("lsp.lsp-servers.texlab-ls")
+local terraformConfig = require("lsp.lsp-servers.terraform-ls")
 
 -- symbols for autocomplete
 vim.lsp.protocol.CompletionItemKind = {
@@ -85,6 +86,8 @@ servers.efm = efmConfig
 servers.stylelint_lsp = stylelintConfig
 
 servers.texlab = texlabConfig
+
+servers.terraform = terraformConfig
 
 for server, config in pairs(servers) do
   require("lspconfig")[server].setup(vim.tbl_deep_extend("force", {capabilities = clientCapabilities}, config))
