@@ -66,6 +66,10 @@ for _, server in pairs(installed_servers) do
     end
   end
 
+  if server.name == "sumneko_lua" then
+    opts.settings = { Lua = { diagnostics = { globals = {'vim', 'vimp'}}}}
+  end
+
   if opts.on_attach == nil then
     opts.on_attach = custom_attach
   end
@@ -87,7 +91,7 @@ servers.stylelint_lsp = stylelintConfig
 
 servers.texlab = texlabConfig
 
-servers.terraform = terraformConfig
+servers.terraformls = terraformConfig
 
 for server, config in pairs(servers) do
   require("lspconfig")[server].setup(vim.tbl_deep_extend("force", {capabilities = clientCapabilities}, config))

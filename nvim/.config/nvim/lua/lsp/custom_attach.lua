@@ -31,6 +31,7 @@ local function custom_attach(client)
         vimp.nmap({"silent"}, "gm", "<Plug>(omnisharp_find_members)")
       end
     )
+
   else
     buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
     buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
@@ -74,6 +75,12 @@ local function custom_attach(client)
       false
     )
   end
+
+  require('lsp_signature').on_attach({
+    bind = true,
+    use_lspsaga = false,
+    fix_pos = false
+  })
 end
 
 return custom_attach

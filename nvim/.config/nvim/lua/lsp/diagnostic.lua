@@ -1,5 +1,5 @@
 local lsp, sign_define = vim.lsp, vim.fn.sign_define
-
+  
 lsp.handlers["textDocument/publishDiagnostics"] =
   lsp.with(
   lsp.diagnostic.on_publish_diagnostics,

@@ -27,6 +27,7 @@ return require("packer").startup(
     use "williamboman/nvim-lsp-installer" -- Adds missing lspinstall command with some buindles LSP servers
     use "glepnir/lspsaga.nvim" -- Adds nice UIs and shortcut keys for LSP interactions
     use "kosayoda/nvim-lightbulb" -- Adds the code actions lightbulb with integration with codeaction menu
+    use 'ray-x/lsp_signature.nvim'
 
     -- EditorConfig
     use 'editorconfig/editorconfig-vim'
