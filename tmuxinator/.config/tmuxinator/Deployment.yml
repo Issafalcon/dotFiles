@@ -1,7 +1,5 @@
-# /home/ukafig/.config/tmuxinator/CloudHub.yml
-
-name: TenancyAdmin
-root: ~/repos/wcc-tenancyadmin
+name: deployment
+root: ~/repos/wcc-deployment
 
 # Optional tmux socket
 # socket_name: foo
@@ -36,7 +34,7 @@ root: ~/repos/wcc-tenancyadmin
 # tmux_command: byobu
 
 # Specifies (by name or index) which window will be selected on project startup. If not set, the first window is used.
-startup_window: ClientApp
+startup_window: editor
 
 # Specifies (by index) which pane of the specified window will be selected on project startup. If not set, the first pane is used.
 startup_pane: 1
@@ -45,30 +43,11 @@ startup_pane: 1
 # attach: false
 
 windows:
-  - ClientApp:
+  - editor:
       panes:
       - nvim:
-        - cd TenancyAdmin/ClientApp
         - nvim
-  - Api:
-      panes:
-      - nvim:
-        - cd TenancyAdmin
-        - nvim
-  - Terminals: 
-      layout: tiled
-      panes:
-      - run:
-        - cd TenancyAdmin
-          <%- if @settings["run"] %>
-        - dotnet run
-          <%- end %>
-      - serve:
-        - cd TenancyAdmin/ClientApp
-          <%- if @settings["run"] %>
-        - ng serve
-          <%- end %>
-  <%- if !@settings["dp"].nil? %>
-  - Dev-Proxy:
-    - dev-proxy <%= @settings["dp"] %>
-  <%- end %>
+  - Terminals:
+    layout: tiled
+    panes:
+    - general:
