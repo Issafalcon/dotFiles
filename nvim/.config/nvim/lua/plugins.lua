@@ -95,6 +95,9 @@ return require("packer").startup(
     -- Terraform
     use "hashivim/vim-terraform"
     use "juliosueiras/vim-terraform-completion"
+    
+    -- Gherkin / Cucumber
+    use 'tpope/vim-cucumber'
 
     -- Debugging
     use {"puremourning/vimspector"}
