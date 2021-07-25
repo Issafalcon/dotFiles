@@ -85,6 +85,7 @@ return require("packer").startup(
     }
     use {"kevinhwang91/rnvimr"}
     use {'preservim/tagbar'}
+    use {'easymotion/vim-easymotion'}
 
     -- .NET Development
     use {"OmniSharp/omnisharp-vim"} -- Omnisharpe (.NET LSP interface) - Use to install omnisharpe-rosyln LSP
