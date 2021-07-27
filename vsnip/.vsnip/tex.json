@@ -238,6 +238,11 @@
         "body": ["\\frac{$1}{$2}$0"],
         "description": ["Insert inline fraction notation, (only in the cases when the environment is inline math environment)."]
     },
+    "Vector": {
+        "prefix": ["vector", "\\vector"],
+        "body": ["\\overrightarrow{$1}$0"],
+        "description": ["Insert vector symbol"]
+    },
     "Large Fraction": {
         "prefix": ["fractionlarge", "\\fractionlarge"],
         "body": ["\\displaystyle\\frac{$1}{$2}$0"],
