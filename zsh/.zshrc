@@ -74,9 +74,11 @@ ZSH_THEME=powerlevel10k/powerlevel10k
 plugins=(
   git 
   aws 
-  zsh-syntax-highlighting
 )
 
+if ! grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
+  plugins+=(zsh-syntax-highlighting)
+fi
 # Sourcing oh-my-zsh needs to go after the plugins array
 source $ZSH/oh-my-zsh.sh
 
