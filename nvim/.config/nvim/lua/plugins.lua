@@ -19,15 +19,15 @@ return require("packer").startup(
     -- Lua development
     use {"tjdevries/nlua.nvim"}
     use {"euclidianAce/BetterLua.vim"}
-    use "svermeulen/vimpeccable"
+    use { "svermeulen/vimpeccable" }
     use {"norcalli/nvim_utils"}
 
     -- LSP
-    use "neovim/nvim-lspconfig"
-    use "williamboman/nvim-lsp-installer" -- Adds missing lspinstall command with some buindles LSP servers
-    use "glepnir/lspsaga.nvim" -- Adds nice UIs and shortcut keys for LSP interactions
-    use "kosayoda/nvim-lightbulb" -- Adds the code actions lightbulb with integration with codeaction menu
-    use 'ray-x/lsp_signature.nvim'
+    use {"neovim/nvim-lspconfig"}
+    use {"williamboman/nvim-lsp-installer"} -- Adds missing lspinstall command with some buindles LSP servers
+    use {"glepnir/lspsaga.nvim"} -- Adds nice UIs and shortcut keys for LSP interactions
+    use {"kosayoda/nvim-lightbulb"} -- Adds the code actions lightbulb with integration with codeaction menu
+    use {'ray-x/lsp_signature.nvim'}
 
     -- EditorConfig
     use 'editorconfig/editorconfig-vim'
@@ -38,7 +38,6 @@ return require("packer").startup(
     use {'junegunn/fzf'}
 
     -- Filesystem navigation
-    -- use {"kyazdani42/nvim-tree.lua"} -- Toggle hidden files and refresh tree aren't working currently (25/05/21)
     use 'preservim/nerdtree'
     use 'Xuyuanp/nerdtree-git-plugin'
     use 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -96,7 +95,7 @@ return require("packer").startup(
     -- Terraform
     use "hashivim/vim-terraform"
     use "juliosueiras/vim-terraform-completion"
-    
+
     -- Gherkin / Cucumber
     use 'tpope/vim-cucumber'
 
@@ -104,12 +103,12 @@ return require("packer").startup(
     use {"puremourning/vimspector"}
 
     -- Autocomplete and Snippets
-    use "hrsh7th/nvim-compe"
-    use "hrsh7th/vim-vsnip"
-    use "hrsh7th/vim-vsnip-integ"
-    use "rafamadriz/friendly-snippets"
-    use "J0rgeSerran0/vscode-csharp-snippets"
-    use "robole/vscode-markdown-snippets"
+    use {"hrsh7th/nvim-compe"}
+    use {"hrsh7th/vim-vsnip"}
+    use {"hrsh7th/vim-vsnip-integ"}
+    use {"rafamadriz/friendly-snippets"}
+    use {"J0rgeSerran0/vscode-csharp-snippets"}
+    use {"robole/vscode-markdown-snippets"}
 
     -- Treesitter
     use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
@@ -124,16 +123,16 @@ return require("packer").startup(
     use {"iamcco/markdown-preview.nvim", run = "cd app && npm install"}
 
     -- Wiki and Note taking
-    use 'lervag/vimtex'
-    use 'vimwiki/vimwiki'
+    use {'lervag/vimtex'}
+    use {'vimwiki/vimwiki'}
 
     -- Utility
     use {"terrortylor/nvim-comment"}
     use {"tpope/vim-surround"}
     use {"sheerun/vim-polyglot"} -- Better syntax support
-    use "junegunn/vim-easy-align"
-    use "folke/which-key.nvim" -- Key binding support
-    use "windwp/nvim-autopairs"
+    use {"junegunn/vim-easy-align"}
+    use {"folke/which-key.nvim"} -- Key binding support
+    use {"windwp/nvim-autopairs"}
     use {"tpope/vim-dispatch"}
   end
 )
