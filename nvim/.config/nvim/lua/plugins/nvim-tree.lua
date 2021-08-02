@@ -1,4 +1,3 @@
-local utils = require("utils")
 local tree_cb = require "nvim-tree.config".nvim_tree_callback
 
 vim.g.nvim_tree_disable_netrw  = 0 -- 1 by default, disables netrw
@@ -46,5 +45,5 @@ vim.g.nvim_tree_icons = {
 }
 
 -- Custom mappings
-utils.map("n", "<C-n>", ":NvimTreeToggle<CR>", {noremap = true})
+vimp.nnoremap("<C-n>", ":NvimTreeToggle<CR>")
 

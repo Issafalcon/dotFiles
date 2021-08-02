@@ -1,4 +1,3 @@
-local utils = require('utils')
 local wk = require("which-key")
 
 require'compe'.setup {
