@@ -1,5 +1,4 @@
 local actions = require("telescope.actions")
-local utils = require("utils")
 
 -- Custom function to search vim config files
 function _G.search_dev_config()
@@ -13,22 +12,17 @@ function _G.search_dev_config()
 end
 
 -- Telescope mappings
-utils.map(
-  "n",
-  "<Leader>ss",
-  ':lua require(\'telescope.builtin\').grep_string({ search = vim.fn.input("Grep For > ")})<CR>',
-  {noremap = true}
-)
-utils.map("n", "<C-p>", ":lua require('telescope.builtin').git_files()<CR>", {noremap = true})
-utils.map("n", "<Leader>sf", ":lua require('telescope.builtin').find_files({hidden = true})<CR>", {noremap = true})
-utils.map("n", "<Leader>sw", ':lua require(\'telescope.builtin\').grep_string { search = vim.fn.expand("<cword>") }<CR>', {noremap = true})
-utils.map("n", "<Leader>sb", ":lua require('telescope.builtin').buffers()<CR>", {noremap = true})
-utils.map("n", "<Leader>sh", ":lua require('telescope.builtin').help_tags()<CR>", {noremap = true})
-utils.map("n", "<Leader>sc", ":lua search_dev_config()<CR>", {noremap = true})
-utils.map("n", "<Leader>sgc", ":lua require('telescope.builtin').git_commits()<CR>", {noremap = true})
-utils.map("n", "<Leader>sgb", ":lua require('telescope.builtin').git_branches()<CR>", {noremap = true})
-utils.map("n", "<Leader>sgs", ":lua require('telescope.builtin').git_status()<CR>", {noremap = true})
-utils.map("n", "<Leader>scs", ":lua require('telescope.builtin').colorscheme()<CR>", {noremap = true})
+vimp.nnoremap("<Leader>ss", ':lua require(\'telescope.builtin\').grep_string({ search = vim.fn.input("Grep For > ")})<CR>')
+vimp.nnoremap("<C-p>", ":lua require('telescope.builtin').git_files()<CR>")
+vimp.nnoremap("<Leader>sf", ":lua require('telescope.builtin').find_files({hidden = true})<CR>")
+vimp.nnoremap("<Leader>sw", ':lua require(\'telescope.builtin\').grep_string { search = vim.fn.expand("<cword>") }<CR>')
+vimp.nnoremap("<Leader>sb", ":lua require('telescope.builtin').buffers()<CR>")
+vimp.nnoremap("<Leader>sh", ":lua require('telescope.builtin').help_tags()<CR>")
+vimp.nnoremap("<Leader>sc", ":lua search_dev_config()<CR>")
+vimp.nnoremap("<Leader>sgc", ":lua require('telescope.builtin').git_commits()<CR>")
+vimp.nnoremap("<Leader>sgb", ":lua require('telescope.builtin').git_branches()<CR>")
+vimp.nnoremap("<Leader>sgs", ":lua require('telescope.builtin').git_status()<CR>")
+vimp.nnoremap("<Leader>st", ":lua require('telescope.builtin').colorscheme()<CR>")
 
 require("telescope").setup {
   defaults = {

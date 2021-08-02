@@ -1,25 +1,24 @@
-local utils = require('utils')
 require('vimp')
 
 -- Mapping for paste (Paste over visually selected text with whatever is in unnamed register)
-utils.map('v', '<Leader>p', '"_dP', { noremap = true })
+vimp.vnoremap('<Leader>p', '"_dP')
 
 -- Copying to shared clipboard slots in register
-utils.map('v', '<Leader>y', '"+y', { noremap = true })
-utils.map('n', '<Leader>y', '"+y', { noremap = true })
-utils.map('n', '<Leader>Y', 'gg"+yG', { noremap = true })
+vimp.vnoremap('<Leader>y', '"+y')
+vimp.nnoremap('<Leader>y', '"+y')
+vimp.nnoremap('<Leader>Y', 'gg"+yG')
 
 -- Delete without adding to register
-utils.map('n', '<Leader>d', '"_d', { noremap = true })
-utils.map('v', '<Leader>d', '"_d', { noremap = true })
+vimp.nnoremap('<A-d>', '"_d')
+vimp.vnoremap('<A-d>', '"_d')
 
 -- Quick move lines up and down in buffer
-utils.map('n', '<A-j>', ':m .+1<CR>==', { noremap = true })
-utils.map('n', '<A-k>', ':m .-2<CR>==', { noremap = true })
-utils.map('v', '<A-k>', ':m \'>+1<CR>gv=gv', { noremap = true })
-utils.map('v', '<A-j>', ':m \'<-2<CR>gv=gv', { noremap = true })
-utils.map('i', '<A-j>', '<Esc>:m .+1<CR>==gi', { noremap = true })
-utils.map('i', '<A-k>', '<Esc>:m .-2<CR>==gi', { noremap = true })
+vimp.nnoremap('<A-j>', ':m .+1<CR>==')
+vimp.nnoremap('<A-k>', ':m .-2<CR>==')
+vimp.vnoremap('<A-k>', ':m \'>+1<CR>gv=gv')
+vimp.vnoremap('<A-j>', ':m \'<-2<CR>gv=gv')
+vimp.inoremap('<A-j>', '<Esc>:m .+1<CR>==gi')
+vimp.inoremap('<A-k>', '<Esc>:m .-2<CR>==gi')
 
 -- Tab switch buffer
 vim.api.nvim_set_keymap('n', '<TAB>', ':bnext<CR>', {noremap = true, silent = true})

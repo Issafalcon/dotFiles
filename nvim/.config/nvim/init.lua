@@ -10,7 +10,6 @@ require("keymappings")
 require("lsp")
 
 -- Plugin customizations
--- require("plugins/nvim-tree")
 require("plugins/nerd-tree")
 require("plugins/comment")
 require("plugins/which-key")
