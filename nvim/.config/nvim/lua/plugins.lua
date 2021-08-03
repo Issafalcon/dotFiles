@@ -101,6 +101,7 @@ return require("packer").startup(
 
     -- Debugging
     use {"puremourning/vimspector"}
+    use {'mfussenegger/nvim-dap'}
 
     -- Autocomplete and Snippets
     use {"hrsh7th/nvim-compe"}

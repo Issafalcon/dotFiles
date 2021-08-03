@@ -67,7 +67,7 @@ for _, server in pairs(installed_servers) do
   end
 
   if server.name == "sumneko_lua" then
-    opts.settings = { Lua = { diagnostics = { globals = {'vim', 'vimp'}}}}
+    opts.settings = { Lua = { diagnostics = { globals = {'vim', 'vimp', 'nvim'}}}}
   end
 
   if opts.on_attach == nil then
