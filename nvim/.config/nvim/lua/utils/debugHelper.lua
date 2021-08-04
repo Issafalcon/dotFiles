@@ -1,4 +1,5 @@
 local dap = require("dap")
+local dapUtils = require("dap.utils")
 
 local function debugInChrome()
   local launchUrl = vim.fn.input("Launch URL - Full path or relative to http://localhost: ")
@@ -28,6 +29,28 @@ local function debugInChrome()
   )
 end
 
+local function debugDotNet()
+
+  -- dap.adapters.netcoredbg = {
+  --   type = 'executable',
+  --   command = '/usr/local/netcoredbg',
+  --   args = {'--interpreter=vscode', '--attach ' .. pid}
+  -- }
+  dap.run(
+    {
+      type = "netcoredbg",
+      name = "attach - netcoredbg",
+      request = "launch",
+      -- processId = function()
+      --   return dapUtils.pick_process()
+      -- end,
+      program = function()
+        return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+      end,
+    }
+  )
+end
+
 local function startDebugging()
   if dap.session() then
     dap.disconnect()
@@ -36,6 +59,8 @@ local function startDebugging()
 
   if vim.bo.filetype == "typescript" then
     debugInChrome()
+  elseif vim.bo.filetype == "cs" then
+    debugDotNet()
   end
 end
 
