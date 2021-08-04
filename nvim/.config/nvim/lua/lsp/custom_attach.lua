@@ -50,7 +50,7 @@ local function custom_attach(client)
     end
   end
 
-  buf_set_keymap("n", "ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+  buf_set_keymap("n", "<A-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 
   -- LspSaga
   buf_set_keymap("n", "<leader>gh", ":Lspsaga lsp_finder<CR>", opts)

@@ -9,7 +9,6 @@ require("keymappings")
 require("lsp")
 
 -- Plugin customizations
-require("plugins/nerd-tree")
 require("plugins/comment")
 require("plugins/which-key")
 require("plugins/compe")
@@ -29,3 +28,4 @@ require("plugins/rnvimr")
 require("plugins/vimspector")
 require("plugins/tagbar")
 require("plugins/dap")
+require("plugins/suckless")

@@ -26,7 +26,6 @@ return require("packer").startup(
     use {"neovim/nvim-lspconfig"}
     use {"williamboman/nvim-lsp-installer"} -- Adds missing lspinstall command with some buindles LSP servers
     use {"glepnir/lspsaga.nvim"} -- Adds nice UIs and shortcut keys for LSP interactions
-    use {"kosayoda/nvim-lightbulb"} -- Adds the code actions lightbulb with integration with codeaction menu
     use {'ray-x/lsp_signature.nvim'}
 
     -- EditorConfig
@@ -36,12 +35,6 @@ return require("packer").startup(
     use {"tpope/vim-unimpaired"}
     use {"kevinhwang91/nvim-bqf"}
     use {'junegunn/fzf'}
-
-    -- Filesystem navigation
-    use 'preservim/nerdtree'
-    use 'Xuyuanp/nerdtree-git-plugin'
-    use 'tiagofumo/vim-nerdtree-syntax-highlight'
-    use 'PhilRunninger/nerdtree-visual-selection'
 
     -- Colours and fonts and icons
     use "ryanoasis/vim-devicons"
