@@ -16,14 +16,13 @@ end
 local function startDebugTest()
   if vim.bo.filetype == "typescript" then
     -- This makes the assumption that the test runner is jest
-    vim.g["test#strategy"] = 'debugJest'
-    vim.cmd('UltestNearest -strategy=debugJest')
+    -- Needs reworking to run tests
+    vim.cmd('TestFile -strategy=debugJest')
   elseif vim.bo.filetype == "cs" then
-
-    vim.cmd('UltestNearest -strategy=debugDotNet<CR>')
-    
-    local pid = require('utils.processPicker').pick_process()
-    vim.cmd('call vimspector#LaunchWithSettings( #{ configuration: "netcoredbg attach", processId: "' .. pid .. '"})')
+    vim.cmd('TestNearest -strategy=debugDotNet')
+    vim.cmd('buffer #')
+    vim.cmd('call vimspector#LaunchWithSettings( #{ configuration: "netcoredbg attach"})')
+    vim.cmd('let $VSTEST_HOST_DEBUG=0')
   end  
 end
 

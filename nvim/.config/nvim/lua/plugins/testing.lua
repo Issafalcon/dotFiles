@@ -6,8 +6,11 @@ end
 
 function _G.DebugDotnetFile(cmd)
   print(cmd)
+  --Fix this
   vim.cmd('let $VSTEST_HOST_DEBUG=1')
   vim.cmd('echo $VSTEST_HOST_DEBUG')
+  vim.cmd('!' .. cmd)
+  vim.cmd('sleep 5')
 end
 
 -- Custom Strategies For Testing
