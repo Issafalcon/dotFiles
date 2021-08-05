@@ -46,12 +46,12 @@
         "type": "node",
         "request": "launch",
         "name": "Jest watch current file",
-        "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "program": "${VimCwd}/node_modules/jest/bin/jest.js",
         "cwd": "${fileDirname}",
         "args": [
           "${file}",
           "-c",
-          "${workspaceRoot}/jest.config.js",
+          "${VimCwd}/jest.config.js",
           "--verbose",
           "-i",
           "--no-cache",
@@ -59,6 +59,32 @@
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
+      }
+    },
+    "Jest Debug Single Test": {
+      "adapter": "vscode-node",
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "uncaught": "N"
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "type": "node",
+        "runtimeArgs": [
+          "--inspect-brk",
+          "'${VimCwd}'/node_modules/jest/bin/jest.js",
+          "--no-coverage",
+          "-t",
+          "'${TestName}'",
+          "--",
+          "${file}"
+        ],
+        "console": "integratedTerminal",
+        "skipFiles": ["<node_internals>/**/*.js"],
+        "internalConsoleOptions": "neverOpen",
+        "port": 9229
       }
     },
     "node - attach": {
@@ -81,7 +107,7 @@
       "configuration": {
         "request": "launch",
         "stopOnEntry": true,
-        "url": "http://localhost/hub",
+        "url": "${launchUrl}",
         "webRoot": "${workspaceRoot}",
         "runtimeExecutable": "/usr/bin/google-chrome"
       }
@@ -92,35 +118,6 @@
         "request": "attach",
         "webRoot": "${workspaceRoot}",
         "port": "9222"
-      }
-    },
-    "netcoredbg 3.1": {
-      "adapter": "netcoredbg",
-      "configuration": {
-        "request": "launch",
-        "type": "coreclr",
-        "program": "${workspaceRoot}/bin/Debug/netcoreapp3.1/Waters.Cloud.Hub.dll",
-        "args": [],
-        "stopAtEntry": true,
-        "cwd": "${workspaceRoot}",
-        "env": {}
-      }
-    },
-    "netcoredbg 3.1 attach": {
-      "adapter": "netcoredbg",
-      "configuration": {
-        "request": "attach",
-        "type": "coreclr",
-        "stopAtEntry": true,
-        "env": {},
-        "processId": "${processId}"
-      }
-    },
-    "BASH - Run Current Script": {
-      "adapter": "vscode-bash",
-      "configuration": {
-        "program": "${file}",
-        "args": ["*${CommandLineArgs}"]
       }
     }
   }

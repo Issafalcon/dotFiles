@@ -1,3 +1,6 @@
+-- At time of writing, this file isn't currently in use
+-- I intend to come back to it when nvim-dap is more mature / I know what I'm doing a bit better and can configure it
+-- to work properly
 local dap = require("dap")
 local dapUtils = require("dap.utils")
 
@@ -30,28 +33,24 @@ local function debugInChrome()
 end
 
 local function debugDotNet()
+  dap.set_log_level('TRACE')
 
-  -- dap.adapters.netcoredbg = {
-  --   type = 'executable',
-  --   command = '/usr/local/netcoredbg',
-  --   args = {'--interpreter=vscode', '--attach ' .. pid}
-  -- }
   dap.run(
     {
       type = "netcoredbg",
       name = "attach - netcoredbg",
-      request = "launch",
-      -- processId = function()
-      --   return dapUtils.pick_process()
-      -- end,
-      program = function()
-        return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+      request = "attach",
+      processId = function()
+        return dapUtils.pick_process()
       end,
+      -- program = function()
+      --   return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+      -- end,
     }
   )
 end
 
-local function startDebugging()
+local function startDebuggingDap()
   if dap.session() then
     dap.disconnect()
     dap.close()

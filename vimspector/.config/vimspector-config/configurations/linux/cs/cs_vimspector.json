@@ -1,0 +1,26 @@
+{
+  "configurations": {
+    "netcoredbg": {
+      "adapter": "netcoredbg",
+      "configuration": {
+        "request": "launch",
+        "type": "coreclr",
+        "program": "${dllPath}",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${VimCwd}",
+        "env": "{environment:{\\}}"
+      }
+    },
+    "netcoredbg attach": {
+      "adapter": "netcoredbg",
+      "configuration": {
+        "request": "attach",
+        "type": "coreclr",
+        "stopAtEntry": true,
+        "env": {},
+        "processId": "${processId}"
+      }
+    }
+  }
+}

@@ -16,7 +16,7 @@ dap.adapters.chrome = {
 
 dap.adapters.netcoredbg = {
   type = 'executable',
-  command = '/usr/local/netcoredbg',
+  command = os.getenv('HOME') .. '/debug-adapters/netcoredbg/netcoredbg',
   args = {'--interpreter=vscode'}
 }
 

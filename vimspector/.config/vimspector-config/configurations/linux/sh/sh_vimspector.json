@@ -1,0 +1,11 @@
+{
+  "configurations": {
+    "sh - Run Current Script": {
+      "adapter": "vscode-bash",
+      "configuration": {
+        "program": "${file}",
+        "args": ["*${CommandLineArgs}"]
+      }
+    }
+  }
+}

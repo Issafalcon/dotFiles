@@ -83,7 +83,7 @@ return require("packer").startup(
     use {"OmniSharp/omnisharp-vim"} -- Omnisharpe (.NET LSP interface) - Use to install omnisharpe-rosyln LSP
 
     -- Testing tools
-    use {"vim-test/vim-test"}
+    use { "rcarriga/vim-ultest", requires = {"vim-test/vim-test"}, run = ":UpdateRemotePlugins" }
 
     -- Terraform
     use "hashivim/vim-terraform"
@@ -94,7 +94,7 @@ return require("packer").startup(
 
     -- Debugging
     use {"puremourning/vimspector"}
-    use {'mfussenegger/nvim-dap'}
+    -- use {'mfussenegger/nvim-dap'}
 
     -- Autocomplete and Snippets
     use {"hrsh7th/nvim-compe"}
