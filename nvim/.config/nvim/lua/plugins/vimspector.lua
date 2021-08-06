@@ -44,6 +44,8 @@ vimp.xmap('<Leader>di', '<Plug>VimspectorBalloonEval')
 --  dL = Launch a process in debug
 --  dT = Run a test in debug mode
 --  dd = Launch file specific vimspector.json and select an option
-vimp.nnoremap('<leader>dJ', ':lua require"utils.vimspectorHelper".startDebugTest()<CR>')
-vimp.nnoremap('<leader>dd', ':call vimspector#Launch()<CR>')
+vimp.nnoremap('<leader>dT', ':lua require"utils.vimspectorHelper".startDebugTest()<CR>')
+vimp.nnoremap('<leader>dA', ':lua require"utils.vimspectorHelper".startDebugAttach()<CR>')
+vimp.nnoremap('<leader>dL', ':lua require"utils.vimspectorHelper".startDebugLaunch()<CR>')
+vimp.nnoremap('<leader>dd', ':call require"utils.vimspectorHelper".selectDebug()<CR>')
 

@@ -7,16 +7,15 @@ end
 function _G.DebugDotnetFile(cmd)
   print(cmd)
   --Fix this
-  vim.cmd('let $VSTEST_HOST_DEBUG=1')
-  vim.cmd('echo $VSTEST_HOST_DEBUG')
-  vim.cmd('!' .. cmd)
-  vim.cmd('sleep 5')
+  vim.cmd("let $VSTEST_HOST_DEBUG=1")
+  vim.cmd("echo $VSTEST_HOST_DEBUG")
+  vim.cmd("!" .. cmd)
+  vim.cmd("let $VSTEST_HOST_DEBUG=0")
 end
 
 -- Custom Strategies For Testing
 local strategies = {}
-strategies['debugJest'] = DebugJestFile
-strategies['debugDotNet'] = DebugDotnetFile
+strategies["debugJest"] = DebugJestFile
+strategies["debugDotNet"] = DebugDotnetFile
 
-vim.g['test#custom#strategies'] = strategies
-
+vim.g["test#custom#strategies"] = strategies

@@ -6,13 +6,13 @@
         "type": "node",
         "request": "launch",
         "name": "Jest single run all tests",
-        "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "program": "${VimCwd}/node_modules/jest/bin/jest.js",
         "env": {
           "CI": "true"
         },
         "args": [
           "-c",
-          "${workspaceRoot}/jest.config.js",
+          "${VimCwd}/jest.config.js",
           "--verbose",
           "-i",
           "--no-cache"
@@ -27,10 +27,10 @@
         "type": "node",
         "request": "launch",
         "name": "Jest watch all tests",
-        "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+        "program": "${VimCwd}/node_modules/jest/bin/jest.js",
         "args": [
           "-c",
-          "${workspaceRoot}/jest.config.js",
+          "${VimCwd}/jest.config.js",
           "--verbose",
           "-i",
           "--no-cache",
@@ -108,7 +108,7 @@
         "request": "launch",
         "stopOnEntry": true,
         "url": "${launchUrl}",
-        "webRoot": "${workspaceRoot}",
+        "webRoot": "${VimCwd}",
         "runtimeExecutable": "/usr/bin/google-chrome"
       }
     },
@@ -116,7 +116,7 @@
       "adapter": "chrome",
       "configuration": {
         "request": "attach",
-        "webRoot": "${workspaceRoot}",
+        "webRoot": "${VimCwd}",
         "port": "9222"
       }
     }
