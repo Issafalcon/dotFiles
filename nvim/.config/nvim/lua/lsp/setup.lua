@@ -11,10 +11,10 @@ vim.lsp.protocol.CompletionItemKind = {
   "   (Method)",
   "   (Function)",
   "   (Constructor)",
-  " ﴲ  (Field)",
+  "   (Field)",
   "[] (Variable)",
   "   (Class)",
-  " ﰮ  (Interface)",
+  "   (Interface)",
   "   (Module)",
   " 襁 (Property)",
   "   (Unit)",
@@ -27,8 +27,8 @@ vim.lsp.protocol.CompletionItemKind = {
   "   (Reference)",
   "   (Folder)",
   "   (EnumMember)",
-  " ﲀ  (Constant)",
-  " ﳤ  (Struct)",
+  "   (Constant)",
+  "   (Struct)",
   "   (Event)",
   "   (Operator)",
   "   (TypeParameter)"
@@ -67,7 +67,14 @@ for _, server in pairs(installed_servers) do
   end
 
   if server.name == "sumneko_lua" then
-    opts.settings = { Lua = { diagnostics = { globals = {'vim', 'vimp', 'nvim'}}}}
+    opts.settings = {Lua = {diagnostics = {globals = {"vim", "vimp", "nvim"}}}}
+  end
+
+  if server.name == "tsserver" then
+    opts.on_attach = function(client)
+      custom_attach(client)
+      client.resolved_capabilities.formatting = false
+    end
   end
 
   if opts.on_attach == nil then

@@ -30,7 +30,6 @@ local function custom_attach(client)
         vimp.nmap({"silent"}, "gm", "<Plug>(omnisharp_find_members)")
       end
     )
-
   else
     buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
     buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
@@ -42,9 +41,11 @@ local function custom_attach(client)
     buf_set_keymap("n", "<Leader>l", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
 
     buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
+
     if client.resolved_capabilities.document_formatting then
       buf_set_keymap("n", "<Leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
     end
+
     if client.resolved_capabilities.document_range_formatting then
       buf_set_keymap("v", "<Leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
@@ -76,11 +77,13 @@ local function custom_attach(client)
     )
   end
 
-  require('lsp_signature').on_attach({
-    bind = true,
-    use_lspsaga = false,
-    fix_pos = false
-  })
+  require("lsp_signature").on_attach(
+    {
+      bind = true,
+      use_lspsaga = false,
+      fix_pos = false
+    }
+  )
 end
 
 return custom_attach
