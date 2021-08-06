@@ -47,5 +47,5 @@ vimp.xmap('<Leader>di', '<Plug>VimspectorBalloonEval')
 vimp.nnoremap('<leader>dT', ':lua require"utils.vimspectorHelper".startDebugTest()<CR>')
 vimp.nnoremap('<leader>dA', ':lua require"utils.vimspectorHelper".startDebugAttach()<CR>')
 vimp.nnoremap('<leader>dL', ':lua require"utils.vimspectorHelper".startDebugLaunch()<CR>')
-vimp.nnoremap('<leader>dd', ':call require"utils.vimspectorHelper".selectDebug()<CR>')
+vimp.nnoremap('<leader>dd', ':lua require"utils.vimspectorHelper".selectDebug()<CR>')
 

@@ -26,16 +26,16 @@ end
 -- Generic debug function. Pick from list of 'launch.json' style options
 local function selectDebug()
   -- Provide common parameters (can't use workspaceRoot for example, as we are using a global vimspector.json)
-  vim.cmd('call vimspector#LaunchWithSettings( #{ VimCwd: ' .. cwd() .. "})")
+  vim.cmd("call vimspector#LaunchWithSettings( #{ VimCwd: '" .. cwd() .. "'})")
 end
 
 local function startDebugAttach()
   if vim.bo.filetype == "typescript" then
-    vim.cmd('call vimspector#LaunchWithSettings( #{ configuration: "Chrome - attach", VimCwd: ' .. cwd() .. "})")
+    vim.cmd("call vimspector#LaunchWithSettings( #{ configuration: 'Chrome - Attach', VimCwd: '" .. cwd() .. "'})")
   elseif vim.bo.filetype == "cs" then
     vim.cmd(
-      'call vimspector#LaunchWithSettings( #{ configuration: "netcoredbg attach", VimCwd: ' ..
-        cwd() .. ", processId: " .. pickPID() .. "})"
+      "call vimspector#LaunchWithSettings( #{ configuration: 'netcoredbg attach', VimCwd: '" ..
+        cwd() .. "', processId: " .. pickPID() .. "})"
     )
   end
 end
@@ -43,13 +43,13 @@ end
 local function startDebugLaunch()
   if vim.bo.filetype == "typescript" then
     vim.cmd(
-      'call vimspector#LaunchWithSettings( #{ configuration: "Chrome - launch", VimCwd: ' ..
-        cwd() .. ", launchUrl: " .. getUrlInput() .. "})"
+      "call vimspector#LaunchWithSettings( #{ configuration: 'Chrome - Launch', VimCwd: '" ..
+        cwd() .. "', launchUrl: '" .. getUrlInput() .. "'})"
     )
   elseif vim.bo.filetype == "cs" then
     vim.cmd(
-      'call vimspector#LaunchWithSettings( #{ configuration: "netcoredbg", VimCwd: ' ..
-        cwd() .. ", dllPath: " .. getLaunchFile() .. "})"
+      "call vimspector#LaunchWithSettings( #{ configuration: 'netcoredbg', VimCwd: '" ..
+        cwd() .. "', dllPath: '" .. getLaunchFile() .. "'})"
     )
   end
 end

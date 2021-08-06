@@ -1,5 +1,3 @@
-local wk = require("which-key")
-
 require'compe'.setup {
     enabled = true,
     autocomplete = true,
@@ -21,7 +19,7 @@ require'compe'.setup {
         vsnip = {kind = "   (Snippet)"},
         nvim_lsp = {kind = "   (LSP)"},
         nvim_lua = {kind = "  "},
-        spell = {kind = "   (Spell)", filetypes={"markdown", "text"}},
+        spell = {kind = "   (Spell)", filetypes={"markdown", "text", "tex"}},
         tags = false,
         vim_dadbod_completion = true,
         snippets_nvim = {kind = "  "},
