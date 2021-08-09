@@ -32,13 +32,16 @@ local function custom_attach(client)
     )
   else
     buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-    buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    buf_set_keymap("n", "gd", ":lua require('telescope.builtin').lsp_definitions()<CR>", opts)
+    -- buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
     buf_set_keymap("n", "gtd", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-    buf_set_keymap("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-    buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+    -- buf_set_keymap("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+    buf_set_keymap("n", "<leader>gi", ":lua require('telescope.builtin').lsp_implementations()<CR>", opts)
+    -- buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+    buf_set_keymap('n', "gr", ":lua require('telescope.builtin').lsp_references()<CR>", opts)
+    buf_set_keymap('n', "gm", ":lua require('telescope.builtin').lsp_document_symbols()<CR>", opts)
     buf_set_keymap("n", "rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
     buf_set_keymap("n", "<Leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
-    buf_set_keymap("n", "<Leader>l", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
 
     buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
 
@@ -51,13 +54,18 @@ local function custom_attach(client)
     end
   end
 
+  -- LSP Signature
   buf_set_keymap("n", "<A-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+
+  -- Telescope Pickers
+  buf_set_keymap("n", "<leader>ca", ":lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+  buf_set_keymap("n", "<leader>ac", ":lua require('telescope.builtin').lsp_workspace_diagnostics()<CR>", opts)
 
   -- LspSaga
   buf_set_keymap("n", "<leader>gh", ":Lspsaga lsp_finder<CR>", opts)
   buf_set_keymap("n", "[g", ":Lspsaga diagnostic_jump_prev<CR>", opts)
   buf_set_keymap("n", "]g", ":Lspsaga diagnostic_jump_next<CR>", opts)
-  buf_set_keymap("n", "<leader>ca", ":Lspsaga code_action<CR>", opts)
+  -- buf_set_keymap("n", "<leader>ca", ":Lspsaga code_action<CR>", opts)
   buf_set_keymap("n", "<C-f>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>", opts)
   buf_set_keymap("n", "<C-b>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>", opts)
 

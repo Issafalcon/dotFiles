@@ -20,15 +20,17 @@ vimp.nnoremap("<Leader>sb", ":lua require('telescope.builtin').buffers()<CR>")
 vimp.nnoremap("<Leader>sh", ":lua require('telescope.builtin').help_tags()<CR>")
 vimp.nnoremap("<Leader>sc", ":lua search_dev_config()<CR>")
 vimp.nnoremap("<Leader>sgc", ":lua require('telescope.builtin').git_commits()<CR>")
+vimp.nnoremap("<Leader>sgf", ":lua require('telescope.builtin').git_bcommits()<CR>")
 vimp.nnoremap("<Leader>sgb", ":lua require('telescope.builtin').git_branches()<CR>")
 vimp.nnoremap("<Leader>sgs", ":lua require('telescope.builtin').git_status()<CR>")
 vimp.nnoremap("<Leader>st", ":lua require('telescope.builtin').colorscheme()<CR>")
+vimp.nnoremap('<A-2>', ":lua require('telescope.builtin').registers()<CR>")
+vimp.inoremap('<A-2>', ":lua require('telescope.builtin').registers()<CR>")
 
 require("telescope").setup {
   defaults = {
     vimgrep_arguments = {
       "rg",
-      "-uu",
       "--color=never",
       "--no-heading",
       "--with-filename",
