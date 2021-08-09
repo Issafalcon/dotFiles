@@ -107,8 +107,6 @@ export EDITOR='nvim'
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
-autoload -U +X bashcompinit && bashcompinit
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -121,8 +119,14 @@ export NVM_DIR="$HOME/.nvm"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Autocomplete sources
 complete -C /home/linuxbrew/.linuxbrew/Cellar/terraform/0.13.4/bin/terraform terraform
 complete -o nospace -C /usr/bin/terraform terraform
+autoload -U +X bashcompinit && bashcompinit
+source <(kubectl completion zsh)
+source /usr/share/doc/fzf/examples/completion.zsh
+
+source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
