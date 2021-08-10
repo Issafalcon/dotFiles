@@ -73,6 +73,10 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/issafalcon/.local/share/nvim/site/pack/packer/start/BetterLua.vim"
   },
+  ["cheatsheet.nvim"] = {
+    loaded = true,
+    path = "/home/issafalcon/.local/share/nvim/site/pack/packer/start/cheatsheet.nvim"
+  },
   ["editorconfig-vim"] = {
     loaded = true,
     path = "/home/issafalcon/.local/share/nvim/site/pack/packer/start/editorconfig-vim"
@@ -100,6 +104,10 @@ _G.packer_plugins = {
   ["gv.vim"] = {
     loaded = true,
     path = "/home/issafalcon/.local/share/nvim/site/pack/packer/start/gv.vim"
+  },
+  hop = {
+    loaded = true,
+    path = "/home/issafalcon/.local/share/nvim/site/pack/packer/start/hop"
   },
   ["lsp_signature.nvim"] = {
     loaded = true,
@@ -234,10 +242,6 @@ _G.packer_plugins = {
   ["vim-easy-align"] = {
     loaded = true,
     path = "/home/issafalcon/.local/share/nvim/site/pack/packer/start/vim-easy-align"
-  },
-  ["vim-easymotion"] = {
-    loaded = true,
-    path = "/home/issafalcon/.local/share/nvim/site/pack/packer/start/vim-easymotion"
   },
   ["vim-fugitive"] = {
     loaded = true,

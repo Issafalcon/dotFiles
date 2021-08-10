@@ -126,6 +126,14 @@ return require("packer").startup(
     use {"sheerun/vim-polyglot"} -- Better syntax support
     use {"junegunn/vim-easy-align"}
     use {"folke/which-key.nvim"} -- Key binding support
+    use {
+      "sudormrfbin/cheatsheet.nvim",
+      requires = {
+        {"nvim-telescope/telescope.nvim"},
+        {"nvim-lua/popup.nvim"},
+        {"nvim-lua/plenary.nvim"}
+      }
+    }
     use {"windwp/nvim-autopairs"}
     use {"tpope/vim-dispatch"}
   end
