@@ -32,8 +32,7 @@ local function custom_attach(client)
     )
   else
     buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-    buf_set_keymap("n", "gd", ":lua require('telescope.builtin').lsp_definitions()<CR>", opts)
-    -- buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
     buf_set_keymap("n", "gtd", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
     -- buf_set_keymap("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
     buf_set_keymap("n", "<leader>gi", ":lua require('telescope.builtin').lsp_implementations()<CR>", opts)
@@ -60,6 +59,7 @@ local function custom_attach(client)
   -- Telescope Pickers
   buf_set_keymap("n", "<leader>ca", ":lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
   buf_set_keymap("n", "<leader>ac", ":lua require('telescope.builtin').lsp_workspace_diagnostics()<CR>", opts)
+  buf_set_keymap("n", "<leader>sd", ":lua require('telescope.builtin').lsp_definitions()<CR>", opts)
 
   -- LspSaga
   buf_set_keymap("n", "<leader>gh", ":Lspsaga lsp_finder<CR>", opts)

@@ -79,6 +79,7 @@ plugins=(
   dirhistory
   history
   jsontools
+  docker
 )
 
 if ! grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then

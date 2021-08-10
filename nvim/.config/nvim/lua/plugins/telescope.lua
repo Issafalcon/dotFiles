@@ -64,6 +64,20 @@ require("telescope").setup {
       }
     }
   },
+  pickers = {
+    grep_string = {
+      vimgrep_arguments = {
+        "rg",
+        "-uu",
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--smart-case",
+      }
+    }
+  },
   extensions = {
     fzy_native = {
       override_generic_sorter = false,
@@ -71,4 +85,5 @@ require("telescope").setup {
     }
   }
 }
+
 require("telescope").load_extension("fzy_native")
