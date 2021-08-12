@@ -12,7 +12,11 @@ function _G.search_dev_config()
 end
 
 -- Telescope mappings
-vimp.nnoremap("<Leader>ss", ':lua require(\'telescope.builtin\').grep_string({ search = vim.fn.input("Grep For > ")})<CR>')
+vimp.nnoremap(
+  "<Leader>ss",
+  ':lua require(\'telescope.builtin\').grep_string({ search = vim.fn.input("Grep For > ")})<CR>'
+)
+vimp.nnoremap("<leader>sl", ":lua require('utils.telescopeHelper').custom_live_grep()<CR>")
 vimp.nnoremap("<C-p>", ":lua require('telescope.builtin').git_files()<CR>")
 vimp.nnoremap("<Leader>sf", ":lua require('telescope.builtin').find_files({hidden = true})<CR>")
 vimp.nnoremap("<Leader>sw", ':lua require(\'telescope.builtin\').grep_string { search = vim.fn.expand("<cword>") }<CR>')
@@ -24,8 +28,8 @@ vimp.nnoremap("<Leader>sgf", ":lua require('telescope.builtin').git_bcommits()<C
 vimp.nnoremap("<Leader>sgb", ":lua require('telescope.builtin').git_branches()<CR>")
 vimp.nnoremap("<Leader>sgs", ":lua require('telescope.builtin').git_status()<CR>")
 vimp.nnoremap("<Leader>st", ":lua require('telescope.builtin').colorscheme()<CR>")
-vimp.nnoremap('<A-2>', ":lua require('telescope.builtin').registers()<CR>")
-vimp.inoremap('<A-2>', ":lua require('telescope.builtin').registers()<CR>")
+vimp.nnoremap("<A-2>", ":lua require('telescope.builtin').registers()<CR>")
+vimp.inoremap("<A-2>", ":lua require('telescope.builtin').registers()<CR>")
 
 require("telescope").setup {
   defaults = {
@@ -37,11 +41,12 @@ require("telescope").setup {
       "--line-number",
       "--column",
       "--smart-case",
+      "--glob=!accounts/"
     },
     prompt_prefix = " ",
     selection_caret = " ",
     file_sorter = require "telescope.sorters".get_fzy_sorter,
-    file_ignore_patterns = { "node_modules" },
+    file_ignore_patterns = {"node_modules"},
     file_previewer = require "telescope.previewers".vim_buffer_cat.new,
     grep_previewer = require "telescope.previewers".vim_buffer_vimgrep.new,
     qflist_previewer = require "telescope.previewers".vim_buffer_qflist.new,
@@ -82,7 +87,7 @@ require("telescope").setup {
         "--with-filename",
         "--line-number",
         "--column",
-        "--smart-case",
+        "--smart-case"
       }
     }
   },
