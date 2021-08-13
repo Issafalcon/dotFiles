@@ -53,6 +53,7 @@ return require("packer").startup(
     use {"lewis6991/gitsigns.nvim"}
     use "junegunn/gv.vim" -- Git commit browser
     use "rhysd/git-messenger.vim" -- Show commits under the cursor
+    use {"kdheepak/lazygit.nvim"}
 
     -- Github
     use {
