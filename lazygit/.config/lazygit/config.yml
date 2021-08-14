@@ -187,10 +187,6 @@ os:
   openLinkCommand: sh -c "xdg-open {{link}} >/dev/null"
 disableStartupPopups: false
 customCommands:
-  - key: "<c-r>"
-    command: "gh pr create --fill --web"
-    context: "global"
-    loadingText: "Creating pull request on GitHub"
   - key: '<c-a>' # Out of sane keybindings in commits context :(
     description: 'Search the whole history (From a ref and down) for an expression in a file'
     command: "git checkout {{index .PromptResponses 3}}"
