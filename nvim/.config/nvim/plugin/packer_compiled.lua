@@ -227,6 +227,10 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/undotree"
   },
+  ["vgit.nvim"] = {
+    loaded = true,
+    path = "/home/adam/.local/share/nvim/site/pack/packer/start/vgit.nvim"
+  },
   ["vim-cucumber"] = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/vim-cucumber"
