@@ -53,6 +53,7 @@ return require("packer").startup(
     use "tveskag/nvim-blame-line"
     use "rhysd/git-messenger.vim" -- Show commits under the cursor
     use {"kdheepak/lazygit.nvim"}
+    use "sindrets/diffview.nvim"
 
     -- Github
     use {

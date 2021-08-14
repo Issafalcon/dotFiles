@@ -133,6 +133,10 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/nvim-autopairs"
   },
+  ["nvim-blame-line"] = {
+    loaded = true,
+    path = "/home/adam/.local/share/nvim/site/pack/packer/start/nvim-blame-line"
+  },
   ["nvim-bqf"] = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/nvim-bqf"
@@ -226,10 +230,6 @@ _G.packer_plugins = {
   undotree = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/undotree"
-  },
-  ["vgit.nvim"] = {
-    loaded = true,
-    path = "/home/adam/.local/share/nvim/site/pack/packer/start/vgit.nvim"
   },
   ["vim-cucumber"] = {
     loaded = true,
