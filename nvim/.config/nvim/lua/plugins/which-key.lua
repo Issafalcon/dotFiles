@@ -49,50 +49,62 @@ M.defaultOpts = {
 wk.register(
   {
     ["<C-r>"] = "which_key_ignore", -- Interferes with <C-r><C-l> to toggle relative numbers
+    ["["] = {
+      c = "Previous Git hunk"
+    },
+    ["]"] = {
+      c = "Next Git hunk"
+    },
     ["<leader>"] = {
-      d              = {
-        name         = "+Debug",
-        d            = {"Choose debugger"},
-        A            = {"Attach Filetype Debugger"},
-        L            = {"Launch Filetype Debugger"},
-        T            = {"Debug Filetype Test"},
-        e            = {"Close / Reset debugger"},
-        ["d_"]       = {"Restart debugger"},
-        l            = {"Step into"},
-        j            = {"Step over"},
-        k            = {"Step out"},
+      h = {
+        name = "+Git Hunk",
+        p = "Preview Hunk",
+        s = "Stage Hunk",
+        u = "Unstange Hunk"
+      },
+      d = {
+        name = "+Debug",
+        d = {"Choose debugger"},
+        A = {"Attach Filetype Debugger"},
+        L = {"Launch Filetype Debugger"},
+        T = {"Debug Filetype Test"},
+        e = {"Close / Reset debugger"},
+        ["d_"] = {"Restart debugger"},
+        l = {"Step into"},
+        j = {"Step over"},
+        k = {"Step out"},
         ["d<space>"] = {"Continue"},
-        rc           = {"Run to cursor"},
-        b            = {"Toggle breakpoint"},
-        cb           = {"Toggle conditional breakpoint"},
-        X            = {"Clear all breakpoints"},
-        i            = {"Inspect"},
-        c            = {"Code window"},
-        t            = {"Tag window"},
-        v            = {"Variables window"},
-        w            = {"Watches window"},
-        s            = {"Stack trace window"},
-        o            = {"Output window"}
+        rc = {"Run to cursor"},
+        b = {"Toggle breakpoint"},
+        cb = {"Toggle conditional breakpoint"},
+        X = {"Clear all breakpoints"},
+        i = {"Inspect"},
+        c = {"Code window"},
+        t = {"Tag window"},
+        v = {"Variables window"},
+        w = {"Watches window"},
+        s = {"Stack trace window"},
+        o = {"Output window"}
       },
-      s              = {
-        name         = "+Search",
-        s            = "String (prompt)",
-        d            = "LSP Definition under cursor (if supported)",
-        w            = "String (under cursor)",
-        f            = "File (all files)",
-        b            = "Buffer list",
-        h            = "Help tags",
-        c            = "Config files",
-        gc           = "Git commits",
-        gb           = "Git branches",
-        gs           = "Git status",
-        t            = "Colour schemes"
+      s = {
+        name = "+Search",
+        s = "String (prompt)",
+        d = "LSP Definition under cursor (if supported)",
+        w = "String (under cursor)",
+        f = "File (all files)",
+        b = "Buffer list",
+        h = "Help tags",
+        c = "Config files",
+        gc = "Git commits",
+        gb = "Git branches",
+        gs = "Git status",
+        t = "Colour schemes"
       },
-      T              = {
-        name         = "+Copy Window To Tab"
+      T = {
+        name = "+Copy Window To Tab"
       },
-      t              = {
-        name         = "+Move Window To Tab"
+      t = {
+        name = "+Move Window To Tab"
       }
     }
   },
