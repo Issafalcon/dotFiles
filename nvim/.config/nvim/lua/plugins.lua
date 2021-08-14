@@ -48,9 +48,7 @@ return require("packer").startup(
     -- Git integration
     use {"airblade/vim-gitgutter"}
     use {"tpope/vim-fugitive"}
-    use "sodapopcan/vim-twiggy" -- Fugitive extension to manage branches
     use {"tpope/vim-rhubarb"} -- Browse Github URLs
-    use {"lewis6991/gitsigns.nvim"}
     use "junegunn/gv.vim" -- Git commit browser
     use "rhysd/git-messenger.vim" -- Show commits under the cursor
     use {"kdheepak/lazygit.nvim"}
