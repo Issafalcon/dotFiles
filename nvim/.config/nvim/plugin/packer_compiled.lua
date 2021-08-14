@@ -97,10 +97,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/git-messenger.vim"
   },
-  ["gitsigns.nvim"] = {
-    loaded = true,
-    path = "/home/adam/.local/share/nvim/site/pack/packer/start/gitsigns.nvim"
-  },
   ["gv.vim"] = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/gv.vim"
@@ -231,6 +227,10 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/undotree"
   },
+  ["vgit.nvim"] = {
+    loaded = true,
+    path = "/home/adam/.local/share/nvim/site/pack/packer/start/vgit.nvim"
+  },
   ["vim-cucumber"] = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/vim-cucumber"
@@ -282,10 +282,6 @@ _G.packer_plugins = {
   ["vim-test"] = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/vim-test"
-  },
-  ["vim-twiggy"] = {
-    loaded = true,
-    path = "/home/adam/.local/share/nvim/site/pack/packer/start/vim-twiggy"
   },
   ["vim-ultest"] = {
     loaded = true,

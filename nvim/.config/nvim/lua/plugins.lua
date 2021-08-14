@@ -50,7 +50,8 @@ return require("packer").startup(
     use {"tpope/vim-fugitive"}
     use {"tpope/vim-rhubarb"} -- Browse Github URLs
     use "junegunn/gv.vim" -- Git commit browser
-    use "rhysd/git-messenger.vim" -- Show commits under the cursor
+    use {"tanvirtin/vgit.nvim", requires = "nvim-lua/plenary.nvim"}
+    use {"rhysd/git-messenger.vim"} -- Show commits under the cursor
     use {"kdheepak/lazygit.nvim"}
 
     -- Github
