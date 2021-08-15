@@ -73,8 +73,9 @@ wk.register(
         u = "Unstange Hunk"
       },
       d = {
-        name = "+Debug",
+        name = "+Debug / Doge",
         d = {"Choose debugger"},
+        g = "Doge Generate Documentation",
         A = {"Attach Filetype Debugger"},
         L = {"Launch Filetype Debugger"},
         T = {"Debug Filetype Test"},
