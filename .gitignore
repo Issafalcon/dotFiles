@@ -1,2 +1,4 @@
 ranger/.config/ranger/plugins/
 vimspector/.config/vimspector-config/gadgets/
+
+packer_compiled.lua
