@@ -89,6 +89,18 @@ require("telescope").setup {
         "--column",
         "--smart-case"
       }
+    },
+    live_grep = {
+      vimgrep_arguments = {
+        "rg",
+        "--hidden",
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--smart-case"
+      }
     }
   },
   extensions = {
