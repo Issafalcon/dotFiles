@@ -70,11 +70,82 @@ for _, server in pairs(installed_servers) do
     opts.settings = {Lua = {diagnostics = {globals = {"vim", "vimp", "nvim"}}}}
   end
 
+  if server.name == "angularls" then
+    local lsPath = "~/.local/share/nvim/lsp_servers/angularls"
+    local ngCmd = {
+      "node",
+      lsPath .. "/node_modules/@angular/language-server/index.js",
+      "--stdio",
+      "--tsProbeLocations",
+      lsPath,
+      "ngProbeLocations",
+      lsPath
+    }
+    opts.cmd = ngCmd
+    opts.on_new_config = function(new_config)
+      new_config.cmd = ngCmd
+    end
+  end
+
   if server.name == "tsserver" then
     opts.on_attach = function(client)
       custom_attach(client)
       client.resolved_capabilities.formatting = false
     end
+  end
+
+  if server.name == "jsonls" then
+    opts.on_attach = function(client)
+      custom_attach(client)
+    end
+    opts.filetypes = {"json", "jsonc"}
+    opts.settings = {
+      json = {
+        -- Schemas https://www.schemastore.org
+        schemas = {
+          {
+            fileMatch = {"package.json"},
+            url = "https://json.schemastore.org/package.json"
+          },
+          {
+            fileMatch = {"tsconfig*.json"},
+            url = "https://json.schemastore.org/tsconfig.json"
+          },
+          {
+            fileMatch = {
+              ".prettierrc",
+              ".prettierrc.json",
+              "prettier.config.json"
+            },
+            url = "https://json.schemastore.org/prettierrc.json"
+          },
+          {
+            fileMatch = {".eslintrc", ".eslintrc.json"},
+            url = "https://json.schemastore.org/eslintrc.json"
+          },
+          {
+            fileMatch = {".babelrc", ".babelrc.json", "babel.config.json"},
+            url = "https://json.schemastore.org/babelrc.json"
+          },
+          {
+            fileMatch = {"lerna.json"},
+            url = "https://json.schemastore.org/lerna.json"
+          },
+          {
+            fileMatch = {"now.json", "vercel.json"},
+            url = "https://json.schemastore.org/now.json"
+          },
+          {
+            fileMatch = {
+              ".stylelintrc",
+              ".stylelintrc.json",
+              "stylelint.config.json"
+            },
+            url = "http://json.schemastore.org/stylelintrc.json"
+          }
+        }
+      }
+    }
   end
 
   if opts.on_attach == nil then
