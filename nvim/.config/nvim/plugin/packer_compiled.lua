@@ -73,9 +73,17 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/BetterLua.vim"
   },
+  ["cheat.sh-vim"] = {
+    loaded = true,
+    path = "/home/adam/.local/share/nvim/site/pack/packer/start/cheat.sh-vim"
+  },
   ["cheatsheet.nvim"] = {
     loaded = true,
     path = "/home/adam/.local/share/nvim/site/pack/packer/start/cheatsheet.nvim"
+  },
+  ["diffview.nvim"] = {
+    loaded = true,
+    path = "/home/adam/.local/share/nvim/site/pack/packer/start/diffview.nvim"
   },
   ["editorconfig-vim"] = {
     loaded = true,

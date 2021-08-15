@@ -137,5 +137,6 @@ return require("packer").startup(
     }
     use {"windwp/nvim-autopairs"}
     use {"tpope/vim-dispatch"}
+    use {"dbeniamine/cheat.sh-vim"}
   end
 )
