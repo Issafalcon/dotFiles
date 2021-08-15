@@ -20,7 +20,7 @@ local strategies = {}
 strategies["debugJest"] = DebugJestFile
 strategies["debugDotNet"] = DebugDotnetFile
 
-vim.g["test#custom#strategies"] = strategies
+vim.g["test#custom_strategies"] = strategies
 
 -- Ultest Keybindings
 vimp.nmap('<leader>us', '<Plug>(ultest-summary-toggle)')
