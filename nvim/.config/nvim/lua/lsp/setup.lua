@@ -70,23 +70,6 @@ for _, server in pairs(installed_servers) do
     opts.settings = {Lua = {diagnostics = {globals = {"vim", "vimp", "nvim"}}}}
   end
 
-  if server.name == "angularls" then
-    local lsPath = "~/.local/share/nvim/lsp_servers/angularls"
-    local ngCmd = {
-      "node",
-      lsPath .. "/node_modules/@angular/language-server/index.js",
-      "--stdio",
-      "--tsProbeLocations",
-      lsPath,
-      "ngProbeLocations",
-      lsPath
-    }
-    opts.cmd = ngCmd
-    opts.on_new_config = function(new_config)
-      new_config.cmd = ngCmd
-    end
-  end
-
   if server.name == "tsserver" then
     opts.on_attach = function(client)
       custom_attach(client)
