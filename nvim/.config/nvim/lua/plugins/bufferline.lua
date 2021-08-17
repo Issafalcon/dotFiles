@@ -4,8 +4,8 @@ require("bufferline").setup {
     numbers = "ordinal",
     number_style = "superscript", -- | "" | {"none", "subscript"}, -- buffer_id at index 1, ordinal at index 2
     mappings = true,
-    close_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
-    right_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
+    close_command = "bdelete %d", -- can be a string | function, see "Mouse actions"
+    right_mouse_command = "bdelete %d", -- can be a string | function, see "Mouse actions"
     left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
     middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
     -- NOTE: this plugin is designed with this icon in mind,
@@ -36,6 +36,7 @@ require("bufferline").setup {
     --- diagnostics_dict is a dictionary from error level ("error", "warning" or "info")to number of errors for each level.
     --- this should return a string
     --- Don't get too fancy as this function will be executed a lot
+
     diagnostics_indicator = function(count, level, diagnostics_dict, context)
       local icon = level:match("error") and " " or " "
       return " " .. icon .. count
@@ -64,7 +65,7 @@ require("bufferline").setup {
     -- can also be a table containing 2 custom separators
     -- [focused and unfocused]. eg: { '|', '|' }
     separator_style = "slant",
-    enforce_regular_tabs = false,
+    enforce_regular_tabs = true,
     always_show_bufferline = true,
   }
 }
