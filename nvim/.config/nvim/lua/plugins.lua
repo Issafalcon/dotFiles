@@ -41,6 +41,8 @@ return require("packer").startup(
     use "kyazdani42/nvim-web-devicons"
     use "christianchiarulli/nvcode-color-schemes.vim"
     use "norcalli/nvim-colorizer.lua"
+    use {"yonlu/omni.vim"}
+    use {"marko-cerovac/material.nvim"}
 
     -- Vim undo history
     use {"mbbill/undotree"}
@@ -113,6 +115,7 @@ return require("packer").startup(
 
     -- StatusLine and bufferline
     use {"glepnir/galaxyline.nvim"}
+    use {"akinsho/nvim-bufferline.lua", requires = "kyazdani42/nvim-web-devicons"}
 
     -- Markdown tools
     use {"iamcco/markdown-preview.nvim", run = "cd app && npm install"}
