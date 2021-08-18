@@ -115,7 +115,6 @@ return require("packer").startup(
 
     -- StatusLine and bufferline
     use {"glepnir/galaxyline.nvim"}
-    use {"akinsho/nvim-bufferline.lua", requires = "kyazdani42/nvim-web-devicons"}
 
     -- Markdown tools
     use {"iamcco/markdown-preview.nvim", run = "cd app && npm install"}
