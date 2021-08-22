@@ -221,10 +221,24 @@
     },
     "Large Integral": {
         "prefix": ["integrallarge", "\\integrallarge"],
-		"body": [
-			"\\displaystyle\\int_{$1}^{$2}$3"
-		],
-		"description": "Insert large integral notation."
+        "body": [
+          "\\displaystyle\\int_{$1}^{$2}$3"
+        ],
+        "description": "Insert large integral notation."
+    },
+    "Inline Math": {
+        "prefix": ["mathinline", "\\mathinline"],
+        "body": [
+            "\\${$0}\\$"
+        ],
+        "description": "Adding inline math"
+    },
+    "Degree Symbol": {
+        "prefix": ["degrees", "\\degrees"],
+        "body": [
+            "\\text{\\textdegree}"
+        ],
+        "description": "Insert degree symbol (assuming inside math mode"
     },
     "Inline Integral": {
         "prefix": ["integralinline", "\\integralinline"],
