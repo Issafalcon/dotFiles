@@ -1,3 +1,5 @@
+require('vimp')
+
 function _G.DebugJestFile(cmd)
   print(cmd)
   local cwd = vim.fn.getcwd()
@@ -18,4 +20,13 @@ local strategies = {}
 strategies["debugJest"] = DebugJestFile
 strategies["debugDotNet"] = DebugDotnetFile
 
-vim.g["test#custom#strategies"] = strategies
+vim.g["test#custom_strategies"] = strategies
+
+-- Ultest Keybindings
+vimp.nmap('<leader>us', '<Plug>(ultest-summary-toggle)')
+vimp.nmap('<leader>uf', '<Plug>(ultest-run-file)')
+vimp.nmap('<leader>un', '<Plug>(ultest-run-nearest)')
+vimp.nmap('<leader>uc', ':UltestClear<CR>')
+vimp.nmap('<leader>uo', '<Plug>(ultest-output-jump)')
+vimp.nmap('<leader>[u', '<Plug>(ultest-prev-fail)')
+vimp.nmap('<leader>]u', '<Plug>(ultest-next-fail)')

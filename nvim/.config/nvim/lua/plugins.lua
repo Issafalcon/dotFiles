@@ -41,6 +41,8 @@ return require("packer").startup(
     use "kyazdani42/nvim-web-devicons"
     use "christianchiarulli/nvcode-color-schemes.vim"
     use "norcalli/nvim-colorizer.lua"
+    use {"yonlu/omni.vim"}
+    use {"marko-cerovac/material.nvim"}
 
     -- Vim undo history
     use {"mbbill/undotree"}
@@ -48,11 +50,12 @@ return require("packer").startup(
     -- Git integration
     use {"airblade/vim-gitgutter"}
     use {"tpope/vim-fugitive"}
-    use "sodapopcan/vim-twiggy" -- Fugitive extension to manage branches
     use {"tpope/vim-rhubarb"} -- Browse Github URLs
-    use {"lewis6991/gitsigns.nvim"}
     use "junegunn/gv.vim" -- Git commit browser
+    use "tveskag/nvim-blame-line"
     use "rhysd/git-messenger.vim" -- Show commits under the cursor
+    use {"kdheepak/lazygit.nvim"}
+    use "sindrets/diffview.nvim"
 
     -- Github
     use {
@@ -126,7 +129,17 @@ return require("packer").startup(
     use {"sheerun/vim-polyglot"} -- Better syntax support
     use {"junegunn/vim-easy-align"}
     use {"folke/which-key.nvim"} -- Key binding support
+    use {
+      "sudormrfbin/cheatsheet.nvim",
+      requires = {
+        {"nvim-telescope/telescope.nvim"},
+        {"nvim-lua/popup.nvim"},
+        {"nvim-lua/plenary.nvim"}
+      }
+    }
     use {"windwp/nvim-autopairs"}
     use {"tpope/vim-dispatch"}
+    use {"dbeniamine/cheat.sh-vim"}
+    use {"kkoomen/vim-doge", run = ":call doge#install()"}
   end
 )

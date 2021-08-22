@@ -65,5 +65,5 @@ end
 
 return {
   debugInChrome = debugInChrome,
-  startDebugging = startDebugging
+  startDebugging = startDebuggingDap
 }

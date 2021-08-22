@@ -59,7 +59,7 @@ local yamllint = {
 
 local efmConfig = {
   cmd = {
-    "/home/linuxbrew/.linuxbrew/Cellar/efm-langserver/0.0.31/bin/efm-langserver"
+    "/home/linuxbrew/.linuxbrew/Cellar/efm-langserver/0.0.36/bin/efm-langserver"
   },
   root_dir = util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
   on_attach = function(client)
