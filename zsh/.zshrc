@@ -3,7 +3,16 @@
 # zmodload zsh/zprof
 
 # Check what modules have been 'installed'
-MODULES = $(cat $HOME/.dotFileModules)
+MODULES=$(cat $HOME/.dotFileModules)
+
+# +------------------+
+# | PACKAGE MANAGER  |
+# +------------------+
+source /home/linuxbrew/.linuxbrew/share/antigen/antigen.zsh
+
+antigen use oh-my-zsh
+antigen bundle git
+antigen bundle docker
 
 # +------------+
 # | FUNCTIONS  |
@@ -15,11 +24,10 @@ setopt LOCAL_OPTIONS
 setopt LOCAL_TRAPS
 
 # Set and autoload all custom module functions 
-for module in "${MODULES}"; do
-  source "$DOTFILES/$module/path.zsh"
-
-  fpath=("$DOTFILES/$module/functions" "${fpath[@]}")
-  autoload -Uz "${DOTFILES}"/"${module}"/functions/*(:t)
+for module in ${MODULES}; do
+  [ -d "$DOTFILES/$module/functions" ] \
+    && fpath=("$DOTFILES/$module/functions" "${fpath[@]}") \
+    && autoload -U "${DOTFILES}"/"${module}"/functions/*(.:t)
 done
 
 # +-------+
@@ -27,20 +35,23 @@ done
 # +-------+
 
 # Add paths for modules
-for module in "${MODULES}"; do
-  source "$DOTFILES/$module/path.zsh"
+for module in ${MODULES}; do
+  [ -f "$DOTFILES/$module/path.zsh" ] \
+    && source "$DOTFILES/$module/path.zsh"
 done
 
 # +---------+
 # | SCRIPTS |
 # +---------+
 
-for module in "${MODULES}"; do
+for module in ${MODULES}; do
   # Load the zsh script snippets first
-  source "$DOTFILES/$module/scripts.zsh"
+  [ -f "$DOTFILES/$module/scripts.zsh" ] \
+    && source "$DOTFILES/$module/scripts.zsh"
 
   # Then add the custom_scripts to the path
-  path+=("$DOTFILES"/$module/custom_scripts)
+  [ -d "$DOTFILES/$module/custom_scripts" ] \
+    && path+=("$DOTFILES"/$module/custom_scripts)
 done
 
 # +---------+
@@ -144,4 +155,5 @@ done
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-
+# Apply any pacakges we may have bundled
+antigen apply

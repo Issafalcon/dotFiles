@@ -12,22 +12,27 @@ eval set -- "$ARGS"
 set -e
 
 while true; do
-  case "$1" in
-    -m|--module)
- 			MODULE="${2}"
-      shift 2;;
-    -i|--install)
-      INSTALL=true
-      shift;;
-    -u|--uninstall)
-      UNINSTALL=true
-      shift;;
-    -r|--remove)
-      REMOVE=true
-      shift;;
-    --)
-      break;;
-  esac
+	case "$1" in
+		-m | --module)
+			MODULE="${2}"
+			shift 2
+			;;
+		-i | --install)
+			INSTALL=true
+			shift
+			;;
+		-u | --uninstall)
+			UNINSTALL=true
+			shift
+			;;
+		-r | --remove)
+			REMOVE=true
+			shift
+			;;
+		--)
+			break
+			;;
+	esac
 done
 
 echo ''
@@ -63,17 +68,25 @@ find_zsh() {
 }
 
 update_module_config() {
-	if [[ $REMOVE ]]; then
-		sed -i "/$MODULE/d" ~/.dotFileModules
+	if [[ $REMOVE == true ]]; then
+		sed -i "/$MODULE/d" ~/.dotFileModules \
+			&& stow -D "${MODULE}"
+		if [[ $? -eq 0 ]]; then
+			success "Successfully removed and unstowed $MODULE module"
+		else
+			fail "Failed to remove and unstow $MODULE module"
+		fi
 	else
 		if ! grep -q "${MODULE}" "$HOME"/.dotFileModules; then
-			echo "${MODULE}" >> "${HOME}"/.dotFileModules
+			echo "${MODULE}" >>"${HOME}"/.dotFileModules \
+				&& stow "${MODULE}"
+			if [[ $? -eq 0 ]]; then
+				success "Successfully stowed $MODULE module"
+			else
+				fail "Failed to stow $MODULE module"
+			fi
 		fi
 	fi
-}
-
-stow_module() {
-	stow "${MODULE}"
 }
 
 install_module_dependencies() {
@@ -83,20 +96,18 @@ install_module_dependencies() {
 	else
 		fail "Failed to install dependencies for $MODULE module"
 	fi
-	check last status code
 }
 
-if [[ "${MODULE}" -eq "zsh" ]]; then
+if [[ ${MODULE} == "zsh" ]]; then
 	ZSH="$(find_zsh)"
-	test "$(expr "$SHELL" : '.*/\(.*\)')" != "ZSH" &&
-	command -v chsh >/dev/null 2>&1 &&
-	chsh -s "$ZSH" &&
-	success "set $("$ZSH" --version) at $ZSH as default shell"
+	test "$(expr "$SHELL" : '.*/\(.*\)')" != "ZSH" \
+		&& command -v chsh >/dev/null 2>&1 \
+		&& chsh -s "$ZSH" \
+		&& success "set $("$ZSH" --version) at $ZSH as default shell"
 fi
 
-if [[ $INSTALL ]]; then
+if [[ $INSTALL == true ]]; then
 	install_module_dependencies
 fi
 
-add_module_config
-stow_module
+update_module_config

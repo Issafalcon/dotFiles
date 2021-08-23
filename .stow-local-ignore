@@ -1,4 +1,4 @@
- ~./dotfiles/.stow.local.ignore: Files to be ignored by gnu 'stow'
+# ~./dotfiles/.stow.local.ignore: Files to be ignored by gnu 'stow'
 #
 # Comments and blank lines are allowed.
 #
@@ -29,5 +29,5 @@ _darcs
 install.sh
 path.zsh
 completion.zsh
-custom_scripts
-functions
+^/.*/custom_scripts
+^/.*/functions

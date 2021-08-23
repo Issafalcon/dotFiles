@@ -14,3 +14,6 @@ sudo apt update \
 
 # homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+touch "${HOME}/.dotFileModules"
+chmod 777 "${HOME}/.dotFileModules"

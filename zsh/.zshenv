@@ -1,5 +1,5 @@
 # Dotfile reference
-export DOTFILES=$HOME/.dotfiles
+export DOTFILES=$HOME/dotFiles
 
 # your project folder that we can `c [tab]` to
 export PROJECTS="$HOME/repos"
