@@ -2,6 +2,9 @@
 # uncomment this and the last line for zprof info
 # zmodload zsh/zprof
 
+# Check what modules have been 'installed'
+MODULES = $(cat $HOME/.dotFileModules)
+
 # +------------+
 # | FUNCTIONS  |
 # +------------+
@@ -10,9 +13,35 @@
 setopt LOCAL_OPTIONS
 # allow functions to have local traps
 setopt LOCAL_TRAPS
-# Add custom functions
-fpath=($DOTFILES/zsh/functions "${fpath[@]}")
 
+# Set and autoload all custom module functions 
+for module in "${MODULES}"; do
+  source "$DOTFILES/$module/path.zsh"
+
+  fpath=("$DOTFILES/$module/functions" "${fpath[@]}")
+  autoload -Uz "${DOTFILES}"/"${module}"/functions/*(:t)
+done
+
+# +-------+
+# | PATHS |
+# +-------+
+
+# Add paths for modules
+for module in "${MODULES}"; do
+  source "$DOTFILES/$module/path.zsh"
+done
+
+# +---------+
+# | SCRIPTS |
+# +---------+
+
+for module in "${MODULES}"; do
+  # Load the zsh script snippets first
+  source "$DOTFILES/$module/scripts.zsh"
+
+  # Then add the custom_scripts to the path
+  path+=("$DOTFILES"/$module/custom_scripts)
+done
 
 # +---------+
 # | GENERAL |
@@ -37,7 +66,7 @@ setopt CORRECT              # Spelling correction
 setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
 
-autoload -Uz bd; bd
+bd # Custom function in zsh module
 
 # +---------+
 # | HISTORY |
@@ -57,8 +86,6 @@ autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 autoload -U edit-command-line
 
-# Check what modules have been 'installed'
-MODULES = $(cat $HOME/.dotFileModules)
 #Configurations options
 
  zle -N up-line-or-beginning-search
@@ -71,21 +98,29 @@ MODULES = $(cat $HOME/.dotFileModules)
  bindkey "$terminfo[cuu1]" up-line-or-beginning-search
  bindkey "$terminfo[cud1]" down-line-or-beginning-search
 
-# +-----+
-# | VIM |
-# +-----+
+# +----------+
+# | VIM MODE |
+# +----------+
 
 # Vi mode
 bindkey -v
 export KEYTIMEOUT=1
 
 # Change cursor
-autoload -Uz cursor_mode; cursor_mode
+cursor_mode # Custom function in zsh module
 
 # edit current command line with vim (vim-mode, then v)
 autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
+
+# +------------+
+# | COMPLETION |
+# +------------+
+
+for module in "${MODULES}"; do
+  source "$DOTFILES/$module/completion.zsh"
+done
 
 # +-----+
 # | FZF |
@@ -99,11 +134,6 @@ bindkey -M vicmd v edit-command-line
    bindkey '^R' history-incremental-search-backward
  fi
 
-# Load module path files
-for module in "${MODULES}"; do
-  source "$DOTFILES/$module/path.zsh"
-done
-
 # +-----+
 # | nvm |
 # +-----+
@@ -113,3 +143,5 @@ done
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+

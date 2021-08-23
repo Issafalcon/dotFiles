@@ -24,3 +24,10 @@ _darcs
 ^/README.*
 ^/LICENSE.*
 ^/COPYING
+
+# Files taht should remain local
+^/.*/install.sh
+^/.*/path.zsh
+^/.*/completion.zsh
+^/.*/custom_scripts
+^/.*/functions
