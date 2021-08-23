@@ -71,16 +71,33 @@ MODULES = $(cat $HOME/.dotFileModules)
  bindkey "$terminfo[cuu1]" up-line-or-beginning-search
  bindkey "$terminfo[cud1]" down-line-or-beginning-search
 
- # edit command line in $EDITOR
- bindkey '^e' edit-command-line
+# +-----+
+# | VIM |
+# +-----+
+
+# Vi mode
+bindkey -v
+export KEYTIMEOUT=1
+
+# Change cursor
+autoload -Uz cursor_mode; cursor_mode
+
+# edit current command line with vim (vim-mode, then v)
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
+# +-----+
+# | FZF |
+# +-----+
 
  # search history with fzf if installed, default otherwise
  if test -d /usr/local/opt/fzf/shell; then
    # shellcheck disable=SC1091
-     . /usr/local/opt/fzf/shell/key-bindings.zsh
-     else
-       bindkey '^R' history-incremental-search-backward
-       fi
+   . /usr/local/opt/fzf/shell/key-bindings.zsh
+ else
+   bindkey '^R' history-incremental-search-backward
+ fi
 
 # Load module path files
 for module in "${MODULES}"; do
@@ -91,7 +108,6 @@ done
 # | nvm |
 # +-----+
 
-export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 

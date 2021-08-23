@@ -70,6 +70,10 @@ for _, server in pairs(installed_servers) do
     opts.settings = {Lua = {diagnostics = {globals = {"vim", "vimp", "nvim"}}}}
   end
 
+  if server.name == "bashls" then
+   opts.filetypes = {"sh", "zsh"}
+  end
+
   if server.name == "tsserver" then
     opts.on_attach = function(client)
       custom_attach(client)
