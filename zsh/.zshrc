@@ -2,61 +2,64 @@
 # uncomment this and the last line for zprof info
 # zmodload zsh/zprof
 
-export DOTFILES=$HOME/.dotfiles
+# +------------+
+# | FUNCTIONS  |
+# +------------+
 
-# your project folder that we can `c [tab]` to
-export PROJECTS="$HOME/repos"
+# allow functions to have local options
+setopt LOCAL_OPTIONS
+# allow functions to have local traps
+setopt LOCAL_TRAPS
+# Add custom functions
+fpath=($DOTFILES/zsh/functions "${fpath[@]}")
 
-export EDITOR="nvim"
-export VISUAL="nvim"
 
-# Check what modules have been 'installed'
-MODULES = $(cat $HOME/.dotFileModules)
+# +---------+
+# | GENERAL |
+# +---------+
 
-export LSCOLORS='exfxcxdxbxegedabagacad'
-export CLICOLOR=true
+# don't nice background tasks
+setopt NO_BG_NICE
+setopt NO_HUP
+setopt NO_BEEP
 
-fpath=($DOTFILES/functions $fpath)
+# +------------+
+# | NAVIGATION |
+# +------------+
 
-autoload -U "$DOTFILES"/functions/*(:t)
+setopt AUTO_CD              # Go to folder path without using cd.
+
+setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
+setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
+setopt PUSHD_SILENT         # Do not print the directory stack after pushd or popd.
+
+setopt CORRECT              # Spelling correction
+setopt CDABLE_VARS          # Change directory to a path stored in a variable.
+setopt EXTENDED_GLOB        # Use extended globbing syntax.
+
+autoload -Uz bd; bd
+
+# +---------+
+# | HISTORY |
+# +---------+
+
+setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
+setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_EXPIRE_DUPS_FIRST    # Expire a duplicate event first when trimming history.
+setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
+setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
+setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
+setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
+
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 autoload -U edit-command-line
 
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
-
+# Check what modules have been 'installed'
+MODULES = $(cat $HOME/.dotFileModules)
 #Configurations options
-  # don't nice background tasks
- setopt NO_BG_NICE
- setopt NO_HUP
- setopt NO_BEEP
- # allow functions to have local options
- setopt LOCAL_OPTIONS
- # allow functions to have local traps
- setopt LOCAL_TRAPS
- # share history between sessions ???
- setopt SHARE_HISTORY
- # add timestamps to history
- setopt EXTENDED_HISTORY
- setopt PROMPT_SUBST
- setopt CORRECT
- setopt COMPLETE_IN_WORD
- # adds history
- setopt APPEND_HISTORY
- # adds history incrementally and share it across sessions
- setopt INC_APPEND_HISTORY
- setopt SHARE_HISTORY
- # don't record dupes in history
- setopt HIST_IGNORE_ALL_DUPS
- setopt HIST_REDUCE_BLANKS
- setopt HIST_IGNORE_DUPS
- setopt HIST_IGNORE_SPACE
- setopt HIST_VERIFY
- setopt HIST_EXPIRE_DUPS_FIRST
- # dont ask for confirmation in rm globs*
- setopt RM_STAR_SILENT
 
  zle -N up-line-or-beginning-search
  zle -N down-line-or-beginning-search
@@ -67,26 +70,6 @@ SAVEHIST=10000
  bindkey "$terminfo[kcud1]" down-line-or-beginning-search
  bindkey "$terminfo[cuu1]" up-line-or-beginning-search
  bindkey "$terminfo[cud1]" down-line-or-beginning-search
-
- # backward and forward word with option+left/right
- bindkey '^[^[[D' backward-word
- bindkey '^[b' backward-word
- bindkey '^[^[[C' forward-word
- bindkey '^[f' forward-word
-
- # to to the beggining/end of line with fn+left/right or home/end
- bindkey "${terminfo[khome]}" beginning-of-line
- bindkey '^[[H' beginning-of-line
- bindkey "${terminfo[kend]}" end-of-line
- bindkey '^[[F' end-of-line
-
- # delete char with backspaces and delete
- bindkey '^[[3~' delete-char
- bindkey '^?' backward-delete-char
-
- # delete word with ctrl+backspace
- bindkey '^[[3;5~' backward-delete-word
- # bindkey '^[[3~' backward-delete-word
 
  # edit command line in $EDITOR
  bindkey '^e' edit-command-line
@@ -104,59 +87,9 @@ for module in "${MODULES}"; do
   source "$DOTFILES/$module/path.zsh"
 done
 
-
-autoload -Uz promptinit
-promptinit
-prompt adam1
-
-setopt histignorealldups sharehistory
-
-# Use emacs keybindings even if our EDITOR is set to vi
-bindkey -e
-
-# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE=~/.zsh_history
-
-# Use modern completion system
-autoload -Uz compinit
-compinit
-
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' format 'Completing %d'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-# User configuration
-
-export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-export EDITOR='nvim'
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
+# +-----+
+# | nvm |
+# +-----+
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
@@ -164,28 +97,3 @@ export NVM_DIR="$HOME/.nvm"
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Autocomplete sources
-complete -C /home/linuxbrew/.linuxbrew/Cellar/terraform/0.13.4/bin/terraform terraform
-complete -o nospace -C /usr/bin/terraform terraform
-autoload -U +X bashcompinit && bashcompinit
-source <(kubectl completion zsh)
-source /usr/share/doc/fzf/examples/completion.zsh
-
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
-  # set DISPLAY variable to the IP automatically assigned to WSL2
-  export DISPLAY=$(route.exe print | grep 0.0.0.0 | head -1 | awk '{print $4}'):0.0
-
-  # Used for vagrant - Enables vagrant use from within WSL2
-  export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
-  export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"
-fi
