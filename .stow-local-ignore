@@ -26,8 +26,8 @@ _darcs
 ^/COPYING
 
 # Files taht should remain local
-^/.*/install.sh
-^/.*/path.zsh
-^/.*/completion.zsh
-^/.*/custom_scripts
-^/.*/functions
+install.sh
+path.zsh
+completion.zsh
+custom_scripts
+functions
