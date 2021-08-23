@@ -1,101 +1,145 @@
-## If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+#!/bin/zsh
+# uncomment this and the last line for zprof info
+# zmodload zsh/zprof
 
-# Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+export DOTFILES=$HOME/.dotfiles
+
+# your project folder that we can `c [tab]` to
+export PROJECTS="$HOME/repos"
+
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# Check what modules have been 'installed'
+MODULES = $(cat $HOME/.dotFileModules)
+
+export LSCOLORS='exfxcxdxbxegedabagacad'
+export CLICOLOR=true
+
+fpath=($DOTFILES/functions $fpath)
+
+autoload -U "$DOTFILES"/functions/*(:t)
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+autoload -U edit-command-line
+
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+#Configurations options
+  # don't nice background tasks
+ setopt NO_BG_NICE
+ setopt NO_HUP
+ setopt NO_BEEP
+ # allow functions to have local options
+ setopt LOCAL_OPTIONS
+ # allow functions to have local traps
+ setopt LOCAL_TRAPS
+ # share history between sessions ???
+ setopt SHARE_HISTORY
+ # add timestamps to history
+ setopt EXTENDED_HISTORY
+ setopt PROMPT_SUBST
+ setopt CORRECT
+ setopt COMPLETE_IN_WORD
+ # adds history
+ setopt APPEND_HISTORY
+ # adds history incrementally and share it across sessions
+ setopt INC_APPEND_HISTORY
+ setopt SHARE_HISTORY
+ # don't record dupes in history
+ setopt HIST_IGNORE_ALL_DUPS
+ setopt HIST_REDUCE_BLANKS
+ setopt HIST_IGNORE_DUPS
+ setopt HIST_IGNORE_SPACE
+ setopt HIST_VERIFY
+ setopt HIST_EXPIRE_DUPS_FIRST
+ # dont ask for confirmation in rm globs*
+ setopt RM_STAR_SILENT
+
+ zle -N up-line-or-beginning-search
+ zle -N down-line-or-beginning-search
+ zle -N edit-command-line
+
+ # fuzzy find: start to type
+ bindkey "$terminfo[kcuu1]" up-line-or-beginning-search
+ bindkey "$terminfo[kcud1]" down-line-or-beginning-search
+ bindkey "$terminfo[cuu1]" up-line-or-beginning-search
+ bindkey "$terminfo[cud1]" down-line-or-beginning-search
+
+ # backward and forward word with option+left/right
+ bindkey '^[^[[D' backward-word
+ bindkey '^[b' backward-word
+ bindkey '^[^[[C' forward-word
+ bindkey '^[f' forward-word
+
+ # to to the beggining/end of line with fn+left/right or home/end
+ bindkey "${terminfo[khome]}" beginning-of-line
+ bindkey '^[[H' beginning-of-line
+ bindkey "${terminfo[kend]}" end-of-line
+ bindkey '^[[F' end-of-line
+
+ # delete char with backspaces and delete
+ bindkey '^[[3~' delete-char
+ bindkey '^?' backward-delete-char
+
+ # delete word with ctrl+backspace
+ bindkey '^[[3;5~' backward-delete-word
+ # bindkey '^[[3~' backward-delete-word
+
+ # edit command line in $EDITOR
+ bindkey '^e' edit-command-line
+
+ # search history with fzf if installed, default otherwise
+ if test -d /usr/local/opt/fzf/shell; then
+   # shellcheck disable=SC1091
+     . /usr/local/opt/fzf/shell/key-bindings.zsh
+     else
+       bindkey '^R' history-incremental-search-backward
+       fi
+
+# Load module path files
+for module in "${MODULES}"; do
+  source "$DOTFILES/$module/path.zsh"
+done
 
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME=powerlevel10k/powerlevel10k
+autoload -Uz promptinit
+promptinit
+prompt adam1
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+setopt histignorealldups sharehistory
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# Use emacs keybindings even if our EDITOR is set to vi
+bindkey -e
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+# Use modern completion system
+autoload -Uz compinit
+compinit
 
-# Uncomment the following line to automatically update without prompting.
-# DISABLE_UPDATE_PROMPT="true"
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
-# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  git 
-  aws 
-  zsh-autosuggestions
-  web-search
-  dirhistory
-  history
-  jsontools
-  docker
-)
-
-if ! grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
-  plugins+=(zsh-syntax-highlighting)
-fi
-
-# Sourcing oh-my-zsh needs to go after the plugins array
-source $ZSH/oh-my-zsh.sh
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # User configuration
 
 export MANPATH="/usr/local/man:$MANPATH"
