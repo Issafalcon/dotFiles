@@ -26,8 +26,6 @@ tmux select-layout -t AuditLog:3 tiled
 tmux select-layout -t AuditLog:3 tiled
 tmux select-pane -t AuditLog:3.0
 
-sleep 3
-
 tmux send-keys -t AuditLog:1 cd\ ~/repos/wcc-auditlog C-m
 tmux send-keys -t AuditLog:1.0 cd\ AuditLog/ClientApp C-m
 tmux send-keys -t AuditLog:1.0 nvim C-m

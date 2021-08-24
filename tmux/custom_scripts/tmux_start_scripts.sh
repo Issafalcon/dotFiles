@@ -4,8 +4,6 @@
 # directory if required to support tmux < 1.9
 TMUX=$(tmux new-session -c ~/repos/scripts -d -s scripts -n editor)
 
-sleep 4
-
 tmux send-keys -t scripts:1.0 nvim C-m
 
 # Create other windows.

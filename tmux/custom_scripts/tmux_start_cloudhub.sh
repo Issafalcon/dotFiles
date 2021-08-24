@@ -22,8 +22,6 @@ tmux splitw -c ~/repos/wcc-cloudhub -t CloudHub:3
 tmux select-layout -t CloudHub:3 tiled
 tmux select-pane -t CloudHub:3.0
 
-sleep 4
-
 tmux send-keys -t CloudHub:1.0 nvim C-m
 tmux send-keys -t CloudHub:2.0 nvim C-m
 tmux send-keys -t CloudHub:3.0 cd\ Waters.Cloud.Hub C-m
@@ -34,8 +32,6 @@ while true; do
     -d|--dev-proxy)
       tmux new-window -c ~/repos/wcc-cloudhub -t CloudHub:4 -n Dev-Proxy
       
-      sleep 3
-
       tmux send-keys -t CloudHub:4 dev-proxy\ -l\ "${2}" C-m
       shift 2;;
     -r|--run)

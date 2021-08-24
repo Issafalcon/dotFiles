@@ -25,16 +25,10 @@ tmux splitw -h -c ~/repos/wcc-mfe-notifications -t Notifications-MFE:3.1
 tmux select-layout -t Notifications-MFE:3 tiled
 tmux select-pane -t Notifications-MFE:3.0
 
-sleep 3
-
 tmux send-keys -t Notifications-MFE:1 cd\ ~/repos/wcc-mfe-notifications/notifications-center C-m
 tmux send-keys -t Notifications-MFE:1.0 nvim C-m
 
-sleep 1
-
 tmux send-keys -t Notifications-MFE:2.0 nvim C-m
-
-sleep 1
 
 tmux send-keys -t Notifications-MFE:3.0 cd\ notifications-center/Waters.Cloud.NotificationsCenter C-m
 tmux send-keys -t Notifications-MFE:3.1 cd\ notifications-center/Waters.Cloud.NotificationsCenter/ClientApp C-m

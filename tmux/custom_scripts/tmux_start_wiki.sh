@@ -4,8 +4,6 @@
 # directory if required to support tmux < 1.9
 TMUX=$(tmux new-session -c ~/repos/wiki -d -s wiki -n editor)
 
-sleep 4
-
 tmux send-keys -t wiki:1.0 nvim C-m
 
 # Create other windows.

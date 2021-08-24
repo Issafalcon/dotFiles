@@ -162,8 +162,7 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # +---------+
 
 # Check what modules have been 'installed'
-MODULES=$(cat $HOME/.dotFileModules)
-
+MODULES=($(cat $HOME/.dotFileModules))
 # Set and autoload all custom module files
 for module in ${MODULES}; do
   [ -d "$DOTFILES/$module/functions" ] \
@@ -179,7 +178,7 @@ for module in ${MODULES}; do
 
   # Then add the custom_scripts to the path
   [ -d "$DOTFILES/$module/custom_scripts" ] \
-    && path+=("$DOTFILES"/$module/custom_scripts)
+    && path+=("${DOTFILES}"/"${module}"/custom_scripts)
 
   # Add specific zsh configuration
   [ -f "$DOTFILES/$module/config.zsh" ] \
@@ -188,8 +187,3 @@ done
 
 # Adds homebrew path
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-# Source nvm and completion files if present
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

@@ -4,13 +4,9 @@
 # directory if required to support tmux < 1.9
 TMUX=$(tmux new-session -c ~/repos/wcc-deployment -d -s SRE -n Deployments)
 
-sleep 4
-
 tmux send-keys -t SRE:1.0 nvim C-m
 
 tmux new-window -c ~/repos/wcc-env-config -t SRE:2 -n Env-Config
-
-sleep 3
 
 tmux send-keys -t SRE:2.0 nvim C-m
 

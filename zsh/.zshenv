@@ -17,12 +17,3 @@ export MANPATH="/usr/local/man:$MANPATH"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
-
-
-# TODO: Move the scripts into a custom scripts folder inside dotFiles
-if [ -d "$HOME/repos/scripts" ]; then
-  export PATH=$HOME/repos/scripts/bash/utilities:$PATH
-  export PATH=$HOME/repos/scripts/bash/terminal:$PATH
-fi
-
-
