@@ -164,7 +164,7 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # Check what modules have been 'installed'
 MODULES=$(cat $HOME/.dotFileModules)
 
-# Set and autoload all custom module functions 
+# Set and autoload all custom module files
 for module in ${MODULES}; do
   [ -d "$DOTFILES/$module/functions" ] \
     && fpath=("$DOTFILES/$module/functions" "${fpath[@]}") \
@@ -172,14 +172,16 @@ for module in ${MODULES}; do
 
   [ -f "$DOTFILES/$module/path.zsh" ] \
     && source "$DOTFILES/$module/path.zsh"
-      # Load the zsh script snippets first
-      [ -f "$DOTFILES/$module/scripts.zsh" ] \
-        && source "$DOTFILES/$module/scripts.zsh"
+
+  # Load the zsh script snippets first
+  [ -f "$DOTFILES/$module/scripts.zsh" ] \
+    && source "$DOTFILES/$module/scripts.zsh"
 
   # Then add the custom_scripts to the path
   [ -d "$DOTFILES/$module/custom_scripts" ] \
     && path+=("$DOTFILES"/$module/custom_scripts)
 
+  # Add specific zsh configuration
   [ -f "$DOTFILES/$module/config.zsh" ] \
     && source "$DOTFILES/$module/config.zsh"
 done
