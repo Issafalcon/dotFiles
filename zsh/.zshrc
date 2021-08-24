@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 #!/bin/zsh
 # uncomment this and the last line for zprof info
 # zmodload zsh/zprof
@@ -10,10 +17,6 @@ MODULES=$(cat $HOME/.dotFileModules)
 # +------------------+
 source /home/linuxbrew/.linuxbrew/share/antigen/antigen.zsh
 
-antigen use oh-my-zsh
-antigen bundle git
-antigen bundle docker
-
 # +------------+
 # | FUNCTIONS  |
 # +------------+
@@ -23,36 +26,8 @@ setopt LOCAL_OPTIONS
 # allow functions to have local traps
 setopt LOCAL_TRAPS
 
-# Set and autoload all custom module functions 
-for module in ${MODULES}; do
-  [ -d "$DOTFILES/$module/functions" ] \
-    && fpath=("$DOTFILES/$module/functions" "${fpath[@]}") \
-    && autoload -U "${DOTFILES}"/"${module}"/functions/*(.:t)
-done
-
-# +-------+
-# | PATHS |
-# +-------+
-
-# Add paths for modules
-for module in ${MODULES}; do
-  [ -f "$DOTFILES/$module/path.zsh" ] \
-    && source "$DOTFILES/$module/path.zsh"
-done
-
-# +---------+
-# | SCRIPTS |
-# +---------+
-
-for module in ${MODULES}; do
-  # Load the zsh script snippets first
-  [ -f "$DOTFILES/$module/scripts.zsh" ] \
-    && source "$DOTFILES/$module/scripts.zsh"
-
-  # Then add the custom_scripts to the path
-  [ -d "$DOTFILES/$module/custom_scripts" ] \
-    && path+=("$DOTFILES"/$module/custom_scripts)
-done
+fpath=("$DOTFILES/zsh/functions" "${fpath[@]}")
+autoload -U "${DOTFILES}"/zsh/functions/*(.:t)
 
 # +---------+
 # | GENERAL |
@@ -97,18 +72,6 @@ autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 autoload -U edit-command-line
 
-#Configurations options
-
- zle -N up-line-or-beginning-search
- zle -N down-line-or-beginning-search
- zle -N edit-command-line
-
- # fuzzy find: start to type
- bindkey "$terminfo[kcuu1]" up-line-or-beginning-search
- bindkey "$terminfo[kcud1]" down-line-or-beginning-search
- bindkey "$terminfo[cuu1]" up-line-or-beginning-search
- bindkey "$terminfo[cud1]" down-line-or-beginning-search
-
 # +----------+
 # | VIM MODE |
 # +----------+
@@ -129,21 +92,65 @@ bindkey -M vicmd v edit-command-line
 # | COMPLETION |
 # +------------+
 
-for module in "${MODULES}"; do
-  source "$DOTFILES/$module/completion.zsh"
+# zstyle pattern for the completion
+# :completion:<function>:<completer>:<command>:<argument>:<tag>
+
+# Load more completions
+antigen bundle zsh-users/zsh-completions
+
+# Should be called before compinit
+zmodload zsh/complist
+
+# Use hjlk in menu selection (during completion)
+# Doesn't work well with interactive mode
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'j' vi-down-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+
+bindkey -M menuselect '^xg' clear-screen
+bindkey -M menuselect '^xi' vi-insert                      # Insert
+bindkey -M menuselect '^xh' accept-and-hold                # Hold
+bindkey -M menuselect '^xn' accept-and-infer-next-history  # Next
+bindkey -M menuselect '^xu' undo                           # Undo
+
+autoload -U compinit; compinit
+_comp_options+=(globdots) # With hidden files
+
+# Only work with the Zsh function vman
+# See $DOTFILES/zsh/scripts.zsh
+# compdef vman="man"
+
+# +------------------+
+# | PLUGINS AND THEME|
+# +------------------+
+
+antigen theme romkatv/powerlevel10k
+antigen apply
+
+# +---------+
+# | MODULES |
+# +---------+
+
+# Set and autoload all custom module functions 
+for module in ${MODULES}; do
+  [ -d "$DOTFILES/$module/functions" ] \
+    && fpath=("$DOTFILES/$module/functions" "${fpath[@]}") \
+    && autoload -U "${DOTFILES}"/"${module}"/functions/*(.:t)
+
+  [ -f "$DOTFILES/$module/path.zsh" ] \
+    && source "$DOTFILES/$module/path.zsh"
+      # Load the zsh script snippets first
+      [ -f "$DOTFILES/$module/scripts.zsh" ] \
+        && source "$DOTFILES/$module/scripts.zsh"
+
+  # Then add the custom_scripts to the path
+  [ -d "$DOTFILES/$module/custom_scripts" ] \
+    && path+=("$DOTFILES"/$module/custom_scripts)
+
+  [ -f "$DOTFILES/$module/completion.zsh" ] \
+    && source "$DOTFILES/$module/completion.zsh"
 done
-
-# +-----+
-# | FZF |
-# +-----+
-
- # search history with fzf if installed, default otherwise
- if test -d /usr/local/opt/fzf/shell; then
-   # shellcheck disable=SC1091
-   . /usr/local/opt/fzf/shell/key-bindings.zsh
- else
-   bindkey '^R' history-incremental-search-backward
- fi
 
 # +-----+
 # | nvm |
@@ -152,8 +159,19 @@ done
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Generated for envman. Do not edit.
+# # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-# Apply any pacakges we may have bundled
-antigen apply
+# Apply any packages we may have bundled
+
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# +-----+
+# | FZF |
+# +-----+
+
+# Needs to come after applying plugins
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
