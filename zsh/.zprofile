@@ -8,3 +8,8 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
   # Used for vagrant - Enables vagrant use from within WSL2
   export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
 fi
+
+# Source nvm and completion files if present
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
