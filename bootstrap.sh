@@ -69,8 +69,10 @@ find_zsh() {
 
 update_module_config() {
 	if [[ $REMOVE == true ]]; then
+
 		sed -i "/$MODULE/d" ~/.dotFileModules \
 			&& stow -D "${MODULE}"
+
 		if [[ $? -eq 0 ]]; then
 			success "Successfully removed and unstowed $MODULE module"
 		else
@@ -78,13 +80,15 @@ update_module_config() {
 		fi
 	else
 		if ! grep -q "${MODULE}" "$HOME"/.dotFileModules; then
-			echo "${MODULE}" >>"${HOME}"/.dotFileModules \
-				&& stow "${MODULE}"
-			if [[ $? -eq 0 ]]; then
-				success "Successfully stowed $MODULE module"
-			else
-				fail "Failed to stow $MODULE module"
-			fi
+			echo "${MODULE}" >>"${HOME}"/.dotFileModules
+		fi
+
+		stow "${MODULE}"
+
+		if [[ $? -eq 0 ]]; then
+			success "Successfully stowed $MODULE module"
+		else
+			fail "Failed to stow $MODULE module"
 		fi
 	fi
 }

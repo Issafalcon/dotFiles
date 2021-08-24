@@ -1,3 +1,3 @@
 #!/bin/sh
-brew tap | grep -q 'antigen' || brew tap antigen
-brew install antigen
+mkdir ~/.zinit
+git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
