@@ -36,9 +36,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Check what modules have been 'installed'
-MODULES=$(cat $HOME/.dotFileModules)
-
 
 # +------------+
 # | FUNCTIONS  |
@@ -163,6 +160,9 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # +---------+
 # | MODULES |
 # +---------+
+
+# Check what modules have been 'installed'
+MODULES=$(cat $HOME/.dotFileModules)
 
 # Set and autoload all custom module functions 
 for module in ${MODULES}; do
