@@ -185,3 +185,11 @@ for module in ${MODULES}; do
   [ -f "$DOTFILES/$module/config.zsh" ] \
     && source "$DOTFILES/$module/config.zsh"
 done
+
+# Adds homebrew path
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Source nvm and completion files if present
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
