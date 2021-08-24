@@ -59,11 +59,11 @@ fail() {
 	exit
 }
 
-find_zsh() {
-	if command -v zsh >/dev/null 2>&1 && grep "$(command -v zsh)" /etc/shells >/dev/null; then
-		command -v zsh
+find_shell() {
+	if command -v "${1}" >/dev/null 2>&1 && grep "$(command -v "${1}")" /etc/shells >/dev/null; then
+		command -v "$1"
 	else
-		echo "/bin/zsh"
+		echo "/bin/$1"
 	fi
 }
 
@@ -78,8 +78,16 @@ update_module_config() {
 		else
 			fail "Failed to remove and unstow $MODULE module"
 		fi
+		
+		# Swap shell back to bash if we are removing zsh module
+		if [[ ${MODULE} == "zsh" ]]; then
+			BASH="$(find_shell bash)"
+			command -v chsh >/dev/null 2>&1 \
+				&& chsh -s "$BASH" \
+				&& success "set $("$BASH" --version) at $BASH as default shell"
+		fi
 	else
-		if ! grep -q "${MODULE}" "$HOME"/.dotFileModules; then
+		if (! grep -q "${MODULE}" "$HOME"/.dotFileModules) && [[ "${MODULE}" != "zsh" ]]; then
 			echo "${MODULE}" >>"${HOME}"/.dotFileModules
 		fi
 
@@ -94,16 +102,19 @@ update_module_config() {
 }
 
 install_module_dependencies() {
-	./"${MODULE}"/install.sh
-	if [[ $? -eq 0 ]]; then
-		success "Successfully installed dependencies for $MODULE module"
-	else
-		fail "Failed to install dependencies for $MODULE module"
+	if [[ -f ./"${MODULE}"/install.sh ]]; then
+		./"${MODULE}"/install.sh
+		if [[ $? -eq 0 ]]; then
+
+			success "Successfully installed dependencies for $MODULE module"
+		else
+			fail "Failed to install dependencies for $MODULE module"
+		fi
 	fi
 }
 
 if [[ ${MODULE} == "zsh" ]]; then
-	ZSH="$(find_zsh)"
+	ZSH="$(find_shell zsh)"
 	test "$(expr "$SHELL" : '.*/\(.*\)')" != "ZSH" \
 		&& command -v chsh >/dev/null 2>&1 \
 		&& chsh -s "$ZSH" \
