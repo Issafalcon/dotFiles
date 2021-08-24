@@ -60,6 +60,7 @@ autoload -U "${DOTFILES}"/zsh/functions/*(.:t)
 setopt NO_BG_NICE
 setopt NO_HUP
 setopt NO_BEEP
+setopt promptsubst
 
 # +------------+
 # | NAVIGATION |
@@ -111,9 +112,9 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
-# +------------+
-# | COMPLETION |
-# +------------+
+# +-----------------------------+
+# | COMPLETION AND HIGHLIGHTING |
+# +-----------------------------+
 
 # zstyle pattern for the completion
 # :completion:<function>:<completer>:<command>:<argument>:<tag>
@@ -121,7 +122,7 @@ bindkey -M vicmd v edit-command-line
 # Should be called before compinit
 zmodload zsh/complist
 
-zinit wait lucid light-mode for \
+zinit wait lucid for \
   atinit"zicompinit; zicdreplay" \
       zdharma/fast-syntax-highlighting \
   atload"_zsh_autosuggest_start" \
@@ -179,8 +180,8 @@ for module in ${MODULES}; do
   [ -d "$DOTFILES/$module/custom_scripts" ] \
     && path+=("$DOTFILES"/$module/custom_scripts)
 
-  [ -f "$DOTFILES/$module/completion.zsh" ] \
-    && source "$DOTFILES/$module/completion.zsh"
+  [ -f "$DOTFILES/$module/config.zsh" ] \
+    && source "$DOTFILES/$module/config.zsh"
 done
 
 # +-----+
@@ -189,17 +190,3 @@ done
 
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# # Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-
-# +-----+
-# | FZF |
-# +-----+
-
-# Needs to come after applying plugins
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-
-
