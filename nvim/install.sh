@@ -13,11 +13,13 @@ sudo apt-get install clang
 # Ranger plugins for dev-icons
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
 
+SCRIPT_DIR=$( cd ${0%/*} && pwd -P )
+
 # Need python and pip to install below
-../python/install.sh
+"${SCRIPT_DIR}"/../python/install.sh
 
 # Also need to use node for npm
-../node/install.sh
+"${SCRIPT_DIR}"/../node/install.sh
 
 pip3 install ueberzug
 pip3 install neovim-remote
