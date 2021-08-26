@@ -145,9 +145,30 @@ source "$DOTFILES"/zsh/completion.zsh
 # +-------+
 
 zinit ice depth=1; zinit light romkatv/powerlevel10k
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# +---------+
+# | PLUGINS |
+# +---------+
+
+# Load some essential plugins as a minimal
+if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
+    zinit wait lucid for \
+        atload"_zsh_autosuggest_start" \
+            zsh-users/zsh-autosuggestions \
+        atload"zicompinit; zicdreplay" \
+        blockf atpull'zinit creinstall -q .' \
+            zsh-users/zsh-completions
+else
+    zinit wait lucid for \
+        atinit"zicompinit; zicdreplay" \
+            zdharma/fast-syntax-highlighting \
+        atload"_zsh_autosuggest_start" \
+            zsh-users/zsh-autosuggestions \
+        blockf atpull'zinit creinstall -q .' \
+            zsh-users/zsh-completions
+fi
 
 # +---------+
 # | MODULES |
@@ -177,23 +198,7 @@ for module in ${MODULES}; do
     && source "$DOTFILES/$module/config.zsh"
 done
 
-# Load some essential plugins as a minimal
-if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
-    zinit wait lucid for \
-        atload"_zsh_autosuggest_start" \
-            zsh-users/zsh-autosuggestions \
-        atload"zicompinit; zicdreplay" \
-        blockf atpull'zinit creinstall -q .' \
-            zsh-users/zsh-completions
-else
-    zinit wait lucid for \
-        atinit"zicompinit; zicdreplay" \
-            zdharma/fast-syntax-highlighting \
-        atload"_zsh_autosuggest_start" \
-            zsh-users/zsh-autosuggestions \
-        blockf atpull'zinit creinstall -q .' \
-            zsh-users/zsh-completions
-fi
+
 
 # Adds homebrew path
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
