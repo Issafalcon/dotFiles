@@ -10,7 +10,13 @@ sudo apt-get install silversearcher-ag # Install silversearcher to perform fzf s
 sudo apt-get install -y exuberant-ctags
 sudo apt-get install clang
 
-sudo apt-get install libx11 # Needed for ueberzug
+# Needed for ueberzug
+sudo apt-get install libx11 
+sudo apt-get install libxtst-dev 
+sudo apt-get install libx11 
+sudo apt-get install libxext-dev 
+sudo apt-get install xllproto-xext-dev
+sudo apt-get install libtool-bin
 
 # Ranger plugins for dev-icons
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
