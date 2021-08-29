@@ -37,9 +37,10 @@ run_module_bootstrap() {
 		./bootstrap.sh -r -m "$1"
 	fi
 }
+
 if [[ $ALL == true ]]; then
 	for dir in ./*; do
-		if [[ $dir != ".git" ]]; then
+		if [[ $dir != ".git" && $dir != "docs" ]]; then
 			run_module_bootstrap "$dir"
 		fi
 	done
