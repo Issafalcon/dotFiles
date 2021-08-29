@@ -12,8 +12,9 @@ e.g. Homebrew, git, curl, wget etc.
 
 These prerequisites may change as I evolve this repo.
 
+> IMPORTANT: Clone to the ~/dotFiles directory as this will become the default stow directory (this can of course be modified)
+
 ```console
-# IMPORTANT: Clone to the ~/dotFiles directory as this will become the default stow directory (this can of course be modified)
 $ git clone https://github.com/Issafalcon/dotFiles.git ~/.dotFiles
 $ cd ~/dotFiles
 $ ./prerequisites.sh 
@@ -33,19 +34,22 @@ To "install" a module run the following:
 
 ```console
 $ ./bootstrap.sh -m <MODULE_NAME> -i
+```
+> Or, if you don't want to install the actual dependencies for the module (you may have them installed already)
 
-# Or, if you don't want to install the actual dependencies for the module (you may have them installed already)
+```console
 $ ./bootstrap.sh -m <MODULE_NAME>
 ```
-
 #### Bulk Install Modules
 
 To install multiple modules at once (or all of them), run the following:
 
 ```console
 $ ./bootstrap_bulk.sh.sh -i [...MODULE_NAMES] # Where <MODULE_NAMES> is a space separated list of modules
+```
+> Or, if you don't want to install the actual dependencies for the module (you may have them installed already)
 
-# Or, if you don't want to install the actual dependencies for the module (you may have them installed already)
+```console
 $ ./bootstrap.sh -m [...MODULE_NAMES]
 ```
 ## Further help:
@@ -60,16 +64,16 @@ so that setup can be made more accessible.
 
 ## Feature Roadmap 🌌:
 - [ ] Add uninstall scripts for modules
-** [ ] zsh
-** [ ] node
-** [ ] python
-** [ ] etc...
+  - [ ] zsh
+  - [ ] node
+  - [ ] python
+  - [ ] etc...
 - [ ] Add ability to load custom .zsh settings
 - [ ] Add detailed design guide to how it works
 - [ ] Tidy up prerequisites to make as minimal as possible
 - [ ] Add silent install for modules
-** [ ] zsh
-** [ ] node
-** [ ] python
-** [ ] etc...
+  - [ ] zsh
+  - [ ] node
+  - [ ] python
+  - [ ] etc...
 
