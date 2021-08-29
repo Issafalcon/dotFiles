@@ -63,6 +63,7 @@ At the moment, I am not accepting PRs, but please feel free to open issues or ad
 so that setup can be made more accessible.
 
 ## Feature Roadmap 🌌:
+- [ ] Replace all occurences of ~/repos with $PROJECTS variable
 - [ ] Add uninstall scripts for modules
   - [ ] zsh
   - [ ] node

@@ -73,8 +73,6 @@ setopt CORRECT              # Spelling correction
 setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
 
-bd # Custom function in zsh module
-
 # +---------+
 # | HISTORY |
 # +---------+

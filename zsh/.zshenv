@@ -1,10 +1,11 @@
 # Dotfile reference
 export DOTFILES=$HOME/dotFiles
 
-export TERM=xterm-256color-italic
-
 # your project folder that we can `c [tab]` to
-export PROJECTS="$HOME/repos"
+export PROJECTS="$HOME"/repos
+
+# Custom terminfo allowing for italic display
+export TERM=xterm-256color-italic
 
 export EDITOR="nvim"
 
