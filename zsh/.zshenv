@@ -1,7 +1,7 @@
 # Dotfile reference
 export DOTFILES=$HOME/dotFiles
 
-export TERM=xterm-256color
+export TERM=xterm-256color-italic
 
 # your project folder that we can `c [tab]` to
 export PROJECTS="$HOME/repos"
