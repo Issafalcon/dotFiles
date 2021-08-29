@@ -35,6 +35,8 @@ run_module_bootstrap() {
 		./bootstrap.sh -u -m "$1"
 	elif [[ $REMOVE == true ]]; then
 		./bootstrap.sh -r -m "$1"
+	else
+		./bootstrap.sh -m "$1"
 	fi
 }
 

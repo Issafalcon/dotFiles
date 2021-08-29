@@ -196,7 +196,5 @@ for module in ${MODULES}; do
     && source "$DOTFILES/$module/config.zsh"
 done
 
-
-
 # Adds homebrew path
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
