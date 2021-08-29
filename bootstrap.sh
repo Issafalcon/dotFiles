@@ -126,3 +126,5 @@ if [[ $INSTALL == true ]]; then
 fi
 
 update_module_config
+
+source "$HOME"/.zshrc
