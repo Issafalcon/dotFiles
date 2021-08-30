@@ -13,16 +13,16 @@ sudo apt-get install clang
 # Needed for ueberzug
 sudo apt-get install libx11 \
 	libjpeg8-dev \
-	zlib1g-dev
-sudo apt-get install libxtst-dev 
-sudo apt-get install libxext-dev 
-sudo apt-get install xllproto-xext-dev
-sudo apt-get install libtool-bin
+	zlib1g-dev \
+	libxtst-dev \
+	libxext-dev \
+	xllproto-xext-dev \
+	libtool-bin
 
 # Ranger plugins for dev-icons
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
 
-SCRIPT_DIR=$( cd ${0%/*} && pwd -P )
+SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below
 "${SCRIPT_DIR}"/../python/install.sh
@@ -30,8 +30,8 @@ SCRIPT_DIR=$( cd ${0%/*} && pwd -P )
 # Also need to use node for npm
 "${SCRIPT_DIR}"/../node/install.sh
 
-pip3 install ueberzug
-pip3 install neovim-remote
+pip3 install --user neovim-remote
+pip3 install --user ueberzug
 pip3 install --user pynvim
 npm install -g tree-sitter-cli
 
