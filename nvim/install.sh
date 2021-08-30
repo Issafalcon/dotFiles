@@ -11,9 +11,10 @@ sudo apt-get install -y exuberant-ctags
 sudo apt-get install clang
 
 # Needed for ueberzug
-sudo apt-get install libx11 
+sudo apt-get install libx11 \
+	libjpeg8-dev \
+	zlib1g-dev
 sudo apt-get install libxtst-dev 
-sudo apt-get install libx11 
 sudo apt-get install libxext-dev 
 sudo apt-get install xllproto-xext-dev
 sudo apt-get install libtool-bin
