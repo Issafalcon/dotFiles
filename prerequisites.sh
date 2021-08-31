@@ -20,5 +20,7 @@ chmod 777 "${HOME}/.dotFileModules"
 
 SCRIPT_DIR=$( cd ${0%/*} && pwd -P )
 
-# Need python and pip to install below
+# Install nvm and node
 "${SCRIPT_DIR}"/node/install.sh
+
+/bin/bash "${SCRIPT_DIR}"/bootstrap.sh "-i" "-m" "zsh"
