@@ -41,9 +41,9 @@ run_module_bootstrap() {
 }
 
 if [[ $ALL == true ]]; then
-	for dir in ./*; do
+	for dir in */; do
 		if [[ $dir != ".git" && $dir != "docs" ]]; then
-			run_module_bootstrap "$dir"
+			run_module_bootstrap "${dir%/}"
 		fi
 	done
 else

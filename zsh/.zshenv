@@ -5,7 +5,8 @@ export DOTFILES=$HOME/dotFiles
 export PROJECTS="$HOME"/repos
 
 # Custom terminfo allowing for italic display
-export TERM=xterm-256color-italic
+# export TERMINFO=/usr/lib/terminfo
+# export TERM=xterm-256color-italic
 
 export EDITOR="nvim"
 
