@@ -11,13 +11,14 @@ sudo apt-get install -y exuberant-ctags
 sudo apt-get install clang
 
 # Needed for ueberzug
-sudo apt-get install libx11 \
-	libjpeg8-dev \
-	zlib1g-dev \
-	libxtst-dev \
-	libxext-dev \
-	xllproto-xext-dev \
-	libtool-bin
+sudo apt-get install libjpeg8-dev 
+sudo apt-get install zlib1g-dev 
+sudo apt-get install libxtst-dev 
+sudo apt-get install libx11 
+sudo apt-get install libxext-dev 
+sudo apt-get install xllproto-xext-dev 
+sudo apt-get install libtool-bin 
+sudo apt-get install gettext 
 
 # Ranger plugins for dev-icons
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
