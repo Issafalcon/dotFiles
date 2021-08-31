@@ -22,5 +22,3 @@ SCRIPT_DIR=$( cd ${0%/*} && pwd -P )
 
 # Need python and pip to install below
 "${SCRIPT_DIR}"/node/install.sh
-
-source "$HOME"/.zshrc
