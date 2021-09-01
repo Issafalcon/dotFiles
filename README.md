@@ -3,12 +3,21 @@
 > Modular installation of terminal, and terminal tools with my personal config files
 > Inspired by [`caarlos0 dotFiles setup`](https://github.com/caarlos0/dotfiles)
 
+The goals of my dotFiles are as follows:
+ 1. Replace default shell with zsh, adding useful plugins without compromising speed
+ 2. Create modular installation options for remaining dotfiles
+ 3. Allow customization and extensibility
+
 ## Installation
 
 ### Setup and prerequisites intallation
 
 The following will install some prerequisite files onto your machine (requires `sudo`)
 e.g. Homebrew, git, curl, wget etc.
+
+It will quickly replace the default shell with zsh and add plugins using zinit.
+
+The default theme is powerline10k (you can change this)
 
 These prerequisites may change as I evolve this repo.
 
@@ -18,7 +27,13 @@ These prerequisites may change as I evolve this repo.
 $ git clone https://github.com/Issafalcon/dotFiles.git ~/.dotFiles
 $ cd ~/dotFiles
 $ ./prerequisites.sh 
+$ zsh
 ```
+
+Zinit plugins will be installed and you will need to restart your terminal to be taken to
+powerline10k configuration wizard.
+
+It is recommended that you install a NerdFont compatible font prior to setting up powerline10k.
 
 ### Module Installation
 

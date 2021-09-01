@@ -42,7 +42,7 @@ run_module_bootstrap() {
 
 if [[ $ALL == true ]]; then
 	for dir in */; do
-		if [[ $dir != ".git" && $dir != "docs" ]]; then
+		if [[ $dir != ".git" && $dir != "docs" && $dir != "zsh" ]]; then
 			run_module_bootstrap "${dir%/}"
 		fi
 	done
