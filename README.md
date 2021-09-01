@@ -82,6 +82,7 @@ so that setup can be made more accessible.
 
 ## Feature Roadmap 🌌:
 - [ ] Replace all occurences of ~/repos with $PROJECTS variable
+- [ ] Replace Homebrew installations with apt package manager (and remove Homebrew from deps)
 - [ ] Add uninstall scripts for modules
   - [ ] zsh
   - [ ] node
