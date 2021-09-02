@@ -155,7 +155,7 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
     zinit wait lucid for \
         atload"_zsh_autosuggest_start" \
             zsh-users/zsh-autosuggestions \
-        atload"zicompinit; zicdreplay" \
+        atinit"zicompinit; zicdreplay" \
         blockf atpull'zinit creinstall -q .' \
             zsh-users/zsh-completions
 else
