@@ -63,7 +63,7 @@ setopt promptsubst
 # | NAVIGATION |
 # +------------+
 
-setopt AUTO_CD              # Go to folder path without using cd.
+# setopt AUTO_CD              # Go to folder path without using cd.
 
 setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
 setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
@@ -195,9 +195,6 @@ for module in ${MODULES}; do
   [ -f "$DOTFILES/$module/config.zsh" ] \
     && source "$DOTFILES/$module/config.zsh"
 done
-
-# Adds homebrew path
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"

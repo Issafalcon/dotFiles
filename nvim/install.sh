@@ -26,19 +26,22 @@ git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below
-"${SCRIPT_DIR}"/../python/install.sh
+"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
 
 # Also need to use node for npm
-"${SCRIPT_DIR}"/../node/install.sh
+"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
+
+# Install homebrew
+"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "homebrew"
 
 pip3 install --user neovim-remote
 pip3 install --user ueberzug
 pip3 install --user pynvim
 npm install -g tree-sitter-cli
 
-# Get Neovim nightly and build from source for neovim 0.5
-brew install --HEAD luajit
-brew install --HEAD neovim
+# Get Neovim latest release as app image and move to /usr/bin/nvim
+sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+sudo chmod 777 nvim
 
 # Install language servers that can't be installed via the LspInstall vim command (via lspinstall plugin)
 brew install efm-langserver

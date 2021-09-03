@@ -9,4 +9,3 @@ config.zsh
 completion.zsh
 custom_scripts
 functions
-xterm-color256-italic.terminfo
