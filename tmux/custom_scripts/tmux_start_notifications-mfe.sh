@@ -9,8 +9,8 @@ eval set -- "$ARGS"
 TMUX=$(tmux new-session -d -s Notifications-MFE -n Center)
 
 # Create other windows.
-tmux new-window -c ~/repos/wcc-mfe-notifications/notifications-mfe -t Notifications-MFE:2 -n MFE
-tmux new-window -c ~/repos/wcc-mfe-notifications -t Notifications-MFE:3 -n Terminals
+tmux new-window -c "${PROJECTS}"/wcc-mfe-notifications/notifications-mfe -t Notifications-MFE:2 -n MFE
+tmux new-window -c "${PROJECTS}"/wcc-mfe-notifications -t Notifications-MFE:3 -n Terminals
 
 tmux select-layout -t Notifications-MFE:1 tiled
 tmux select-layout -t Notifications-MFE:1
@@ -20,12 +20,12 @@ tmux select-layout -t Notifications-MFE:2 tiled
 tmux select-layout -t Notifications-MFE:2
 tmux select-pane -t Notifications-MFE:2.0
 
-tmux splitw -c ~/repos/wcc-mfe-notifications -t Notifications-MFE:3
-tmux splitw -h -c ~/repos/wcc-mfe-notifications -t Notifications-MFE:3.1
+tmux splitw -c "${PROJECTS}"/wcc-mfe-notifications -t Notifications-MFE:3
+tmux splitw -h -c "${PROJECTS}"/wcc-mfe-notifications -t Notifications-MFE:3.1
 tmux select-layout -t Notifications-MFE:3 tiled
 tmux select-pane -t Notifications-MFE:3.0
 
-tmux send-keys -t Notifications-MFE:1 cd\ ~/repos/wcc-mfe-notifications/notifications-center C-m
+tmux send-keys -t Notifications-MFE:1 cd\ "${PROJECTS}"/wcc-mfe-notifications/notifications-center C-m
 tmux send-keys -t Notifications-MFE:1.0 nvim C-m
 
 tmux send-keys -t Notifications-MFE:2.0 nvim C-m
@@ -36,7 +36,7 @@ tmux send-keys -t Notifications-MFE:3.1 cd\ notifications-center/Waters.Cloud.No
 while true; do
   case "$1" in
     -d|--dev-proxy)
-      tmux new-window -c ~/repos/wcc-mfe-notifications -t Notifications-MFE:4 -n Dev-Proxy
+      tmux new-window -c "${PROJECTS}"/wcc-mfe-notifications -t Notifications-MFE:4 -n Dev-Proxy
       tmux send-keys -t Notifications-MFE:4 dev-proxy\ -l\ "${2}" C-m
       shift 2;;
     -r|--run)

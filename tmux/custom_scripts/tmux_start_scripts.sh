@@ -2,12 +2,12 @@
 
 # Create the session and the first window. Manually switch to root
 # directory if required to support tmux < 1.9
-TMUX=$(tmux new-session -c ~/repos/scripts -d -s scripts -n editor)
+TMUX=$(tmux new-session -c "${PROJECTS}"/scripts -d -s scripts -n editor)
 
 tmux send-keys -t scripts:1.0 nvim C-m
 
 # Create other windows.
-tmux new-window -c ~/repos/scripts -t scripts:2 -n Terminals
+tmux new-window -c "${PROJECTS}"/scripts -t scripts:2 -n Terminals
 
 tmux select-layout -t scripts:1 tiled
 tmux select-layout -t scripts:2 tiled

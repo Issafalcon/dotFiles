@@ -16,7 +16,7 @@ The goals of my dotFiles are as follows:
 ### Setup and prerequisites intallation
 
 The following will install some prerequisite files onto your machine (requires `sudo`)
-e.g. Homebrew, git, curl, wget etc.
+e.g. git, curl, wget etc.
 
 It will quickly replace the default shell with zsh and add plugins using zinit.
 
@@ -81,8 +81,8 @@ At the moment, I am not accepting PRs, but please feel free to open issues or ad
 so that setup can be made more accessible.
 
 ## Feature Roadmap 🌌:
-- [ ] Replace all occurences of ~/repos with $PROJECTS variable
-- [ ] Replace Homebrew installations with apt package manager (and remove Homebrew from deps)
+- [x] Replace all occurences of ~/repos with $PROJECTS variable
+- [x] Replace Homebrew installations with apt package manager (and remove Homebrew from deps) (NOTE: Lazygit and some language servers / formatters still require homebrew)
 - [ ] Add uninstall scripts for modules
   - [ ] zsh
   - [ ] node
@@ -90,7 +90,7 @@ so that setup can be made more accessible.
   - [ ] etc...
 - [ ] Add ability to load custom .zsh settings
 - [ ] Add detailed design guide to how it works
-- [ ] Tidy up prerequisites to make as minimal as possible
+- [x] Tidy up prerequisites to make as minimal as possible
 - [ ] Add silent install for modules
   - [ ] zsh
   - [ ] node

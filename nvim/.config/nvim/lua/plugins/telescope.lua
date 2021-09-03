@@ -5,7 +5,7 @@ function _G.search_dev_config()
   require("telescope.builtin").find_files(
     {
       prompt_title = "< Config Files >",
-      search_dirs = {"$HOME/dotFiles"},
+      search_dirs = {"$DOTFILES"},
       hidden = true
     }
   )

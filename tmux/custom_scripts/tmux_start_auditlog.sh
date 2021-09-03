@@ -9,8 +9,8 @@ eval set -- "$ARGS"
 TMUX=$(tmux new-session -d -s AuditLog -n ClientApp)
 
 # Create other windows.
-tmux new-window -c ~/repos/wcc-auditlog/Waters.Cloud.AuditLog -t AuditLog:2 -n Api
-tmux new-window -c ~/repos/wcc-auditlog -t AuditLog:3 -n Terminals
+tmux new-window -c "${PROJECTS}"/wcc-auditlog/Waters.Cloud.AuditLog -t AuditLog:2 -n Api
+tmux new-window -c "${PROJECTS}"/wcc-auditlog -t AuditLog:3 -n Terminals
 
 tmux select-layout -t AuditLog:1 tiled
 tmux select-layout -t AuditLog:1
@@ -20,13 +20,13 @@ tmux select-layout -t AuditLog:2 tiled
 tmux select-layout -t AuditLog:2
 tmux select-pane -t AuditLog:2.0
 
-tmux splitw -c ~/repos/wcc-auditlog -t AuditLog:3
+tmux splitw -c "${PROJECTS}"/wcc-auditlog -t AuditLog:3
 tmux select-layout -t AuditLog:3 tiled
 tmux select-layout -t AuditLog:3 tiled
 tmux select-layout -t AuditLog:3 tiled
 tmux select-pane -t AuditLog:3.0
 
-tmux send-keys -t AuditLog:1 cd\ ~/repos/wcc-auditlog C-m
+tmux send-keys -t AuditLog:1 cd\ "${PROJECTS}"/wcc-auditlog C-m
 tmux send-keys -t AuditLog:1.0 cd\ AuditLog/ClientApp C-m
 tmux send-keys -t AuditLog:1.0 nvim C-m
 
@@ -38,7 +38,7 @@ tmux send-keys -t AuditLog:3.1 cd\ Waters.Cloud.AuditLog/ClientApp C-m
 while true; do
   case "$1" in
     -d|--dev-proxy)
-      tmux new-window -c ~/repos/wcc-auditlog -t AuditLog:4 -n Dev-Proxy
+      tmux new-window -c "${PROJECTS}"/wcc-auditlog -t AuditLog:4 -n Dev-Proxy
       tmux send-keys -t AuditLog:4 dev-proxy\ -l\ "${2}" C-m
       shift 2;;
     -r|--run)
