@@ -61,9 +61,15 @@ for _, server in pairs(installed_servers) do
   -- Add custom options here.
   if server.name == "eslintls" then
     opts.on_attach = function(client)
+      client.resolved_capabilities.document_formatting = true
       custom_attach(client)
       addAutoSave(client)
     end
+    opts.settings = {
+      format = {
+        enable = true
+      }
+    }
   end
 
   if server.name == "sumneko_lua" then
