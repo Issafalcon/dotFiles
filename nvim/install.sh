@@ -41,7 +41,7 @@ npm install -g tree-sitter-cli
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
 sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-sudo chmod 777 nvim
+sudo chmod 777 /usr/bin/nvim
 
 # Install language servers that can't be installed via the LspInstall vim command (via lspinstall plugin)
 brew install efm-langserver

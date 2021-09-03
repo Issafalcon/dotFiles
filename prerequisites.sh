@@ -16,4 +16,7 @@ touch "${HOME}/.dotFileModules"
 chmod 777 "${HOME}/.dotFileModules"
 
 SCRIPT_DIR=$( cd ${0%/*} && pwd -P )
+
+"${SCRIPT_DIR}"/bootstrap.sh "-i" "-m" "node"
+
 /bin/bash "${SCRIPT_DIR}"/bootstrap.sh "-i" "-m" "zsh"
