@@ -29,5 +29,4 @@ _darcs
 install.sh
 path.zsh
 completion.zsh
-^/.*/custom_scripts
-^/.*/functions
+docs/

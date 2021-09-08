@@ -20,9 +20,6 @@ sudo apt-get install xllproto-xext-dev
 sudo apt-get install libtool-bin 
 sudo apt-get install gettext 
 
-# Ranger plugins for dev-icons
-git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
-
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below

@@ -77,3 +77,17 @@ if fn.has('persistent_undo') then
     cmd('set undodir=~/.undodir')
     cmd('set undofile')
 end
+
+if fn.has('wsl') then
+    g.clipboard = {
+        name = "win32yank-wsl",
+        copy = {
+            ["+"] = "win32yank.exe -i --crlf",
+            ["*"] = "win32yank.exe -i --crlf"
+        },
+        paste = {
+            ["+"] = "win32yank.exe -o --lf",
+            ["*"] = "win32yank.exe -o --lf"
+        }
+    }
+end

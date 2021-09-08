@@ -1,0 +1,55 @@
+user: adam_figgins@waters.com
+authentication-method: api-token
+endpoint: https://waterscorporation.atlassian.net
+project: INFSAAS
+team: Fuji
+
+team_sprint_jql: cf[10253] = Fuji
+custom-commands:
+
+  - name: env
+    help: print the JIRA environment variables available to custom commands
+    script: |
+      env | grep JIRA
+
+  - name: mine
+    help: display issues assigned to me
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current project
+          {{jira}} list --template table --query "resolution = unresolved and assignee=currentuser() and project = $JIRA_PROJECT ORDER BY priority asc, created"
+      else
+          # otherwise list issues for all project
+          {{jira}} list --template table --query "resolution = unresolved and assignee=currentuser() ORDER BY priority asc, created"
+      fi
+
+  - name: sprint
+    help: display issues for active sprint
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current project
+          {{jira}} list --template table --query "sprint in openSprints() and type != epic and resolution = unresolved and project=$JIRA_PROJECT ORDER BY rank asc, created"
+      else
+          # otherwise list issues for all project
+          {{jira}} list --template table --query "sprint in openSprints() and customfield_10253 = $JIRA_TEAM and type != epic and resolution = unresolved ORDER BY rank asc, created"
+      fi
+
+  - name: team-sprint
+    help: display issues for active sprint
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current project
+          {{jira}} request -t table -M POST "/rest/api/latest/search" \
+              "{\"jql\": \"cf[10253]=${JIRA_TEAM} AND sprint in openSprints() and type != epic and resolution = unresolved and project=${JIRA_PROJECT} ORDER BY rank asc, created\"}"
+      else
+          # otherwise list issues for all project
+          {{jira}} list --template table --query "sprint in openSprints() and customfield_10253 = $JIRA_TEAM and type != epic and resolution = unresolved ORDER BY rank asc, created"
+      fi
+
+  - name: search
+    help: Search summary, comments and description for matching text
+    args:
+      - name: QUERY
+        required: true
+    script: |-
+      {{jira}} list --query "project = ${JIRA_PROJECT} AND (summary ~ \"{{args.QUERY}}\" or comment ~ \"{{args.QUERY}}\" or description ~ \"{{args.QUERY}}\") ORDER BY rank ASC"
