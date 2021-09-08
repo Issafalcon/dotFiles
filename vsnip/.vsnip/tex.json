@@ -110,6 +110,24 @@
         ],
         "description": "Template for a new subpage that can be inserted into a root_file.tex page"
     },
+    "Highlighted Code Block": {
+        "prefix": ["code", "\\code"],
+        "body": [
+            "\\begin{mygreenhighlightedbox}",
+            "\tbegin{minted}{$1}",
+            "\t\t$2",
+            "\tend{minted}",
+            "\\end{mygreenhighlightedbox}$0"
+        ],
+        "description": "Created a greeen highlighted custom box around code block"
+    },
+    "Inline Code": {
+        "prefix": ["code_inline", "\\code_inline"],
+        "body": [
+            "\\texttt{$1}$0"
+        ],
+        "description": "Create an inline code text"
+    },
     "Large Summation": {
         "prefix": ["sumlarge", "\\sumlarge"],
 		"body": [
