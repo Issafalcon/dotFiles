@@ -194,8 +194,12 @@ for module in ${MODULES}; do
   # Add specific zsh configuration
   [ -f "$DOTFILES/$module/config.zsh" ] \
     && source "$DOTFILES/$module/config.zsh"
+
+  [ -f "$DOTFILES/$module/completion.zsh" ] \
+    && source "$DOTFILES/$module/completion.zsh"
 done
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
+eval "$(jira --completion-script-zsh)"
