@@ -199,3 +199,8 @@ done
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+# Finally, source any custom overrides
+[ -s "$HOME/.zshenv_local" ] && source "$HOME/.zshenv_local"
+[ -s "$HOME/.zshrc_local" ] && source "$HOME/.zshrc_local"
+[ -s "$HOME/.aliases" ] && source "$HOME/.aliases"

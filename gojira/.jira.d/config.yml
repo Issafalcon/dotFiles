@@ -4,7 +4,6 @@ endpoint: https://waterscorporation.atlassian.net
 project: INFSAAS
 team: Fuji
 
-team_sprint_jql: cf[10253] = Fuji
 custom-commands:
 
   - name: env
