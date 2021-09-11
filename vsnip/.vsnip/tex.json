@@ -142,6 +142,13 @@
         ],
         "description": "Insert an inline summation notation, (only in the cases when the environment is inline math environment)."
     },
+    "Inline binomial": {
+        "prefix": ["binom_inline", "\\binom_inline"],
+        "body": [
+            "\\binom{$1}{$2}$0"
+        ],
+        "description": "Insert inline bionomial coefficient notation"
+    },
     "Section": {
         "prefix": ["section", "\\section"],
         "body": [
@@ -247,7 +254,7 @@
     "Inline Math": {
         "prefix": ["mathinline", "\\mathinline"],
         "body": [
-            "\\${$0}\\$"
+            "\\${$1}\\$0"
         ],
         "description": "Adding inline math"
     },
