@@ -1,3 +1,4 @@
+local map = vim.api.nvim_set_keymap
 local o = vim.o
 local g = vim.g
 local wo = vim.wo
@@ -90,4 +91,13 @@ if fn.has('wsl') then
             ["*"] = "win32yank.exe -o --lf"
         }
     }
+end
+
+-- URL handling. Opens urls in browser with gx
+if vim.fn.has("mac") == 1 then
+  map('', 'gx', '<Cmd>call jobstart(["open", expand("<cfile>")], {"detach": v:true})<CR>', {})
+elseif vim.fn.has("unix") == 1 then
+  map('', 'gx', '<Cmd>call jobstart(["xdg-open", expand("<cfile>")], {"detach": v:true})<CR>', {})
+else
+  map('', 'gx', '<Cmd>lua print("Error: gx is not supported on this OS!")', {})
 end
