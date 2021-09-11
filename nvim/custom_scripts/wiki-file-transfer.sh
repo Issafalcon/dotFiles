@@ -9,4 +9,4 @@ if [[ $# -lt 1 ]]; then
 fi
 
 # Transfers all .pdf files in a directory recursively
-find "$PROJECTS"/wiki -name '*.pdf' -exec cp --parents '{}' "$1" \;
+find "$PROJECTS"/wiki -name '*.pdf' -exec cp '{}' "$1" \;

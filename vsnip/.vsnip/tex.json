@@ -254,7 +254,7 @@
     "Inline Math": {
         "prefix": ["mathinline", "\\mathinline"],
         "body": [
-            "\\${$1}\\$0"
+            "\\${$1}\\$$0"
         ],
         "description": "Adding inline math"
     },
