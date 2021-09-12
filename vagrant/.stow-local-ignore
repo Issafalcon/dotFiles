@@ -1,0 +1,12 @@
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+# Files taht should remain local
+install.sh
+path.zsh
+scripts.zsh
+config.zsh
+completion.zsh
+custom_scripts
+functions
