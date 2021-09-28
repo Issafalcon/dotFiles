@@ -83,8 +83,8 @@ for _, server in pairs(installed_servers) do
   if server.name == "tsserver" then
     opts.on_attach = function(client)
       custom_attach(client)
-      client.resolved_capabilities.formatting = false
-      client.resolved_capabilities.document_formatting = false
+      client.resolved_capabilities.formatting = true
+      client.resolved_capabilities.document_formatting = true
     end
   end
 
