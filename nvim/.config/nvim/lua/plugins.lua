@@ -107,6 +107,7 @@ return require("packer").startup(
     use {"rafamadriz/friendly-snippets"}
     use {"J0rgeSerran0/vscode-csharp-snippets"}
     use {"robole/vscode-markdown-snippets"}
+    use {"xabikos/vscode-react"}
     use {"mattn/emmet-vim"} -- Install this only for javascript (React) or jsx files support, which emmet-ls doesn't support
 
     -- Treesitter

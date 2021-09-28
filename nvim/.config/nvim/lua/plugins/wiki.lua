@@ -5,10 +5,6 @@ vimp.nnoremap('<leader>cg', ':lua AutoCommit()<CR>')
 
 -- vim.cmd "autocmd BufWritePost */wiki/* call AutoCommit"
 
--- Enable markdown snippets in vimwiki files
-vim.cmd('let g:vsnip_filetypes = {}')
-vim.cmd('let g:vsnip_filetypes.vimwiki = ["markdown"]')
-
 -- VimWiki settings
 local wikiList = {}
 
