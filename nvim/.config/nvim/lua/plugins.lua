@@ -43,6 +43,7 @@ return require("packer").startup(
     use "norcalli/nvim-colorizer.lua"
     use {"yonlu/omni.vim"}
     use {"marko-cerovac/material.nvim"}
+    use {'bluz71/vim-nightfly-guicolors'}
 
     -- Vim undo history
     use {"mbbill/undotree"}
@@ -106,6 +107,7 @@ return require("packer").startup(
     use {"rafamadriz/friendly-snippets"}
     use {"J0rgeSerran0/vscode-csharp-snippets"}
     use {"robole/vscode-markdown-snippets"}
+    use {"mattn/emmet-vim"} -- Install this only for javascript (React) or jsx files support, which emmet-ls doesn't support
 
     -- Treesitter
     use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}

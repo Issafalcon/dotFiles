@@ -34,7 +34,7 @@ vim.lsp.protocol.CompletionItemKind = {
   "   (TypeParameter)"
 }
 
-local function addAutoSave(client)
+local function addAutoFormatOnSave(client)
   -- Format on save if the lsp has document formattin enabled
   if client.resolved_capabilities.document_formatting then
     vim.api.nvim_command [[augroup Format]]
@@ -63,7 +63,7 @@ for _, server in pairs(installed_servers) do
     opts.on_attach = function(client)
       client.resolved_capabilities.document_formatting = true
       custom_attach(client)
-      addAutoSave(client)
+      -- addAutoFormatOnSave(client) --Add autoformat on save: This is annoying when multiple LSPs are attached
     end
     opts.settings = {
       format = {
@@ -84,6 +84,7 @@ for _, server in pairs(installed_servers) do
     opts.on_attach = function(client)
       custom_attach(client)
       client.resolved_capabilities.formatting = false
+      client.resolved_capabilities.document_formatting = false
     end
   end
 
