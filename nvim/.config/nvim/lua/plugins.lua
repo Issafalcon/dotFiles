@@ -117,12 +117,7 @@ return require("packer").startup(
     use {"nvim-treesitter/nvim-treesitter-angular"}
     use {"windwp/nvim-ts-autotag"}
     use {"p00f/nvim-ts-rainbow"}
-    use {
-      "romgrk/nvim-treesitter-context",
-      config = function()
-        require("treesitter-context.config").setup {enable = true}
-      end
-    }
+
     -- StatusLine and bufferline
     use {"glepnir/galaxyline.nvim"}
 
