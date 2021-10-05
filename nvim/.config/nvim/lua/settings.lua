@@ -52,7 +52,7 @@ wo.scrolloff      = 8
 g.scrolloff       = 8
 wo.wrap           = false                      -- Display long lines as just one line
 wo.number         = true                       -- set numbered lines
-wo.signcolumn     = "auto:4"                      -- Always show the signcolumn, otherwise it would shift the text each time
+wo.signcolumn     = "yes:2"                      -- Always show the signcolumn, otherwise it would shift the text each time
 
 bo.expandtab      = true 							-- Converts tabs to spaces
 bo.smartindent    = true 							-- Makes indenting smart
