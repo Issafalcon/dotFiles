@@ -166,6 +166,11 @@ else
             zsh-users/zsh-completions
 fi
 
+# Sourcing various zsh lists and useful config for cdr builtin
+zinit wait lucid for \
+    willghatch/zsh-cdr \
+    zsh-users/zaw
+
 # +---------+
 # | MODULES |
 # +---------+

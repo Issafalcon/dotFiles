@@ -87,9 +87,10 @@ local function custom_attach(client)
 
   require("lsp_signature").on_attach(
     {
-      bind = true,
-      use_lspsaga = false,
-      fix_pos = false
+      bind = false,
+      use_lspsaga = true,
+      fix_pos = false,
+      floating_window = false
     }
   )
 end
