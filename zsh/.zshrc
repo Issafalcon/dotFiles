@@ -201,8 +201,9 @@ done
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 # Load custom functions
-fpath=("$HOME/zsh_local/functions" "${fpath[@]}")
-autoload -U "${HOME}"/zsh_local/functions/*(.:t)
+[ -d "$HOME/zsh_local/functions" ] \
+    && fpath=("$HOME/zsh_local/functions" "${fpath[@]}") \
+    && autoload -U "${HOME}"/zsh_local/functions/*(.:t)
 
 # Finally, source any custom overrides
 [ -s "$HOME/.zshenv_local" ] && source "$HOME/.zshenv_local"
