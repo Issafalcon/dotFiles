@@ -80,19 +80,19 @@ if fn.has('persistent_undo') then
 end
 
 -- This may not be required anymore for WSL
--- if fn.has('wsl') then
---     g.clipboard = {
---         name = "win32yank-wsl",
---         copy = {
---             ["+"] = "win32yank.exe -i --crlf",
---             ["*"] = "win32yank.exe -i --crlf"
---         },
---         paste = {
---             ["+"] = "win32yank.exe -o --lf",
---             ["*"] = "win32yank.exe -o --lf"
---         }
---     }
--- end
+if fn.has('wsl') then
+    g.clipboard = {
+        name = "win32yank-wsl",
+        copy = {
+            ["+"] = "win32yank.exe -i --crlf",
+            ["*"] = "win32yank.exe -i --crlf"
+        },
+        paste = {
+            ["+"] = "win32yank.exe -o --lf",
+            ["*"] = "win32yank.exe -o --lf"
+        }
+    }
+end
 
 -- URL handling. Opens urls in browser with gx
 if vim.fn.has("mac") == 1 then
