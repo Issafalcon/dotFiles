@@ -73,6 +73,9 @@ g.diagnostic_insert_delay = 1
 -- FOLDS
 o.foldlevel = 99
 
+-- Session
+o.sessionoptions="blank,buffers,curdir,folds,help,options,tabpages,winsize,resize,winpos,terminal"
+
 -- Backup, undo, swap options
 if fn.has('persistent_undo') then
     cmd('set undodir=~/.undodir')

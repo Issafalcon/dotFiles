@@ -147,5 +147,12 @@ return require("packer").startup(
     use {"tpope/vim-dispatch"}
     use {"dbeniamine/cheat.sh-vim"}
     use {"kkoomen/vim-doge", run = ":call doge#install()"}
+    use { 'rmagatti/session-lens',
+          requires = {'rmagatti/auto-session', 'nvim-telescope/telescope.nvim'},
+          config = function()
+            require('session-lens').setup()
+          end
+        }
+
   end
 )
