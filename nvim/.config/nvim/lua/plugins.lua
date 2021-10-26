@@ -25,7 +25,9 @@ return require("packer").startup(
     -- LSP
     use {"neovim/nvim-lspconfig"}
     use {"williamboman/nvim-lsp-installer"} -- Adds missing lspinstall command with some buindles LSP servers
-    use {"glepnir/lspsaga.nvim"} -- Adds nice UIs and shortcut keys for LSP interactions
+    -- Original lspsaga looks like it isn't being maintained. Incompatible with newer versions of neovim. Use fork instead for now
+    -- use {"glepnir/lspsaga.nvim"} -- Adds nice UIs and shortcut keys for LSP interactions
+    use { 'tami5/lspsaga.nvim' }
     use {"ray-x/lsp_signature.nvim"}
 
     -- EditorConfig
