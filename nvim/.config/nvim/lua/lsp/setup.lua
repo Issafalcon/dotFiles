@@ -44,7 +44,7 @@ local function addAutoFormatOnSave(client)
   end
 end
 
-vim.lsp.set_log_level("debug")
+-- vim.lsp.set_log_level("debug")
 
 -- Set the capabilities for all servers. Snippet support can be enabled for all
 local clientCapabilities = vim.lsp.protocol.make_client_capabilities()
