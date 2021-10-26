@@ -11,14 +11,14 @@ sudo apt-get install -y exuberant-ctags
 sudo apt-get install clang
 
 # Needed for ueberzug
-sudo apt-get install libjpeg8-dev 
-sudo apt-get install zlib1g-dev 
-sudo apt-get install libxtst-dev 
-sudo apt-get install libx11 
-sudo apt-get install libxext-dev 
-sudo apt-get install xllproto-xext-dev 
-sudo apt-get install libtool-bin 
-sudo apt-get install gettext 
+sudo apt-get install libjpeg8-dev
+sudo apt-get install zlib1g-dev
+sudo apt-get install libxtst-dev
+sudo apt-get install libx11
+sudo apt-get install libxext-dev
+sudo apt-get install xllproto-xext-dev
+sudo apt-get install libtool-bin
+sudo apt-get install gettext
 
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
@@ -37,7 +37,7 @@ pip3 install --user pynvim
 npm install -g tree-sitter-cli
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
-sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.5.0/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
 # Install language servers that can't be installed via the LspInstall vim command (via lspinstall plugin)
