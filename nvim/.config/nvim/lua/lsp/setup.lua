@@ -155,7 +155,8 @@ end
 local servers = {}
 
 -- Supplement omnisharp-vim with diagnostic info
-servers.omnisharp = require("lsp.lsp-servers.omnisharp-ls").getConfig()
+-- Use LspInstallers version of omnisharp lsp as it can be updated easily
+-- servers.omnisharp = require("lsp.lsp-servers.omnisharp-ls").getConfig()
 
 servers.efm = efmConfig
 
