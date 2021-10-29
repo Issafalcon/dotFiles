@@ -44,7 +44,7 @@ local function addAutoFormatOnSave(client)
   end
 end
 
-vim.lsp.set_log_level("debug")
+-- vim.lsp.set_log_level("debug")
 
 -- Set the capabilities for all servers. Snippet support can be enabled for all
 local clientCapabilities = vim.lsp.protocol.make_client_capabilities()
@@ -155,7 +155,8 @@ end
 local servers = {}
 
 -- Supplement omnisharp-vim with diagnostic info
-servers.omnisharp = require("lsp.lsp-servers.omnisharp-ls").getConfig()
+-- Use LspInstallers version of omnisharp lsp as it can be updated easily
+-- servers.omnisharp = require("lsp.lsp-servers.omnisharp-ls").getConfig()
 
 servers.efm = efmConfig
 
