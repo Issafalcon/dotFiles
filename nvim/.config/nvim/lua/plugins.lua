@@ -30,6 +30,8 @@ return require("packer").startup(
     use {"glepnir/lspsaga.nvim"} -- Adds nice UIs and shortcut keys for LSP interactions
     -- use { 'tami5/lspsaga.nvim' }
     use {"ray-x/lsp_signature.nvim"}
+    use {"onsails/lspkind-nvim"}
+
 
     -- EditorConfig
     use "editorconfig/editorconfig-vim"
@@ -104,8 +106,14 @@ return require("packer").startup(
     -- use {'mfussenegger/nvim-dap'}
 
     -- Autocomplete and Snippets
-    use {"hrsh7th/nvim-compe"}
+    -- use {"hrsh7th/nvim-compe"}
     use {"hrsh7th/vim-vsnip"}
+    use {"hrsh7th/cmp-vsnip"}
+    use {'hrsh7th/cmp-nvim-lsp'}
+    use {'hrsh7th/cmp-buffer'}
+    use {'hrsh7th/cmp-path'}
+    use {'hrsh7th/cmp-cmdline'}
+    use {'hrsh7th/nvim-cmp'}
     use {"hrsh7th/vim-vsnip-integ"}
     use {"rafamadriz/friendly-snippets"}
     use {"J0rgeSerran0/vscode-csharp-snippets"}

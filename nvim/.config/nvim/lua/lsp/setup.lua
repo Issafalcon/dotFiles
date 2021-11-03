@@ -47,7 +47,7 @@ end
 -- vim.lsp.set_log_level("debug")
 
 -- Set the capabilities for all servers. Snippet support can be enabled for all
-local clientCapabilities = vim.lsp.protocol.make_client_capabilities()
+local clientCapabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 clientCapabilities.textDocument.completion.completionItem.snippetSupport = true
 
 -- Get the servers installed via nvim-lsp-installer plugin
