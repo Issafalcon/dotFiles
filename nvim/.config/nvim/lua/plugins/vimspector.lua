@@ -33,6 +33,8 @@ vimp.nmap('<leader>drc', '<Plug>VimspectorRunToCursor')
 vimp.nmap('<leader>db', '<Plug>VimspectorToggleBreakpoint')
 vimp.nnoremap('<leader>dB', '<Plug>VimspectorToggleConditionalBreakpoint')
 vimp.nmap('<leader>dX', ':call vimspector#ClearBreakpoints()<CR>')
+vimp.nnoremap('<leader>dm', '<Plug> VimspectorMkSession')
+vimp.nnoremap('<leader>dM', '<Plug> VimspectorLoadSession .vimspector.session')
 
 -- for normal mode - the word under the cursor
 vimp.nmap('<Leader>di', '<Plug>VimspectorBalloonEval')

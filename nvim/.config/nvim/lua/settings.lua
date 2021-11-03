@@ -82,8 +82,7 @@ if fn.has('persistent_undo') then
     cmd('set undofile')
 end
 
--- This may not be required anymore for WSL
-if fn.has('wsl') then
+if fn.has('win32unix') and fn.has('wsl') then
     g.clipboard = {
         name = "win32yank-wsl",
         copy = {
