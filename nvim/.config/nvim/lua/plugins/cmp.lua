@@ -9,8 +9,8 @@ cmp.setup(
       end
     },
     mapping = {
-      ["<Tab>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Insert}),
-      ["<S-Tab"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Insert}),
+      ["<C-n"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Insert}),
+      ["<C-p>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Insert}),
       ["<Down>"] = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior.Select}),
       ["<Up>"] = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior.Select}),
       ["<C-d>"] = cmp.mapping.scroll_docs(-4),
@@ -45,7 +45,12 @@ cmp.setup(
         {name = "vsnip"}, -- For vsnip users.
         {name = "snippets_nvim"},
         {name = "path"},
-        {name = "buffer"}
+        {name = "buffer"},
+        {name = "calc"},
+        {name = "treesitter"},
+        {name = "emoji"},
+        {name = "emmet"},
+        {name = "emmet_ls"},
       },
       {
         {name = "buffer"}

@@ -106,7 +106,6 @@ return require("packer").startup(
     -- use {'mfussenegger/nvim-dap'}
 
     -- Autocomplete and Snippets
-    -- use {"hrsh7th/nvim-compe"}
     use {"hrsh7th/vim-vsnip"}
     use {"hrsh7th/cmp-vsnip"}
     use {'hrsh7th/cmp-nvim-lsp'}
@@ -114,7 +113,6 @@ return require("packer").startup(
     use {'hrsh7th/cmp-path'}
     use {'hrsh7th/cmp-cmdline'}
     use {'hrsh7th/nvim-cmp'}
-    use {"hrsh7th/vim-vsnip-integ"}
     use {"rafamadriz/friendly-snippets"}
     use {"J0rgeSerran0/vscode-csharp-snippets"}
     use {"robole/vscode-markdown-snippets"}
