@@ -28,6 +28,9 @@ local function custom_attach(client)
         vimp.nmap({"silent"}, "gtd", "<Plug>(omnisharp_type_lookup)")
         vimp.nmap({"silent"}, "<leader>ac", "<Plug>(omnisharp_global_code_check)")
         vimp.nmap({"silent"}, "gm", "<Plug>(omnisharp_find_members)")
+        vimp.nmap({"silent"}, "<leader>f", "<Plug>(omnisharp_code_format)")
+        vimp.nmap({"silent"}, "K", "<Plug>(omnisharp_documentation)")
+        vimp.nmap({"silent"}, "rn", "<Plug>(omnisharp_rename)")
       end
     )
   else
@@ -39,18 +42,19 @@ local function custom_attach(client)
     buf_set_keymap('n', "gm", ":lua require('telescope.builtin').lsp_document_symbols()<CR>", opts)
     buf_set_keymap("n", "<Leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
     buf_set_keymap("n", "<leader>ac", ":lua require('telescope.builtin').lsp_workspace_diagnostics()<CR>", opts)
+    buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
+    buf_set_keymap("n", "rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+
+    if client.resolved_capabilities.document_formatting then
+      buf_set_keymap("n", "<Leader>f", "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", opts)
+    end
+
+    if client.resolved_capabilities.document_range_formatting then
+      buf_set_keymap("v", "<Leader>f", "<cmd>lua vim.lsp.buf.range_formatting_sync()<CR>", opts)
+    end
   end
 
-  if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<Leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  end
 
-  if client.resolved_capabilities.document_range_formatting then
-    buf_set_keymap("v", "<Leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
-  end
-
-  buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
-  buf_set_keymap("n", "rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
   buf_set_keymap("n", "<A-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
   buf_set_keymap("n", "<leader>ca", ":lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
   buf_set_keymap("n", "<leader>sd", ":lua require('telescope.builtin').lsp_definitions()<CR>", opts)

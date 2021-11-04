@@ -32,7 +32,6 @@ return require("packer").startup(
     use {"ray-x/lsp_signature.nvim"}
     use {"onsails/lspkind-nvim"}
 
-
     -- EditorConfig
     use "editorconfig/editorconfig-vim"
 
@@ -48,7 +47,7 @@ return require("packer").startup(
     use "norcalli/nvim-colorizer.lua"
     use {"yonlu/omni.vim"}
     use {"marko-cerovac/material.nvim"}
-    use {'bluz71/vim-nightfly-guicolors'}
+    use {"bluz71/vim-nightfly-guicolors"}
 
     -- Vim undo history
     use {"mbbill/undotree"}
@@ -108,11 +107,11 @@ return require("packer").startup(
     -- Autocomplete and Snippets
     use {"hrsh7th/vim-vsnip"}
     use {"hrsh7th/cmp-vsnip"}
-    use {'hrsh7th/cmp-nvim-lsp'}
-    use {'hrsh7th/cmp-buffer'}
-    use {'hrsh7th/cmp-path'}
-    use {'hrsh7th/cmp-cmdline'}
-    use {'hrsh7th/nvim-cmp'}
+    use {"hrsh7th/cmp-nvim-lsp"}
+    use {"hrsh7th/cmp-buffer"}
+    use {"hrsh7th/cmp-path"}
+    use {"hrsh7th/cmp-cmdline"}
+    use {"hrsh7th/nvim-cmp"}
     use {"rafamadriz/friendly-snippets"}
     use {"J0rgeSerran0/vscode-csharp-snippets"}
     use {"robole/vscode-markdown-snippets"}
@@ -122,8 +121,8 @@ return require("packer").startup(
 
     -- Treesitter
     use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
-    use {'nvim-treesitter/nvim-treesitter-textobjects'}
-    use {'nvim-treesitter/playground'}
+    use {"nvim-treesitter/nvim-treesitter-textobjects"}
+    use {"nvim-treesitter/playground"}
     use {"nvim-treesitter/nvim-treesitter-angular"}
     use {"windwp/nvim-ts-autotag"}
     use {"p00f/nvim-ts-rainbow"}
@@ -156,12 +155,12 @@ return require("packer").startup(
     use {"tpope/vim-dispatch"}
     use {"dbeniamine/cheat.sh-vim"}
     use {"kkoomen/vim-doge", run = ":call doge#install()"}
-    use { 'rmagatti/session-lens',
-          requires = {'rmagatti/auto-session', 'nvim-telescope/telescope.nvim'},
-          config = function()
-            require('session-lens').setup()
-          end
-        }
-
+    use {
+      "rmagatti/session-lens",
+      requires = {"rmagatti/auto-session", "nvim-telescope/telescope.nvim"},
+      config = function()
+        require("session-lens").setup()
+      end
+    }
   end
 )

@@ -1,6 +1,6 @@
 vim.cmd('let g:nvcode_termcolors=256')
 
-vim.g.material_style = 'darker'
+vim.g.material_style = 'deep ocean'
 
 require('material').setup({
 
