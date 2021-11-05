@@ -154,9 +154,6 @@ end
 -- Add lsp servers from local setup (i.e. Not installed as per nvim-lsp-installer
 local servers = {}
 
--- Supplement omnisharp-vim with diagnostic info
-servers.omnisharp = require("lsp.lsp-servers.omnisharp-ls").getConfig()
-
 servers.efm = efmConfig
 
 servers.stylelint_lsp = stylelintConfig
