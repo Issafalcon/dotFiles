@@ -42,7 +42,8 @@ local function custom_attach(client)
     buf_set_keymap('n', "gm", ":lua require('telescope.builtin').lsp_document_symbols()<CR>", opts)
     buf_set_keymap("n", "<Leader>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
     buf_set_keymap("n", "<leader>ac", ":lua require('telescope.builtin').lsp_workspace_diagnostics()<CR>", opts)
-    buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
+    -- buf_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", opts)
+    buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
     buf_set_keymap("n", "rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 
     if client.resolved_capabilities.document_formatting then
