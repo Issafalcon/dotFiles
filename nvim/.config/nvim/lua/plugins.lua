@@ -137,6 +137,9 @@ return require("packer").startup(
     use {"lervag/vimtex"}
     use {"vimwiki/vimwiki"}
 
+    -- Marks management
+    use {"chentau/marks.nvim"}
+
     -- Utility
     use {"terrortylor/nvim-comment"}
     use {"tpope/vim-surround"}
