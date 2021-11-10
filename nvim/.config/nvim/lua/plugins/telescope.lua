@@ -28,6 +28,8 @@ vimp.nnoremap("<Leader>sgf", ":lua require('telescope.builtin').git_bcommits()<C
 vimp.nnoremap("<Leader>sgb", ":lua require('telescope.builtin').git_branches()<CR>")
 vimp.nnoremap("<Leader>sgs", ":lua require('telescope.builtin').git_status()<CR>")
 vimp.nnoremap("<Leader>st", ":lua require('telescope.builtin').colorscheme()<CR>")
+vimp.nnoremap("<Leader>sm", ":lua require('telescope.builtin').marks()<CR>")
+vimp.nnoremap("<Leader>sr", ":lua require('telescope.builtin').registers()<CR>")
 vimp.nnoremap("<A-2>", ":lua require('telescope.builtin').registers()<CR>")
 vimp.inoremap("<A-2>", ":lua require('telescope.builtin').registers()<CR>")
 
