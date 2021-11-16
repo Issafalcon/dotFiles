@@ -1,0 +1,124 @@
+{
+  "configurations": {
+    "Jest single run all tests": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest single run all tests",
+        "program": "${VimCwd}/node_modules/jest/bin/jest.js",
+        "env": {
+          "CI": "true"
+        },
+        "args": [
+          "-c",
+          "${VimCwd}/jest.config.js",
+          "--verbose",
+          "-i",
+          "--no-cache"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    },
+    "Jest watch all tests": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest watch all tests",
+        "program": "${VimCwd}/node_modules/jest/bin/jest.js",
+        "args": [
+          "-c",
+          "${VimCwd}/jest.config.js",
+          "--verbose",
+          "-i",
+          "--no-cache",
+          "--watchAll"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    },
+    "Jest watch current file": {
+      "adapter": "vscode-node",
+      "configuration": {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest watch current file",
+        "program": "${VimCwd}/node_modules/jest/bin/jest.js",
+        "cwd": "${fileDirname}",
+        "args": [
+          "${file}",
+          "-c",
+          "${VimCwd}/jest.config.js",
+          "--verbose",
+          "-i",
+          "--no-cache",
+          "--watchAll"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    },
+    "Jest Debug Single Test": {
+      "adapter": "vscode-node",
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "uncaught": "N"
+        }
+      },
+      "configuration": {
+        "request": "launch",
+        "type": "node",
+        "runtimeArgs": [
+          "--inspect-brk",
+          "'${VimCwd}'/node_modules/jest/bin/jest.js",
+          "--no-coverage",
+          "-t",
+          "'${TestName}'",
+          "--",
+          "${file}"
+        ],
+        "console": "integratedTerminal",
+        "skipFiles": ["<node_internals>/**/*.js"],
+        "internalConsoleOptions": "neverOpen",
+        "port": 9229
+      }
+    },
+    "node - attach": {
+      "adapter": "vscode-node",
+      "breakpoints": {
+        "exception": {
+          "all": "N",
+          "uncaught": "N"
+        }
+      },
+      "configuration": {
+        "request": "attach",
+        "type": "node",
+        "skipFiles": ["<node_internals>/**/*.js"],
+        "processId": "${processId}"
+      }
+    },
+    "Chrome - Launch": {
+      "adapter": "chrome",
+      "configuration": {
+        "request": "launch",
+        "stopOnEntry": true,
+        "url": "${launchUrl}",
+        "webRoot": "${VimCwd}",
+        "runtimeExecutable": "/usr/bin/google-chrome"
+      }
+    },
+    "Chrome - Attach": {
+      "adapter": "chrome",
+      "configuration": {
+        "request": "attach",
+        "webRoot": "${VimCwd}",
+        "port": "9222"
+      }
+    }
+  }
+}

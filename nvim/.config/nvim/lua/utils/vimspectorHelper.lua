@@ -30,7 +30,7 @@ local function selectDebug()
 end
 
 local function startDebugAttach()
-  if vim.bo.filetype == "typescript" then
+  if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
     vim.cmd("call vimspector#LaunchWithSettings( #{ configuration: 'Chrome - Attach', VimCwd: '" .. cwd() .. "'})")
   elseif vim.bo.filetype == "cs" then
     vim.cmd(
@@ -41,7 +41,7 @@ local function startDebugAttach()
 end
 
 local function startDebugLaunch()
-  if vim.bo.filetype == "typescript" then
+  if vim.bo.filetype == "typescript" or vim.bo.filetype == "typescriptreact" then
     vim.cmd(
       "call vimspector#LaunchWithSettings( #{ configuration: 'Chrome - Launch', VimCwd: '" ..
         cwd() .. "', launchUrl: '" .. getUrlInput() .. "'})"
