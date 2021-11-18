@@ -58,21 +58,21 @@ sudo apt install yamllint
 brew install shfmt
 
 # Install debug adapters - Used for DAP only. Vimspector installs them as 'gadgets'
-# mkdir -p ~/debug-adapters
+mkdir -p ~/debug-adapters
 #
-# git clone https://github.com/microsoft/vscode-node-debug2.git ~/debug-adapters/vscode-node-debug2
-# cd ~/debug-adapters/vscode-node-debug2
-# npm install
+git clone https://github.com/microsoft/vscode-node-debug2.git ~/debug-adapters/vscode-node-debug2
+cd ~/debug-adapters/vscode-node-debug2
+npm install
 #
 # git clone https://github.com/Microsoft/vscode-chrome-debug ~/debug-adapters/vscode-chrome-debug
 # cd ~/debug-adapters/vscode-chrome-debug
 # npm install
 # npm run build
 #
-# git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
-# cd ~/debug-adapters/netcoredbg
-# mkdir build
-# cd build
-# CC=clang CXX=clang++ cmake ..
-# make
-# sudo make install
+git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
+cd ~/debug-adapters/netcoredbg
+mkdir build
+cd build
+CC=clang CXX=clang++ cmake ..
+make
+sudo make install

@@ -101,8 +101,8 @@ return require("packer").startup(
     use "tpope/vim-cucumber"
 
     -- Debugging
-    use {"puremourning/vimspector"}
-    -- use {'mfussenegger/nvim-dap'}
+    -- use {"puremourning/vimspector"}
+    use {'mfussenegger/nvim-dap'}
 
     -- Autocomplete and Snippets
     use {"hrsh7th/vim-vsnip"}

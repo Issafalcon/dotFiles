@@ -38,14 +38,15 @@ local function debugDotNet()
   dap.run(
     {
       type = "netcoredbg",
-      name = "attach - netcoredbg",
-      request = "attach",
-      processId = function()
-        return dapUtils.pick_process()
-      end,
-      -- program = function()
-      --   return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+      name = "launch - netcoredbg",
+      request = "launch",
+      stopOnEntry = true,
+      -- processId = function()
+      --   return dapUtils.pick_process()
       -- end,
+      program = function()
+        return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+      end
     }
   )
 end
