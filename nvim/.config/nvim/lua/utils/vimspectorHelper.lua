@@ -59,7 +59,7 @@ local function startDebugTest()
     -- This makes the assumption that the test runner is jest
     vim.cmd("TestFile -strategy=debugJest")
   elseif vim.bo.filetype == "cs" then
-    vim.cmd("TestNearest -strategy=debugDotNet")
+    vim.cmd("OmniSharpDebugTest")
   end
 end
 
