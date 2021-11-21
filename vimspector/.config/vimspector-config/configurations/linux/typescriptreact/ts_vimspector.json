@@ -106,10 +106,15 @@
       "adapter": "chrome",
       "configuration": {
         "request": "launch",
-        "stopOnEntry": true,
         "url": "${launchUrl}",
         "webRoot": "${VimCwd}",
-        "runtimeExecutable": "/usr/bin/google-chrome"
+        "runtimeExecutable": "/usr/bin/google-chrome",
+        "runtimeArgs": [
+          "--remote-debugging-port=9222"
+        ],
+        "sourceMapPathOverrides": {
+          "webpack:///src/*": "${VimCwd}/src"
+        }
       }
     },
     "Chrome - Attach": {
