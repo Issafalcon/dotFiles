@@ -7,7 +7,7 @@
         "type": "coreclr",
         "program": "${dllPath}",
         "args": [],
-        "stopAtEntry": true,
+        "stopAtEntry": false,
         "cwd": "${VimCwd}",
         "env": "{environment:{\\}}"
       }
@@ -17,7 +17,7 @@
       "configuration": {
         "request": "attach",
         "type": "coreclr",
-        "stopAtEntry": true,
+        "stopAtEntry": false,
         "env": {},
         "processId": "${processId}"
       }
