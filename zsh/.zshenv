@@ -28,3 +28,5 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
   # Used for vagrant - Enables vagrant use from within WSL2
   export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
 fi
+
+[ -s "$HOME/.zshenv_local" ] && source "$HOME/.zshenv_local"

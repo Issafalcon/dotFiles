@@ -204,5 +204,9 @@ customCommands:
         command: "git log --oneline --graph {{index .PromptResponses 2}} -S'{{index .PromptResponses 0}}' --all -- {{index .PromptResponses 1}}"
         filter: '(?P<commit_id>[0-9a-zA-Z]+) .*' # or just '(?P<commit_id>.*)' to catch commit descriptions too
         format: '{{ .commit_id }}'
+  - key: '<c-g>' # Out of sane keybindings in files context :(
+    description: 'Set the GPG_TTY value correctly so WSL terminal multiplexers can prompt for password on signed commits'
+    command: "export GPG_TTY=$(tty)"
+    context: 'files'
 services: {}
 notARepository: prompt
