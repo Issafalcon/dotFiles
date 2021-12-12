@@ -292,6 +292,17 @@
         ],
         "description": ["Insert 2 x 2 matrix with brackets"]
     },
+    "BMatrix3x3": {
+        "prefix": ["matrix_3x3", "\\matrix_3x3"],
+        "body": [
+            "\\begin{bmatrix}",
+            "\t$1 & $2 & $3 \\\\\\",
+            "\t$4 & $5 & $6 \\\\\\",
+            "\t$7 & $8 & $9",
+            "\\end{bmatrix}$0"
+        ],
+        "description": ["Insert 3 x 3 matrix with brackets"]
+    },
     "Large Fraction": {
         "prefix": ["fractionlarge", "\\fractionlarge"],
         "body": ["\\displaystyle\\frac{$1}{$2}$0"],
