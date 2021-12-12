@@ -282,6 +282,16 @@
         "body": ["\\overrightarrow{$1}$0"],
         "description": ["Insert vector symbol"]
     },
+    "BMatrix2x2": {
+        "prefix": ["matrix_2x2", "\\matrix_2x2"],
+        "body": [
+            "\\begin{bmatrix}",
+            "\t$1 & $2 \\\\\\",
+            "\t$3 & $4",
+            "\\end{bmatrix}$0"
+        ],
+        "description": ["Insert 2 x 2 matrix with brackets"]
+    },
     "Large Fraction": {
         "prefix": ["fractionlarge", "\\fractionlarge"],
         "body": ["\\displaystyle\\frac{$1}{$2}$0"],
