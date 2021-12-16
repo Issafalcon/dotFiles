@@ -50,6 +50,13 @@ fpath=("$DOTFILES/zsh/functions" "${fpath[@]}")
 autoload -U "${DOTFILES}"/zsh/functions/*(.:t)
 
 # +---------+
+# | SCRIPTS |
+# +---------+
+
+  [ -d "$DOTFILES/zsh/custom_scripts" ] \
+    && path+=("${DOTFILES}"/zsh/custom_scripts)
+
+# +---------+
 # | GENERAL |
 # +---------+
 
