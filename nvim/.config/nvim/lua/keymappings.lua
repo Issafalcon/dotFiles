@@ -1,5 +1,8 @@
 require('vimp')
 
+-- Exit insert mode without using Esc
+vim.api.nvim_set_keymap('i', 'jk', '<Esc>', {noremap = true, silent = true})
+
 -- Mapping for paste (Paste over visually selected text with whatever is in unnamed register)
 vimp.vnoremap('<Leader>p', '"_dP')
 
