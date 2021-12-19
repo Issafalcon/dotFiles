@@ -34,7 +34,7 @@ openWiki() {
 	WIKIDIR="${PROJECTS}/wiki"
 
 	if [[ -n $WIKI ]]; then
-		find "${WIKIDIR}" -maxdepth 5 -type f -iname "*${WIKI}*.pdf" -exec zathura '{}' \;
+		find "${WIKIDIR}" -maxdepth 5 -type f -iname "*${WIKI}*.pdf" -exec zathura '{}' \; &
 	fi
 }
 
