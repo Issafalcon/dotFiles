@@ -149,6 +149,13 @@
         ],
         "description": "Insert inline bionomial coefficient notation"
     },
+    "Limit": {
+        "prefix": ["limit", "\\limit"],
+        "body": [
+            "\\lim_{$1 \\to $2}$0"
+        ],
+        "description": "Insert limit notation"
+    },
     "Section": {
         "prefix": ["section", "\\section"],
         "body": [
