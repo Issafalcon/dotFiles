@@ -140,8 +140,11 @@ return require("packer").startup(
     -- Marks management
     use {"chentau/marks.nvim"}
 
-    -- Utility
+    -- Commenting Out Code
     use {"terrortylor/nvim-comment"}
+    use {"JoosepAlviste/nvim-ts-context-commentstring"}
+
+    -- Utility
     use {"tpope/vim-surround"}
     use {"sheerun/vim-polyglot"} -- Better syntax support
     use {"junegunn/vim-easy-align"}
