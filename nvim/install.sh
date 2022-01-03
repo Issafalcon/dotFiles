@@ -65,10 +65,10 @@ brew install shfmt
 # npm install
 # npm run build
 #
-# git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
-# cd ~/debug-adapters/netcoredbg
-# mkdir build
-# cd build
-# CC=clang CXX=clang++ cmake ..
-# make
-# sudo make install
+git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
+cd ~/debug-adapters/netcoredbg
+mkdir build
+cd build
+CC=clang CXX=clang++ cmake ..
+make
+sudo make install
