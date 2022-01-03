@@ -40,12 +40,8 @@ npm install -g tree-sitter-cli
 sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.6.0/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
-# Install language servers that can't be installed via the LspInstall vim command (via lspinstall plugin)
-brew install efm-langserver
-brew install texlab
-brew install hashicorp/tap/terraform-ls
-npm install -g emmet-ls
-npm install -g stylelint-lsp
+# Install language servers (if not available via lsp-installer or custom)
+npm install -g @kozer/emmet-language-server
 
 # Install formatters / linters for LSP
 npm install -g lua-fmt
@@ -69,10 +65,10 @@ brew install shfmt
 # npm install
 # npm run build
 #
-# git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
-# cd ~/debug-adapters/netcoredbg
-# mkdir build
-# cd build
-# CC=clang CXX=clang++ cmake ..
-# make
-# sudo make install
+git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
+cd ~/debug-adapters/netcoredbg
+mkdir build
+cd build
+CC=clang CXX=clang++ cmake ..
+make
+sudo make install
