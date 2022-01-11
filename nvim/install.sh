@@ -23,13 +23,32 @@ sudo apt-get install gettext
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below
-"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
+if [[ command -v python3 ]]; then
+  echo "Python 3 found. Skipping python 3 installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
+fi
 
 # Also need to use node for npm
-"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
+if [[ command -v node ]]; then
+  echo "Node found. Skipping python 3 installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
+fi
 
 # Install homebrew
-"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "homebrew"
+if [[ command -v brew ]]; then
+  echo "Homebrew found. Skipping Homebrew installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "homebrew"
+fi
+
+# Install go
+if [[ command -v go ]]; then
+  echo "go found. Skipping go installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
+fi
 
 pip3 install --user neovim-remote
 pip3 install --user ueberzug
@@ -54,17 +73,17 @@ sudo apt install yamllint
 brew install shfmt
 
 # Install debug adapters - Used for DAP only. Vimspector installs them as 'gadgets'
-# mkdir -p ~/debug-adapters
-#
-# git clone https://github.com/microsoft/vscode-node-debug2.git ~/debug-adapters/vscode-node-debug2
-# cd ~/debug-adapters/vscode-node-debug2
-# npm install
-#
-# git clone https://github.com/Microsoft/vscode-chrome-debug ~/debug-adapters/vscode-chrome-debug
-# cd ~/debug-adapters/vscode-chrome-debug
-# npm install
-# npm run build
-#
+mkdir -p ~/debug-adapters
+
+git clone https://github.com/microsoft/vscode-node-debug2.git ~/debug-adapters/vscode-node-debug2
+cd ~/debug-adapters/vscode-node-debug2
+npm install
+
+git clone https://github.com/Microsoft/vscode-chrome-debug ~/debug-adapters/vscode-chrome-debug
+cd ~/debug-adapters/vscode-chrome-debug
+npm install
+npm run build
+
 git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
 cd ~/debug-adapters/netcoredbg
 mkdir build

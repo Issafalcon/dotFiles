@@ -87,7 +87,7 @@ update_module_config() {
 				&& success "set $("$BASH" --version) at $BASH as default shell"
 		fi
 	else
-		if (! grep -q "${MODULE}" "$HOME"/.dotFileModules) && [[ "${MODULE}" != "zsh" ]]; then
+		if (! grep -q "^${MODULE}$" "$HOME"/.dotFileModules) && [[ "${MODULE}" != "zsh" ]]; then
 			echo "${MODULE}" >>"${HOME}"/.dotFileModules
 		fi
 
