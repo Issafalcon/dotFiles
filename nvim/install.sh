@@ -84,6 +84,11 @@ cd ~/debug-adapters/vscode-chrome-debug
 npm install
 npm run build
 
+git clone https://github.com/rogalmic/vscode-bash-debug.git ~/debug-adapters/vscode-bash-debug
+cd ~/debug-adapters/vscode-bash-debug
+npm install
+npm run compile
+
 git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
 cd ~/debug-adapters/netcoredbg
 mkdir build
