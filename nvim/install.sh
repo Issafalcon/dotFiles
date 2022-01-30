@@ -70,7 +70,9 @@ npm install -g prettier
 npm install -g markdownlint
 sudo apt-get install shellcheck
 sudo apt install yamllint
+sudo apt-get install uncrustify
 brew install shfmt
+
 
 # Install debug adapters - Used for DAP only. Vimspector installs them as 'gadgets'
 mkdir -p ~/debug-adapters
