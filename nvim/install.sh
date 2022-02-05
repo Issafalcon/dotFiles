@@ -56,7 +56,7 @@ pip3 install --user pynvim
 npm install -g tree-sitter-cli
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
-sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.6.0/nvim.appimage
+sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.6.1/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
 # Install language servers (if not available via lsp-installer or custom)
