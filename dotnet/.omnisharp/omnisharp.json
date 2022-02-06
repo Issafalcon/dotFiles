@@ -3,7 +3,7 @@
     "documentAnalysisTimeoutMs": 10000,
     "enableDecompilationSupport": true,
     "enableImportCompletion": true,
-    "enableAnalyzersSupport": false,
+    "enableAnalyzersSupport": true,
     "diagnosticWorkersThreadCount": 8
   },
 	"fileOptions": {
