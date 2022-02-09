@@ -1,0 +1,1 @@
+path+=($HOME/.dotnet/tools)
