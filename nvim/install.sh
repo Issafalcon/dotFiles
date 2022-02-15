@@ -72,6 +72,7 @@ sudo apt-get install shellcheck
 sudo apt install yamllint
 sudo apt-get install uncrustify
 brew install shfmt
+brew install stylua
 
 
 # Install debug adapters - Used for DAP only. Vimspector installs them as 'gadgets'
