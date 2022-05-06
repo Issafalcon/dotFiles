@@ -2,6 +2,7 @@ gui:
   scrollHeight: 8
   scrollPastBottom: true
   mouseEvents: true
+  showIcons: true
   skipUnstageLineWarning: false
   skipStashWarning: true
   sidePanelWidth: 0.3333
@@ -28,10 +29,10 @@ gui:
   showCommandLog: true
   commandLogSize: 8
 git:
+  # https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
   paging:
     colorArg: always
-    pager: ""
-    useConfig: false
+    useConfig: true
   merging:
     manualCommit: false
     args: ""
@@ -183,6 +184,7 @@ keybinding:
     update: u
     bulkMenu: b
 os:
+  editCommand: 'floaterm'
   openCommand: sh -c "xdg-open {{filename}} >/dev/null"
   openLinkCommand: sh -c "xdg-open {{link}} >/dev/null"
 disableStartupPopups: false
