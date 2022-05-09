@@ -184,7 +184,7 @@ keybinding:
     update: u
     bulkMenu: b
 os:
-  editCommand: nvim
+  editCommand: floaterm
   openCommand: sh -c "xdg-open {{filename}} >/dev/null"
   openLinkCommand: sh -c "xdg-open {{link}} >/dev/null"
 disableStartupPopups: false
