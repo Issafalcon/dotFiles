@@ -46,7 +46,7 @@ git:
   allBranchesLogCmd:
     git log --graph --all --color=always --abbrev-commit --decorate
     --date=relative  --pretty=medium
-  overrideGpg: true
+  overrideGpg: false
   disableForcePushing: false
   commitPrefixes: {}
 update:
