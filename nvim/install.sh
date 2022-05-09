@@ -23,28 +23,28 @@ sudo apt-get install gettext
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below
-if [[ command -v python3 ]]; then
+if [[ ! -v python3 ]]; then
   echo "Python 3 found. Skipping python 3 installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
 fi
 
 # Also need to use node for npm
-if [[ command -v node ]]; then
+if [[ ! -v node ]]; then
   echo "Node found. Skipping python 3 installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
 fi
 
 # Install homebrew
-if [[ command -v brew ]]; then
+if [[ ! -v brew ]]; then
   echo "Homebrew found. Skipping Homebrew installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "homebrew"
 fi
 
 # Install go
-if [[ command -v go ]]; then
+if [[ ! -v go ]]; then
   echo "go found. Skipping go installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
