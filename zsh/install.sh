@@ -6,10 +6,6 @@ fi
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-zsh
-
-zinit self-update
-
 # Enable italics and 256color for terminal
 tic "$DIR"/xterm-256color-italic.terminfo
 

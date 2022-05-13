@@ -95,6 +95,11 @@ update_module_config() {
 
 		if [[ $? -eq 0 ]]; then
 			success "Successfully stowed $MODULE module"
+
+      if [[ ${MODULE} == "zsh" ]]; then
+        zsh
+        zinit self-update
+      fi
 		else
 			fail "Failed to stow $MODULE module"
 		fi
