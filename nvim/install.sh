@@ -27,6 +27,7 @@ if [[ ! -v python3 ]]; then
   echo "Python 3 found. Skipping python 3 installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
+  path+=(/usr/bin/pip3)
 fi
 
 # Also need to use node for npm

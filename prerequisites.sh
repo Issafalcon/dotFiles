@@ -10,7 +10,8 @@ sudo apt update \
 		zip \
 		unzip \
 		build-essential \
-		libssl-dev
+		libssl-dev \
+    jq
 
 touch "${HOME}/.dotFileModules"
 chmod 777 "${HOME}/.dotFileModules"

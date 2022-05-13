@@ -40,11 +40,20 @@ It is recommended that you install a NerdFont compatible font prior to setting u
 
 ### Module Installation
 
-Modules are installed via two scripts in the root directory:
+Following the `prerequisites.sh` script run, modules can be installed via two scripts in the root directory:
 - `./bootstrap.sh`
 - `./bootstrap_bulk.sh`
 
 Module names match the names of the top level subdirectories in the repo (except `docs` and `.git`)
+
+The recommended order of modules would be:
+  1. `fzf` - The `z` function (fzf search on previously visited directories) relies on this being installed
+  2. `homebrew` - Required for installation of some of the other modules
+  3. `libsecret` - Used for storing git credentials in WSL
+  4. `git` - Adds `delta` which provides prettier output for git commands
+  5. `tmux` - Terminal multiplexer
+  6. `ranger` - Terminal file explorer
+  7. `lazygit` - TUI for git
 
 #### Individual Modules
 
@@ -63,13 +72,16 @@ $ ./bootstrap.sh -m <MODULE_NAME>
 To install multiple modules at once (or all of them), run the following:
 
 ```console
-$ ./bootstrap_bulk.sh.sh -i [...MODULE_NAMES] # Where <MODULE_NAMES> is a space separated list of modules
+$ ./bootstrap_bulk.sh -i [...MODULE_NAMES] # Where <MODULE_NAMES> is a space separated list of modules
 ```
 > Or, if you don't want to install the actual dependencies for the module (you may have them installed already)
 
 ```console
 $ ./bootstrap.sh -m [...MODULE_NAMES]
 ```
+
+### Neovim Setup
+
 ## Further help:
 
 - [Opinionated Terminal Setup for WSL2 on Windows](/docs/WSL2.md)

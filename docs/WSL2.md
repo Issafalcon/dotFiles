@@ -47,4 +47,3 @@ BoldAsFont=yes
 FontWeight=500
   ```
 
-
