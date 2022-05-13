@@ -1,11 +1,14 @@
 #!/bin/bash
 
-if [[ ! -d "$HOME"/.zinit ]]; then
-	mkdir ~/.zinit
-	git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
+if [[ ! -d "$HOME"/.local/share/zinit/zinit.git ]]; then
+  bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 fi
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+zsh
+
+zinit self-update
 
 # Enable italics and 256color for terminal
 tic "$DIR"/xterm-256color-italic.terminfo

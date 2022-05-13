@@ -27,7 +27,7 @@ These prerequisites may change as I evolve this repo.
 > IMPORTANT: Clone to the ~/dotFiles directory as this will become the default stow directory (this can of course be modified)
 
 ```console
-$ git clone https://github.com/Issafalcon/dotFiles.git ~/.dotFiles
+$ git clone https://github.com/Issafalcon/dotFiles.git ~/dotFiles
 $ cd ~/dotFiles
 $ ./prerequisites.sh 
 $ zsh
@@ -72,6 +72,7 @@ $ ./bootstrap.sh -m [...MODULE_NAMES]
 ```
 ## Further help:
 
+- [Opinionated Terminal Setup for WSL2 on Windows](/docs/WSL2.md)
 - [Personalize your configs](/docs/PERSONALIZATION.md)
 - [Understand how it works](/docs/DESIGN.md)
 
