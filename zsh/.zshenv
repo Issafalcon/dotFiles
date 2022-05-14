@@ -20,6 +20,10 @@ export MANPATH="/usr/local/man:$MANPATH"
 # nvm
 export NVM_DIR="$HOME/.nvm"
 
+# Setting local (TODO: Uncomment the en_GB.UTF-8 in /etc/locale.gen after running 'sudo locale'. Then run sudo locale-gen after)
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 # Allow WSL gui apps to load up in Windows X Server
 if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
   # set DISPLAY variable to the IP automatically assigned to WSL2
