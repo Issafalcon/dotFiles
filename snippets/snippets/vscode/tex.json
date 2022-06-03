@@ -113,11 +113,9 @@
     "Highlighted Code Block": {
         "prefix": ["code", "\\code"],
         "body": [
-            "\\begin{mygreenhighlightedbox}",
-            "\t\\begin{minted}{$1}",
-            "\t\t$2",
-            "\t\\end{minted}",
-            "\\end{mygreenhighlightedbox}$0"
+            "\\begin{minted}{$1}",
+            "\t$2",
+            "\\end{minted}$0"
         ],
         "description": "Created a greeen highlighted custom box around code block"
     },
