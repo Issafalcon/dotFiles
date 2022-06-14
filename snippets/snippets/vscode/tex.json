@@ -157,16 +157,29 @@
     "Section": {
         "prefix": ["section", "\\section"],
         "body": [
-            "\\section{$1}$0"
+            "\\section{$1}",
+            "\\label{sec:$1}",
+            "$0"
         ],
         "description": "Insert a new section."
     },
     "Subsection": {
         "prefix": ["subsection", "\\subsection"],
         "body": [
-            "\\subsection{$1}$0"
+            "\\subsection{$1}",
+            "\\label{sec:$1}",
+            "$0"
         ],
         "description": "Insert a new subsection."
+    },
+    "SubSubsection": {
+        "prefix": ["subsubsection", "\\subsubsection"],
+        "body": [
+            "\\subsubsection{$1}",
+            "\\label{sec:$1}",
+            "$0"
+        ],
+        "description": "Insert a new subsubsection."
     },
     "Header": {
         "prefix": ["header", "\\header", "##"],
