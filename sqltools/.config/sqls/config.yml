@@ -1,0 +1,12 @@
+# Set to true to use lowercase keywords instead of uppercase.
+# See https://github.com/lighttiger2505/sqls for other connection examples
+lowercaseKeywords: false
+connections:
+  - alias: "Windows Host MS-SQL"
+    driver: mssql
+    proto: tcp
+    user: change_me
+    passwd: change_me
+    host: 172.27.240.1
+    port: 1433
+    dbName: AdventureWorks2019

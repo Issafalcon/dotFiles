@@ -62,6 +62,7 @@ sudo chmod 777 /usr/bin/nvim
 
 # Install language servers (if not available via lsp-installer or custom)
 npm install -g @kozer/emmet-language-server
+go install github.com/lighttiger2505/sqls@latest
 
 # Install formatters / linters for LSP
 npm install -g lua-fmt
