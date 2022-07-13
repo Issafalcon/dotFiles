@@ -9,7 +9,11 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
 	unzip -p /tmp/win32yank.zip win32yank.exe >/tmp/win32yank.exe
 	chmod +x /tmp/win32yank.exe
 	
-	mv /tmp/win32yank.exe "$HOME"/.local/bin
+  if [[ ! -d "$HOME/.local/bin" ]]; then
+    mkdir "$HOME"/.local/bin
+  fi
+
+	sudo mv /tmp/win32yank.exe /bin
 else
 	sudo apt-get install -y xclip
 fi
