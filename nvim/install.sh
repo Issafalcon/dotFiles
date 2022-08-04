@@ -37,13 +37,6 @@ else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
 fi
 
-# Install homebrew
-if [[ ! -v brew ]]; then
-  echo "Homebrew found. Skipping Homebrew installation"
-else
-  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "homebrew"
-fi
-
 # Install go
 if [[ ! -v go ]]; then
   echo "go found. Skipping go installation"
@@ -60,44 +53,13 @@ npm install -g tree-sitter-cli
 sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.7.0/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
-# Install language servers (if not available via lsp-installer or custom)
-npm install -g @kozer/emmet-language-server
-go install github.com/lighttiger2505/sqls@latest
-
 # Install formatters / linters for LSP
-npm install -g lua-fmt
-npm install -g eslint
-npm install -g eslint_d
-npm install -g prettier
-npm install -g markdownlint
-sudo apt-get install shellcheck
-sudo apt install yamllint
-sudo apt-get install uncrustify
 sudo apt-get install chktex
-brew install shfmt
-brew install stylua
 
-# Install debug adapters - Used for DAP only. Vimspector installs them as 'gadgets'
+# Install debug adapters: Use Mason plugin to install others
 mkdir -p ~/debug-adapters
-
-git clone https://github.com/microsoft/vscode-node-debug2.git ~/debug-adapters/vscode-node-debug2
-cd ~/debug-adapters/vscode-node-debug2
-npm install
-
-git clone https://github.com/Microsoft/vscode-chrome-debug ~/debug-adapters/vscode-chrome-debug
-cd ~/debug-adapters/vscode-chrome-debug
-npm install
-npm run build
 
 git clone https://github.com/rogalmic/vscode-bash-debug.git ~/debug-adapters/vscode-bash-debug
 cd ~/debug-adapters/vscode-bash-debug
 npm install
 npm run compile
-
-git clone https://github.com/Samsung/netcoredbg.git ~/debug-adapters/netcoredbg
-cd ~/debug-adapters/netcoredbg
-mkdir build
-cd build
-CC=clang CXX=clang++ cmake ..
-make
-sudo make install
