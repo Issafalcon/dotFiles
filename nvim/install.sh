@@ -57,9 +57,9 @@ sudo chmod 777 /usr/bin/nvim
 sudo apt-get install chktex
 
 # Install debug adapters: Use Mason plugin to install others
-mkdir -p ~/debug-adapters
+mkdir -p ~/.local/share/nvim/mason/packages
 
-git clone https://github.com/rogalmic/vscode-bash-debug.git ~/debug-adapters/vscode-bash-debug
-cd ~/debug-adapters/vscode-bash-debug
+git clone https://github.com/rogalmic/vscode-bash-debug.git ~/.local/share/nvim/mason/packages
+cd ~/.local/share/nvim/mason/packages/vscode-bash-debug
 npm install
 npm run compile
