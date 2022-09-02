@@ -24,24 +24,24 @@ SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below
 if [[ ! -v python3 ]]; then
-  echo "Python 3 found. Skipping python 3 installation"
+	echo "Python 3 found. Skipping python 3 installation"
 else
-  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
-  path+=(/usr/bin/pip3)
+	"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
+	path+=(/usr/bin/pip3)
 fi
 
 # Also need to use node for npm
 if [[ ! -v node ]]; then
-  echo "Node found. Skipping python 3 installation"
+	echo "Node found. Skipping python 3 installation"
 else
-  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
+	"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
 fi
 
 # Install go
 if [[ ! -v go ]]; then
-  echo "go found. Skipping go installation"
+	echo "go found. Skipping go installation"
 else
-  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
+	"${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
 fi
 
 pip3 install --user neovim-remote
@@ -50,7 +50,7 @@ pip3 install --user pynvim
 npm install -g tree-sitter-cli
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
-sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.7.0/nvim.appimage
+sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.7.2/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
 # Install formatters / linters for LSP
