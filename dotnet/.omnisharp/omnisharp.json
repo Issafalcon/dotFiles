@@ -4,7 +4,21 @@
     "enableDecompilationSupport": true,
     "enableImportCompletion": true,
     "enableAnalyzersSupport": true,
-    "diagnosticWorkersThreadCount": 8
+    "diagnosticWorkersThreadCount": 8,
+    "inlayHintsOptions": {
+        "enableForParameters": true,
+        "forLiteralParameters": true,
+        "forIndexerParameters": true,
+        "forObjectCreationParameters": true,
+        "forOtherParameters": true,
+        "suppressForParametersThatDifferOnlyBySuffix": false,
+        "suppressForParametersThatMatchMethodIntent": false,
+        "suppressForParametersThatMatchArgumentName": false,
+        "enableForTypes": true,
+        "forImplicitVariableTypes": true,
+        "forLambdaParameterTypes": true,
+        "forImplicitObjectCreation": true
+    }
   },
 	"fileOptions": {
     "systemExcludeSearchPatterns": [
