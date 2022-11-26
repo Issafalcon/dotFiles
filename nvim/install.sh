@@ -9,6 +9,7 @@ sudo apt-get install ninja-build
 sudo apt-get install silversearcher-ag # Install silversearcher to perform fzf searches using ag insteak of ack
 sudo apt-get install -y exuberant-ctags
 sudo apt-get install clang
+sudo apt-get install sqlite3 libsqlite3-dev # For persisting history of yanks between sessions
 
 # Needed for ueberzug
 sudo apt-get install libjpeg8-dev
