@@ -7,13 +7,47 @@
 # A simple command for demonstration purposes follows.
 # -----------------------------------------------------------------------------
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
 
 # You can import any python module as needed.
 import os
+import subprocess
+import ranger.api
+import ranger.core.runner
 
 # You always need to import ranger.api.commands here to get the Command class:
 from ranger.api.commands import Command
+from ranger.core.loader import CommandLoader
+
+old_hook_init = ranger.api.hook_init
+
+
+def call(cmds):
+    return subprocess.Popen(cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def git_exists():
+    try:
+        proc = call(["git", "rev-parse", "--git-dir"])
+        proc.communicate()
+        return proc.returncode == 0
+    except OSError:
+        return False
+
+
+def git_mv_call(fm, flags, fname):
+    thisdir = str(fm.thisdir)
+    git_mv_command = ["git", "mv", *flags, fname, thisdir]
+    # print out the git_mv_command
+    fm.notify(" ".join(git_mv_command))
+    loader = CommandLoader(git_mv_command, "git:mv")
+
+    def reload_dir():
+        thisdir.unload()
+        thisdir.load_content()
+
+    loader.signal_bind("after", reload_dir)
+    fm.loader.add(loader)
 
 
 # Any class that is a subclass of "Command" will be integrated into ranger as a
@@ -60,3 +94,28 @@ class my_edit(Command):
         # This is a generic tab-completion function that iterates through the
         # content of the current directory.
         return self._tab_directory_content()
+
+
+class git_mv(Command):
+    """:git_mv
+
+    Perform git mv on the selected files, into the current ranger directory.
+    """
+
+    def execute(self):
+        if not git_exists():
+            self.fm.notify("not in a git directory", bad=True)
+            return
+
+        self.fm.notify("In git. Trying to move files", bad=False)
+
+        if self.arg(1):
+            flags = self.rest(1)
+        else:
+            flags = []
+
+        paths = [os.path.basename(f.path) for f in self.fm.thistab.get_selection()]
+
+        for p in paths:
+            # self.fm.notify("Moving file " + p + " to folder")
+            git_mv_call(self.fm, flags, p)
