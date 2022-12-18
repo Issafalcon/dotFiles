@@ -13,7 +13,7 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
     mkdir "$HOME"/.local/bin
   fi
 
-	sudo mv /tmp/win32yank.exe /bin
+	sudo mv /tmp/win32yank.exe "$HOME"/.local/bin
 else
 	sudo apt-get install -y xclip
 fi
