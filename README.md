@@ -3,7 +3,7 @@
 > Modular installation of terminal, and terminal tools with my personal config files
 > Inspired by [`caarlos0 dotFiles setup`](https://github.com/caarlos0/dotfiles)
 >
-> DISCLOSURE: Most of the contents have only been tested using Ubuntu 20.04 on native Linux machine and WSL
+> DISCLOSURE: Most of the contents have only been tested using Ubuntu 22.04 on native Linux machine and WSL
 >             They are also an ongoing WIP and highly personalised, so please review the module code before you install to make sure it fits your needs
 
 The goals of my dotFiles are as follows:
