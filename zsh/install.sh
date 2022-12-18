@@ -12,3 +12,6 @@ tic "$DIR"/xterm-256color-italic.terminfo
 sudo apt-get update \
 	&& sudo apt-get install fonts-powerline \
 	&& sudo apt-get install powerline
+
+cd "$HOME"
+mv .zshrc .zshrc_original

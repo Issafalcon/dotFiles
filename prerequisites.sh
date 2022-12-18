@@ -14,6 +14,8 @@ sudo apt update \
 		libssl-dev \
     jq
 
+sudo locale-gen en_US.UTF-8
+
 touch "${HOME}/.dotFileModules"
 chmod 777 "${HOME}/.dotFileModules"
 
