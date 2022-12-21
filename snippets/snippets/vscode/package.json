@@ -1,13 +1,19 @@
 {
-	"name": "cutom-vscode-like-snippets",
-	"contributes": {
-		"snippets": [
-			{
-				"language": [
-					"tex"
-				],
-				"path": "./tex.json"
-			}
-		]
-	}
+  "name": "cutom-vscode-like-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "tex"
+        ],
+        "path": "./tex.json"
+      },
+      {
+        "language": [
+          "plantuml"
+        ],
+        "path": "./plantuml.json"
+      }
+    ]
+  }
 }
