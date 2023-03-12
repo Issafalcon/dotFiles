@@ -522,7 +522,7 @@
         "prefix": ["table2x2_glossary"],
         "body": [
             "\\begin{center}", 
-            "   \begin{tabularx}{0.9\textwidth}{|X|X|}",
+            "   \\begin{tabularx}{0.9\\textwidth}{|X|X|}",
             "       \\hline",
             "       \\multicolumn{1}{|c|}{\\textbf{$1}} & \\multicolumn{1}{|c|}{\\textbf{$2}} \\\\\\",
             "       $3 & $4 \\\\\\ \\hline",
@@ -536,7 +536,7 @@
         "prefix": ["table3x3_glossary"],
         "body": [
             "\\begin{center}", 
-            "   \begin{tabularx}{0.9\textwidth}{|X|X|}",
+            "   \\begin{tabularx}{0.9\\textwidth}{|X|X|}",
             "       \\hline",
             "       \\multicolumn{1}{|c|}{\\textbf{$1}} & \\multicolumn{1}{|c|}{\\textbf{$2}}",
             "       & \\multicolumn{1}{|c|}{\\textbf{$4}} \\\\\\ \\hline",
