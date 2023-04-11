@@ -12,7 +12,6 @@ tmux new-window -c "${PROJECTS}"/wiki -t wiki:2 -n Terminals
 tmux select-layout -t wiki:1 tiled
 tmux select-layout -t wiki:2 tiled
 
-tmux select-pane -t wiki:2.0
 tmux select-window -t wiki:editor
 tmux select-pane -t wiki:editor.0
 
