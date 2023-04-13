@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Check if wiki dir exists and create it if not.
+if [ ! -d "${PROJECTS}"/wiki ]; then
+
+  # Clone wiki repo into wiki dir.
+  git clone https://github.com/Issafalcon/wiki.git "${PROJECTS}"/wiki
+fi
+
 # Create the session and the first window. Manually switch to root
 # directory if required to support tmux < 1.9
 TMUX=$(tmux new-session -c "${PROJECTS}"/wiki -d -s wiki -n editor)
