@@ -8,4 +8,3 @@ if [ ! -d ~/bin ]; then
 fi
 
 mv ./WezTerm-20230408-112425-69ae8472-Ubuntu20.04.AppImage ~/bin/wezterm
-~/bin/wezterm
