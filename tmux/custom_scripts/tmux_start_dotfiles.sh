@@ -10,9 +10,14 @@ tmux send-keys -t config:1.0 nvim C-m
 tmux new-window -c "${DOTFILES}"/nvim/.config/nvim -t config:2 -n nvim-config
 tmux send-keys -t config:2.0 nvim C-m
 
+# Wezterm Config
+tmux new-window -c "${DOTFILES}"/wezterm/.config/wezterm -t config:3 -n wezterm-config
+tmux send-keys -t config:3.0 nvim C-m
+
 # Teminals Window
-tmux new-window -c ~/dotFiles -t config:3 -n Terminals
-tmux splitw -c "${DOTFILES}"/nvim/.config/nvim -t config:3 -l 50%
+tmux new-window -c ~/dotFiles -t config:4 -n Terminals
+tmux splitw -c "${DOTFILES}"/nvim/.config/nvim -t config:4 -l 50%
+tmux splitw -h -c "${DOTFILES}"/wezterm/.config/wezterm -t config:4.1 -l 50%
 
 tmux select-layout -t config:1 tiled
 tmux select-layout -t config:2 tiled
