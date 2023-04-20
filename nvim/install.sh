@@ -46,6 +46,7 @@ else
 fi
 
 pip3 install neovim-remote
+pip3 install neovim
 pip3 install ueberzug
 pip3 install pynvim
 npm install -g tree-sitter-cli
