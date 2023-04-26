@@ -24,7 +24,7 @@ zlib1g-dev \
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below
-if [[ ! -v python3 ]]; then
+if command -v python3 > /dev/null; then
   echo "Python 3 found. Skipping python 3 installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
@@ -32,24 +32,35 @@ else
 fi
 
 # Also need to use node for npm
-if [[ ! -v node ]]; then
+# check if node is installed
+if command -v node > /dev/null; then
   echo "Node found. Skipping python 3 installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
 fi
 
 # Install go
-if [[ ! -v go ]]; then
+if command -v go > /dev/null; then 
   echo "go found. Skipping go installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
 fi
 
-pip3 install neovim-remote
-pip3 install neovim
-pip3 install ueberzug
+# Set python virtual env
+if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
+  mkdir -p python3/envs
+  cd "$HOME"/python3/envs || exit
+  python3 -m venv neovim
+  source "$HOME"/python3/envs/neovim/bin/activate
+  python3 -m pip install pynvim
+  python3 -m pip install neovim
+  python3 -m pip install neovim-remote
+  exit
+fi
+
 pip3 install pynvim
 npm install -g tree-sitter-cli
+npm install -g neovim
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
 sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.9.0/nvim.appimage
@@ -59,4 +70,4 @@ sudo chmod 777 /usr/bin/nvim
 sudo apt-get install -y chktex
 
 # FUSE needed to run app images
-sudo apt install -y fuse libfuse2
+sudo apt install -y libfuse2
