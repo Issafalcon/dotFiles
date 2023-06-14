@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Script to manually execute latexmk compiler that also compiles indexes and glossaries
-# This is to workaround the limitation that VimTex \ll command is unable to also compile the glossaries
-# and will error is one is included
+# Script to convert a LaTeX wiki file to mediawiki format using pandoc
+# Requires pandoc and pandoc-citeproc to be installed
+# If a bibliography.bib file is present, it will also use that to create citations using the elsevier-with-titles.csl style
+# Usage: pandoc-tex-to-mediawiki.sh <file.tex>
 
 if [[ $# -lt 1 ]]; then
   echo 1>$2 "$0: File argument is required"
