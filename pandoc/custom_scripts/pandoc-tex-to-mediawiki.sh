@@ -26,23 +26,23 @@ if ! command -v pandoc-citeproc &>/dev/null; then
 fi
 
 # Check if mediawiki folder exists, if not, create it
-if ! [ -d "${TEX_DIR}/mediawiki/" ]; then
-  mkdir "${TEX_DIR}/mediawiki"
+if ! [ -d "${TEX_DIR}/../mediawiki/" ]; then
+  mkdir "${TEX_DIR}/../mediawiki"
 fi
 
 cd "$TEX_DIR" || return
 
-if [ -f "${TEX_DIR}/references.bib" ]; then
+if [ -f "${TEX_DIR}/../bibliography.bib" ]; then
   pandoc -f latex -t mediawiki \
     --metadata link-citations=true \
-    --bibliography="${TEX_DIR}/references.bib" \
+    --bibliography="${TEX_DIR}/../bibliography.bib" \
     --csl="${PROJECTS}/wiki/elsevier-with-titles.csl" \
     "${FULL_PATH}" \
-    -o "${TEX_DIR}/mediawiki/${FILE}.md"
+    -o "${TEX_DIR}/../mediawiki/${FILE}.md"
 else
   pandoc -f latex -t mediawiki \
     --metadata link-citations=true \
     --csl="${PROJECTS}/wiki/elsevier-with-titles.csl" \
     "${FULL_PATH}" \
-    -o "${TEX_DIR}/mediawiki/${FILE}.md"
+    -o "${TEX_DIR}/../mediawiki/${FILE}.md"
 fi
