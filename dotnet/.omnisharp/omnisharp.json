@@ -32,7 +32,7 @@
     "EnableEditorConfigSupport": true,
     "OrganizeImports": true,
     "NewLine": "\n",
-    "UseTabs": true,
+    "UseTabs": false,
     "TabSize": 4,
     "IndentationSize": 4,
     "SpacingAfterMethodDeclarationName": false,
