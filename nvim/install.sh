@@ -34,7 +34,7 @@ fi
 # Also need to use node for npm
 # check if node is installed
 if command -v node > /dev/null; then
-  echo "Node found. Skipping python 3 installation"
+  echo "Node found. Skipping node installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
 fi
@@ -48,14 +48,14 @@ fi
 
 # Set python virtual env
 if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
-  mkdir -p python3/envs
+  mkdir -p "$HOME"/python3/envs
   cd "$HOME"/python3/envs || exit
   python3 -m venv neovim
   source "$HOME"/python3/envs/neovim/bin/activate
   python3 -m pip install pynvim
   python3 -m pip install neovim
   python3 -m pip install neovim-remote
-  exit
+  deactivate
 fi
 
 pip3 install pynvim
@@ -63,7 +63,7 @@ npm install -g tree-sitter-cli
 npm install -g neovim
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
-sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.9.0/nvim.appimage
+sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.9.1/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
 # Install formatters / linters for LSP
