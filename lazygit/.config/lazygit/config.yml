@@ -184,9 +184,9 @@ keybinding:
     update: u
     bulkMenu: b
 os:
-  editCommand: nvim
-  openCommand: sh -c "xdg-open {{filename}} >/dev/null"
-  openLinkCommand: sh -c "xdg-open {{link}} >/dev/null"
+  edit: nvim
+  open: sh -c "xdg-open {{filename}} >/dev/null"
+  openLink: sh -c "xdg-open {{link}} >/dev/null"
 disableStartupPopups: false
 customCommands:
   - key: '<c-a>' # Out of sane keybindings in commits context :(
