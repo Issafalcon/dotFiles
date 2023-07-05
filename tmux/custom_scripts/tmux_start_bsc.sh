@@ -6,9 +6,9 @@ eval set -- "$ARGS"
 
 # Create the session and the first window. Manually switch to root
 # directory if required to support tmux < 1.9
-TMUX=$(tmux new-session -c "${PROJECTS}"/BSC/FrontEnd -d -s BSC -n FrontEnd)
+TMUX=$(tmux new-session -c "${PROJECTS}"/BSC/Frontend -d -s BSC -n Frontend)
 
-tmux send-keys -t BSC:FrontEnd nvim C-m
+tmux send-keys -t BSC:Frontend nvim C-m
 
 # Create other windows.
 tmux new-window -c "${PROJECTS}"/BSC/Backend/BSC.Api -t BSC:2 -n API
@@ -16,8 +16,8 @@ tmux new-window -c "${PROJECTS}"/BSC/Frontend -t BSC:3 -n Terminals
 
 tmux send-keys -t BSC:API nvim C-m
 
-tmux select-layout -t BSC:FrontEnd tiled
-tmux select-pane -t BSC:FrontEnd.0
+tmux select-layout -t BSC:Frontend tiled
+tmux select-pane -t BSC:Frontend.0
 
 tmux select-layout -t BSC:API tiled
 tmux select-pane -t BSC:API.0
@@ -43,4 +43,3 @@ if [ -z "$TMUX" ]; then
 else
   tmux -u switch-client -t BSC
 fi
-
