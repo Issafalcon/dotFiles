@@ -9,3 +9,4 @@ config.zsh
 completion.zsh
 custom_scripts
 functions
+README.MD

@@ -8,13 +8,13 @@ eval set -- "$ARGS"
 # directory if required to support tmux < 1.9
 TMUX=$(tmux new-session -c "${PROJECTS}"/BSC/Frontend -d -s BSC -n Frontend)
 
-tmux send-keys -t BSC:Frontend nvim C-m
+tmux send-keys -t BSC:Frontend.0 nvim C-m
 
 # Create other windows.
 tmux new-window -c "${PROJECTS}"/BSC/Backend/BSC.Api -t BSC:2 -n API
 tmux new-window -c "${PROJECTS}"/BSC/Frontend -t BSC:3 -n Terminals
 
-tmux send-keys -t BSC:API nvim C-m
+tmux send-keys -t BSC:API.0 nvim C-m
 
 tmux select-layout -t BSC:Frontend tiled
 tmux select-pane -t BSC:Frontend.0
