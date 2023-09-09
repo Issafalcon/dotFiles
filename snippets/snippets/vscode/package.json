@@ -13,6 +13,13 @@
           "plantuml"
         ],
         "path": "./plantuml.json"
+      },
+      {
+        "language": [
+          "global",
+          "all"
+        ],
+        "path": "./all.json"
       }
     ]
   }
