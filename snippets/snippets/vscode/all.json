@@ -11,5 +11,5 @@
       "add_executable($1 ${2:main.cpp})$0"
     ],
     "description": "CMakeLists code snippet"
-  },
+  }
 }
