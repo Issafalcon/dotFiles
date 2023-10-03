@@ -63,7 +63,7 @@ npm install -g tree-sitter-cli
 npm install -g neovim
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
-sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.9.1/nvim.appimage
+sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.9.2/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
 # Install formatters / linters for LSP
