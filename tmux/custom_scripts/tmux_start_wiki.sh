@@ -10,12 +10,12 @@ fi
 if [ ! -d "${PROJECTS}"/wiki-md ]; then
 
   # Clone wiki repo into wiki dir.
-  git clone https://github.com/Issafalcon/wiki-md.git "${PROJECTS}"/wiki-md
+  git clone https://github.com/Issafalcon/obsidian-notes.git "${PROJECTS}"/obsidian-notes
 fi
 
 # Create the session and the first window. Manually switch to root
 # directory if required to support tmux < 1.9
-TMUX=$(tmux new-session -c "${PROJECTS}"/wiki-md -d -s wiki -n Obsidian)
+TMUX=$(tmux new-session -c "${PROJECTS}"/obsidian-notes -d -s wiki -n Obsidian)
 
 tmux send-keys -t wiki:1.0 nvim C-m
 
@@ -24,9 +24,8 @@ tmux new-window -c "${PROJECTS}"/wiki -t wiki:2 -n Terminals
 
 # Old wiki
 tmux new-window -c "${DOTFILES}"/wiki -t wiki:3 -n wiki
-tmux send-keys -t config:3.0 nvim C-m
+tmux send-keys -t wiki:3.0 nvim C-m
 
-tmux select-layout -t wiki:1 tiled
 tmux select-layout -t wiki:2 tiled
 
 tmux select-window -t wiki:Obsidian
