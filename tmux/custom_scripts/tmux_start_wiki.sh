@@ -21,6 +21,8 @@ tmux send-keys -t wiki:1.0 nvim C-m
 
 # Terminal
 tmux new-window -c "${PROJECTS}"/wiki -t wiki:2 -n Terminals
+tmux split-window -c "${PROJECTS}"/wiki -t wiki:Terminals -h -l 30%
+tmux send-keys -t wiki:Terminals.1 obsidian C-m
 
 # Old wiki
 tmux new-window -c "${DOTFILES}"/wiki -t wiki:3 -n wiki
