@@ -2,13 +2,11 @@
 
 # Check if wiki dir exists and create it if not.
 if [ ! -d "${PROJECTS}"/wiki ]; then
-
   # Clone wiki repo into wiki dir.
   git clone https://github.com/Issafalcon/wiki.git "${PROJECTS}"/wiki
 fi
 
-if [ ! -d "${PROJECTS}"/wiki-md ]; then
-
+if [ ! -d "${PROJECTS}"/obsidian-notes ]; then
   # Clone wiki repo into wiki dir.
   git clone https://github.com/Issafalcon/obsidian-notes.git "${PROJECTS}"/obsidian-notes
 fi
