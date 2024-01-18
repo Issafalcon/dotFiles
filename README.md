@@ -82,6 +82,10 @@ $ ./bootstrap.sh -m [...MODULE_NAMES]
 
 ### Neovim Setup
 
+### MySql Setup
+
+This module folder contains a `docker-compose.yaml` file and associated `.env` and SQL script files to startup a containerized MySql server.
+
 ## Further help:
 
 - [Opinionated Terminal Setup for WSL2 on Windows](/docs/WSL2.md)
