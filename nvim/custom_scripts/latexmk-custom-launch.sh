@@ -20,7 +20,7 @@ if ! command -v latexmk &> /dev/null; then
 fi
 
 cd "$TEX_DIR" || return
-latexmk -pdf -verbose -shell-escape "${FILE}"
+latexmk -pdf -pdflatex=lualatex -verbose -shell-escape "${FILE}"
 
 if ! command -v makeglossaries &> /dev/null; then
  echo "makeglossaries could not be found" 
@@ -28,4 +28,4 @@ if ! command -v makeglossaries &> /dev/null; then
 fi
 
 makeglossaries "${FILE%.*}"
-latexmk -pdf -pvc -verbose -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape "${FILE}"
+latexmk -pdf -pdflatex=lualatex -pvc -verbose -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape "${FILE}"
