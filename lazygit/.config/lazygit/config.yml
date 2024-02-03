@@ -2,7 +2,7 @@ gui:
     scrollHeight: 8
     scrollPastBottom: true
     mouseEvents: true
-    showIcons: true
+    nerdFontsVersion: "3"
     skipDiscardChangeWarning: false
     skipStashWarning: true
     sidePanelWidth: 0.3333
@@ -24,7 +24,7 @@ gui:
     commitLength:
         show: true
     skipNoStagedFilesWarning: false
-    showFileTree: false
+    showFileTree: true
     showRandomTip: true
     showCommandLog: true
     commandLogSize: 8
