@@ -11,7 +11,6 @@ sudo apt-get install -y ripgrep \
   clang \
   sqlite3 libsqlite3-dev
 
-# Needed for ueberzug
 sudo apt-get install -y libjpeg8-dev
 zlib1g-dev \
   libxtst-dev \
@@ -24,7 +23,7 @@ zlib1g-dev \
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 # Need python and pip to install below
-if command -v python3 > /dev/null; then
+if command -v python3 >/dev/null; then
   echo "Python 3 found. Skipping python 3 installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "python"
@@ -33,14 +32,14 @@ fi
 
 # Also need to use node for npm
 # check if node is installed
-if command -v node > /dev/null; then
+if command -v node >/dev/null; then
   echo "Node found. Skipping node installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "node"
 fi
 
 # Install go
-if command -v go > /dev/null; then 
+if command -v go >/dev/null; then
   echo "go found. Skipping go installation"
 else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
