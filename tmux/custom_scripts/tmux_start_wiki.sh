@@ -22,10 +22,6 @@ tmux new-window -c "${PROJECTS}"/wiki -t wiki:2 -n Terminals
 tmux split-window -c "${PROJECTS}"/wiki -t wiki:Terminals -h -l 30%
 tmux send-keys -t wiki:Terminals.1 obsidian C-m
 
-# Old wiki
-tmux new-window -c "${DOTFILES}"/wiki -t wiki:3 -n wiki
-tmux send-keys -t wiki:3.0 nvim C-m
-
 tmux select-layout -t wiki:2 tiled
 
 tmux select-window -t wiki:Obsidian
