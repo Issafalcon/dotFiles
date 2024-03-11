@@ -1,7 +1,6 @@
 #!/bin/bash
 
-usage ()
-{
+usage() {
   # Print out the usage instructions for this script
   echo "Usage: $0 [options]"
   echo ""
@@ -19,7 +18,7 @@ usage ()
   exit 1
 }
 
-ARGS=$(getopt -a --options n:p:v:h --long "name:password:volume:port:help" -- "$@")
+ARGS=$(getopt -a --options n:p:v:h --long "name:password:volume:help:,port:" -- "$@")
 CONTAINER_NAME=""
 SQL_SA_PASSWORD=""
 LOCAL_VOLUME=""
@@ -75,4 +74,3 @@ docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$SQL_SA_PASSWORD" \
   --name "$CONTAINER_NAME" -p "$PORT":1433 \
   -v "$LOCAL_VOLUME":/var/opt/mssql \
   -d mcr.microsoft.com/mssql/server:2022-latest
-
