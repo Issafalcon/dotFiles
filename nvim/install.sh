@@ -57,12 +57,14 @@ if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
   deactivate
 fi
 
-pip3 install pynvim
+# pip3 no longer can install global packages
+# Below is needed for rnvimr
+sudo apt install python3-pynvim
 npm install -g tree-sitter-cli
 npm install -g neovim
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
-sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.10.1/nvim.appimage
+sudo curl -Lo /usr/bin/nvim https://github.com/neovim/neovim/releases/download/v0.10.2/nvim.appimage
 sudo chmod 777 /usr/bin/nvim
 
 # Install formatters / linters for LSP
