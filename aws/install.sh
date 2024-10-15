@@ -2,10 +2,12 @@
 
 SCRIPT_DIR=$( cd ${0%/*} && pwd -P )
 
+echo $SCRIPT_DIR
+
 # Install latest aws cli
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "${SCRIPT_DIR}/awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+unzip "${SCRIPT_DIR}/awscliv2.zip"
+sudo "${SCRIPT_DIR}/aws/install"
 
 
 rm -f "${SCRIPT_DIR}"/awscliv2.zip
