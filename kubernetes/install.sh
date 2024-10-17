@@ -14,7 +14,7 @@ sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg # allow unprivileged
 #
 # This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly
+sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list # helps tools such as command-not-found to work correctly
 
 # Update apt package index with new repo and install kubectl
 sudo apt-get update
@@ -23,3 +23,7 @@ sudo apt-get install -y kubectl
 # Install k9s tool
 curl -sS https://webinstall.dev/k9s | bash
 
+# Load kubectl completions here into local_function as sourcing the kubectl doesn't seem to work
+# source <(kubectl completion zsh) - Doesn't work
+# Set the kubectl completion code for zsh[1] to autoload on startup
+kubectl completion zsh >"$HOME/zsh_local/functions/_kubectl"
