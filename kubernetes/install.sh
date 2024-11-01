@@ -26,4 +26,11 @@ curl -sS https://webinstall.dev/k9s | bash
 # Load kubectl completions here into local_function as sourcing the kubectl doesn't seem to work
 # source <(kubectl completion zsh) - Doesn't work
 # Set the kubectl completion code for zsh[1] to autoload on startup
+
+# Check if $HOME/zsh_local/functions/_kubectl exists, if not create it
+if [ ! -f "$HOME/zsh_local/functions/_kubectl" ]; then
+  mkdir -p "$HOME/zsh_local/functions"
+  touch "$HOME/zsh_local/functions/_kubectl"
+fi
+
 kubectl completion zsh >"$HOME/zsh_local/functions/_kubectl"
