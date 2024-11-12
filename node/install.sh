@@ -14,3 +14,6 @@ export NVM_DIR="$HOME/.nvm"
 nvm install --lts
 nvm use --lts
 nvm install-latest-npm
+
+# Improves download speed (issues seen on WSL2 behind VPN)
+npm set progress=false
