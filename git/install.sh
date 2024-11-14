@@ -25,6 +25,4 @@ git config --global delta.features "decorations line-numbers zebra-dark"
 git config --global merge.conflictstyle "diff3"
 
 # Check if on Linux and set git credentials to store
-if [[ $(uname) == "Linux" ]]; then
-  git config --global credential.helper store
-fi
+git config --global credential.helper store
