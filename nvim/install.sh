@@ -11,14 +11,16 @@ sudo apt-get install -y ripgrep \
   clang \
   sqlite3 libsqlite3-dev
 
-sudo apt-get install -y libjpeg8-dev
-zlib1g-dev \
+sudo apt-get install -y libjpeg8-dev \
+  zlib1g-dev \
   libxtst-dev \
   libx11 \
   libxext-dev \
   xllproto-xext-dev \
   libtool-bin \
-  gettext
+  gettext \
+  lua5.1 \
+  liblua5.1-dev
 
 SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
