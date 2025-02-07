@@ -72,5 +72,15 @@ sudo chmod 777 /usr/bin/nvim
 # Install formatters / linters for LSP
 sudo apt-get install -y chktex
 
+# Install debuggers that require manual install
+
+## vscode-js-debug
+cd "$HOME"/.local/share/nvim || exit
+git clone https://github.com/microsoft/vscode-js-debug
+cd vscode-js-debug || exit
+npm install --legacy-peer-deps
+npx gulp vsDebugServerBundle
+mv dist out
+
 # FUSE needed to run app images
 sudo apt install -y libfuse2
