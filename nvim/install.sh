@@ -47,6 +47,13 @@ else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
 fi
 
+# Install yazi (also install brew)
+if command -v yazi >/dev/null; then
+  echo "yazi found. Skipping yazi and homebrew installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "yazi"
+fi
+
 # Set python virtual env
 if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
   mkdir -p "$HOME"/python3/envs
@@ -84,3 +91,6 @@ mv dist out
 
 # FUSE needed to run app images
 sudo apt install -y libfuse2
+
+# Install ast-grep for grug-far search and replace
+brew install ast-grep
