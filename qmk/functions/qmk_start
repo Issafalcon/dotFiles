@@ -1,0 +1,6 @@
+qmk_start() {
+  cd "$HOME"/python3/envs/qmk || exit
+  source ./bin/activate
+}
+
+qmk_start
