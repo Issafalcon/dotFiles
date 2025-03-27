@@ -1,0 +1,6 @@
+awslocal_env() {
+  cd "$HOME"/python3/envs/awslocal || exit
+  source ./bin/activate
+}
+
+awslocal_env
