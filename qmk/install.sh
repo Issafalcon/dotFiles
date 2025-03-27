@@ -16,3 +16,10 @@ if [[ ! -d "$HOME/python3/envs/qmk" ]]; then
   python3 -m pip install qmk
   deactivate
 fi
+
+cd "$HOME"/python3/envs/qmk || exit
+source ./bin/activate
+qmk setup -H "$PROJECTS/qmk_firmware" Issafalcon/qmk_firmware
+qmk config user.keyboard=keebart/sofle_choc_pro
+qmk config user.keymap=issafalcon
+deactivate
