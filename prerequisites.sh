@@ -13,7 +13,7 @@ sudo apt update &&
     build-essential \
     libssl-dev \
     jq \
-    fd
+    fdclone
 
 sudo locale-gen en_US.UTF-8
 
@@ -24,6 +24,6 @@ SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 "${SCRIPT_DIR}"/bootstrap.sh "-i" "-m" "node"
 
-/bin/bash "${SCRIPT_DIR}"/bootstrap.sh "-i" "-m" "zsh"
+"${SCRIPT_DIR}"/bootstrap.sh "-i" "-m" "zsh"
 
 path+=(/usr/bin)

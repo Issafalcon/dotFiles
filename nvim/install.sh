@@ -82,6 +82,7 @@ sudo apt-get install -y chktex
 # Install debuggers that require manual install
 
 ## vscode-js-debug
+mkdir -p "$HOME"/.local/share/nvim
 cd "$HOME"/.local/share/nvim || exit
 git clone https://github.com/microsoft/vscode-js-debug
 cd vscode-js-debug || exit
