@@ -1,5 +1,5 @@
 # Adding wsl-open as a browser for Bash for Windows
-if [[ $(uname -r) =~ (m|M)icrosoft ]]; then
+if [[ $(uname -r) == *Microsoft* ]]; then
   if [[ -z $BROWSER ]]; then
     export BROWSER=wsl-open
   else
