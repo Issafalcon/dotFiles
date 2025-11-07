@@ -1,0 +1,61 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "args": ["run", "-i", "--rm", "mcp/fetch"],
+      "command": "docker"
+    },
+    "filesystem": {
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--mount",
+        "type=bind,src=${CWD},dst=/projects",
+        "mcp/filesystem",
+        "/projects"
+      ],
+      "command": "docker"
+    },
+    "github": {
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "-e",
+        "GITHUB_TOOLSETS",
+        "-e",
+        "GITHUB_READ_ONLY",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "command": "docker",
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}",
+        "GITHUB_READ_ONLY": "${GITHUB_READ_ONLY}",
+        "GITHUB_TOOLSETS": "${GITHUB_TOOLSETS}"
+      }
+    },
+    "mcp-atlassian": {
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "CONFLUENCE_URL=${CONFLUENCE_URL}",
+        "-e",
+        "CONFLUENCE_USERNAME=${CONFLUENCE_USERNAME}",
+        "-e",
+        "CONFLUENCE_API_TOKEN=${CONFLUENCE_API_TOKEN}",
+        "-e",
+        "JIRA_URL=${JIRA_URL}",
+        "-e",
+        "JIRA_USERNAME=${JIRA_USERNAME}",
+        "-e",
+        "JIRA_API_TOKEN=${JIRA_API_TOKEN}",
+        "ghcr.io/sooperset/mcp-atlassian:latest"
+      ],
+      "command": "docker"
+    }
+  }
+}

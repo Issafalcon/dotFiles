@@ -1,7 +1,12 @@
 #!/bin/bash
 
 # Claude code
-curl -fsSL https://claude.ai/install.sh | bash
+# Check if claude is installed first
+if command -v claude >/dev/null; then
+  echo "Claude CLI found. Skipping Claude installation"
+else
+  curl -fsSL https://claude.ai/install.sh | bash
+fi
 
 # Copilot CLI
 npm install -g @github/copilot
