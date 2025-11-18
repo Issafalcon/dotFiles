@@ -27,9 +27,9 @@ gui:
   commandLogSize: 8
 git:
   # https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
-  paging:
-    colorArg: always
-    useConfig: true
+  pagers:
+    - colorArg: always
+      useConfig: true
   merging:
     manualCommit: false
     args: ""
@@ -130,7 +130,7 @@ keybinding:
     viewResetOptions: D
     fetch: f
     toggleTreeView: "`"
-    openMergeTool: M
+    openMergeOptions: M
   branches:
     createPullRequest: o
     copyPullRequestURL: <c-y>
