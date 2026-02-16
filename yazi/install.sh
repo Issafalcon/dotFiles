@@ -12,3 +12,5 @@ brew install yazi \
   ImageMagick \
   ffmpeg \
   fd
+
+git clone https://github.com/MasouShizuka/projects.yazi.git ~/.config/yazi/plugins/projects.yazi
