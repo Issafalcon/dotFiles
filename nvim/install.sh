@@ -59,10 +59,11 @@ if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
   mkdir -p "$HOME"/python3/envs
   cd "$HOME"/python3/envs || exit
   python3 -m venv neovim
-  source "$HOME"/python3/envs/neovim/bin/activate
+  source "${HOME}"/python3/envs/neovim/bin/activate
   python3 -m pip install pynvim
   python3 -m pip install neovim
   python3 -m pip install neovim-remote
+  python3 -m pip install jupyter ipykernel nbclient nbformat jupyter-cache PyYAML matplotlib plotly
   deactivate
 fi
 
