@@ -10,9 +10,27 @@
       },
       {
         "language": [
+          "css",
+          "scss"
+        ],
+        "path": "./css.json"
+      },
+      {
+        "language": [
           "plantuml"
         ],
         "path": "./plantuml.json"
+      },
+      {
+        "language": "quarto",
+        "path": "./quarto.json"
+      },
+      {
+        "language": [
+          "markdown",
+          "quarto"
+        ],
+        "path": "./markdown.json"
       },
       {
         "language": [
