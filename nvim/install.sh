@@ -64,6 +64,7 @@ if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
   python3 -m pip install neovim
   python3 -m pip install neovim-remote
   python3 -m pip install jupyter ipykernel nbclient nbformat jupyter-cache PyYAML matplotlib plotly
+  python3 -m pip install pandas
   deactivate
 fi
 
