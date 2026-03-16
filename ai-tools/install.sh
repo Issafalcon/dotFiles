@@ -19,3 +19,12 @@ fi
 
 # MCP Hub
 npm install -g mcp-hub@latest
+
+# Nvim-Lsp MCP
+if command -v go >/dev/null; then
+  echo "Go found. Skipping Go installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "go"
+fi
+
+go install github.com/trevorprater/nvim-lsp-mcp/cmd/nvim-lsp-mcp@latest

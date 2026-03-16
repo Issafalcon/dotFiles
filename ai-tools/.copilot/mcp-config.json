@@ -36,6 +36,17 @@
         "ghcr.io/sooperset/mcp-atlassian:latest"
       ],
       "command": "docker"
+    },
+    "nvim-mcp": {
+      "command": "nvim-mcp",
+      "args": [
+        "--log-file ",
+        ". ",
+        "--log-level ",
+        "debug ",
+        "--connect ",
+        "auto"
+      ]
     }
   }
 }

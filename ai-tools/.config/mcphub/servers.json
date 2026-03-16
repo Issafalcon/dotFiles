@@ -1,7 +1,16 @@
 {
   "mcpServers": {
+    "context7": {
+      "type": "streamable-http",
+      "url": "https://mcp.context7.com/mcp"
+    },
     "fetch": {
-      "args": ["run", "-i", "--rm", "mcp/fetch"],
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mcp/fetch"
+      ],
       "command": "docker",
       "disabled": false
     },
