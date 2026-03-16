@@ -10,7 +10,7 @@
         "-i",
         "--rm",
         "--mount",
-        "type=bind,src=${PATH},dst=/projects",
+        "type=bind,src={cmd,dst=/projects",
         "mcp/filesystem",
         "/projects"
       ],
@@ -39,14 +39,11 @@
     },
     "nvim-mcp": {
       "command": "nvim-mcp",
-      "args": [
-        "--log-file ",
-        ". ",
-        "--log-level ",
-        "debug ",
-        "--connect ",
-        "auto"
-      ]
+      "args": ["--log-file", ".", "--log-level", "debug", "--connect", "auto"]
+    },
+    "context7": {
+      "type": "streamable-http",
+      "url": "https://mcp.context7.com/mcp"
     }
   }
 }
