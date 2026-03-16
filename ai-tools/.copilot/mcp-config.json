@@ -4,18 +4,6 @@
       "args": ["run", "-i", "--rm", "mcp/fetch"],
       "command": "docker"
     },
-    "mcphub_filesystem": {
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "--mount",
-        "type=bind,src={cmd,dst=/projects",
-        "mcp/filesystem",
-        "/projects"
-      ],
-      "command": "docker"
-    },
     "mcphub_atlassian": {
       "args": [
         "run",
@@ -42,8 +30,11 @@
       "args": ["--log-file", ".", "--log-level", "debug", "--connect", "auto"]
     },
     "context7": {
-      "type": "streamable-http",
-      "url": "https://mcp.context7.com/mcp"
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}"
+      }
     }
   }
 }
