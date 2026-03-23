@@ -8,3 +8,6 @@ packer_compiled.lua
 
 # Yazi plugins
 yazi/.config/yazi/plugins/
+
+# Copilot output
+ai-tools/.copilot/
