@@ -13,4 +13,4 @@ brew install yazi \
   ffmpeg \
   fd
 
-git clone https://github.com/MasouShizuka/projects.yazi.git ~/.config/yazi/plugins/projects.yazi
+sudo git clone https://github.com/MasouShizuka/projects.yazi.git "${SCRIPT_DIR}"/.config/yazi/plugins/projects.yazi
