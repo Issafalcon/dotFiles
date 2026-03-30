@@ -1,40 +1,18 @@
 {
   "mcpServers": {
-    "mcphub_fetch": {
-      "args": ["run", "-i", "--rm", "mcp/fetch"],
-      "command": "docker"
-    },
-    "mcphub_atlassian": {
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "CONFLUENCE_URL=${CONFLUENCE_URL}",
-        "-e",
-        "CONFLUENCE_USERNAME=${CONFLUENCE_USERNAME}",
-        "-e",
-        "CONFLUENCE_API_TOKEN=${CONFLUENCE_API_TOKEN}",
-        "-e",
-        "JIRA_URL=${JIRA_URL}",
-        "-e",
-        "JIRA_USERNAME=${JIRA_USERNAME}",
-        "-e",
-        "JIRA_API_TOKEN=${JIRA_API_TOKEN}",
-        "ghcr.io/sooperset/mcp-atlassian:latest"
-      ],
-      "command": "docker"
-    },
     "nvim-mcp": {
       "command": "nvim-mcp",
       "args": ["--log-file", ".", "--log-level", "debug", "--connect", "auto"]
     },
     "context7": {
-      "type": "http",
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}"
-      }
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@upstash/context7-mcp@1.0.31"],
+      "env": {
+        "CONTEXT7_API_KEY": "${input:CONTEXT7_API_KEY}"
+      },
+      "gallery": "https://api.mcp.github.com",
+      "version": "1.0.31"
     }
   }
 }
