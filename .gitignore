@@ -10,4 +10,5 @@ packer_compiled.lua
 yazi/.config/yazi/plugins/
 
 # Copilot output
-ai-tools/.copilot/
+ai-tools/.copilot/**/*
+!ai-tools/.copilot/mcp-config.json
