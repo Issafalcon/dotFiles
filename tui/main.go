@@ -38,7 +38,18 @@ import (
 	"github.com/issafalcon/dotfiles-tui/internal/app"
 )
 
+// version is set at build time via -ldflags "-X main.version=v1.2.3".
+// If not set (e.g., during `go run .`), it defaults to "dev".
+// See: https://pkg.go.dev/cmd/link
+var version = "dev"
+
 func main() {
+	// Handle --version flag for quick version checks.
+	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-v") {
+		fmt.Printf("dotfiles-tui %s\n", version)
+		os.Exit(0)
+	}
+
 	// Create the root application model.
 	// In Go, short variable declaration (:=) infers the type automatically.
 	// See: https://go.dev/tour/basics/10

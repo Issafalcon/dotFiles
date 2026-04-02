@@ -4,17 +4,21 @@
 BINARY_NAME := dotfiles-tui
 BUILD_DIR := ./build
 INSTALL_DIR := /usr/local/bin
+APPIMAGE_DIR := $(BUILD_DIR)/AppDir
+VERSION ?= dev
 
 # Go build flags
-# -ldflags="-s -w" strips debug info for smaller binaries
+# -ldflags="-s -w" strips debug info for smaller binaries.
+# -X injects the version string at compile time via the linker.
 # See: https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies
-GO_FLAGS := -ldflags="-s -w"
+# See: https://pkg.go.dev/cmd/link
+GO_FLAGS := -ldflags="-s -w -X main.version=$(VERSION)"
 
-.PHONY: build run install clean lint test help
+.PHONY: build run install clean lint test tidy appimage help
 
 ## build: Compile the application binary
 build:
-	@echo "Building $(BINARY_NAME)..."
+	@echo "Building $(BINARY_NAME) (version=$(VERSION))..."
 	@mkdir -p $(BUILD_DIR)
 	go build $(GO_FLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) .
 
@@ -48,6 +52,18 @@ test:
 ## tidy: Clean up go.mod and go.sum
 tidy:
 	go mod tidy
+
+## appimage: Build a Linux AppImage (requires appimagetool on PATH)
+appimage: build
+	@echo "Packaging AppImage..."
+	@mkdir -p $(APPIMAGE_DIR)/usr/bin
+	cp $(BUILD_DIR)/$(BINARY_NAME) $(APPIMAGE_DIR)/usr/bin/$(BINARY_NAME)
+	cp appimage/AppRun $(APPIMAGE_DIR)/AppRun
+	chmod +x $(APPIMAGE_DIR)/AppRun
+	cp appimage/dotfiles-tui.desktop $(APPIMAGE_DIR)/dotfiles-tui.desktop
+	cp appimage/dotfiles-tui.svg $(APPIMAGE_DIR)/dotfiles-tui.svg
+	cd $(BUILD_DIR) && ARCH=x86_64 appimagetool AppDir $(BINARY_NAME)-$(VERSION)-x86_64.AppImage
+	@echo "AppImage created: $(BUILD_DIR)/$(BINARY_NAME)-$(VERSION)-x86_64.AppImage"
 
 ## help: Show this help message
 help:

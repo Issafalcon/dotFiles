@@ -1,0 +1,147 @@
+# DotFiles TUI — CI/CD Pipeline
+#
+# This workflow builds, tests, and releases the DotFiles TUI application.
+#
+# Triggers:
+#   - Push to main: build + test (no release)
+#   - Pull requests: build + test (no release)
+#   - Tag push (v*): build + test + AppImage + GitHub Release
+#
+# The release job packages the Go binary into a Linux AppImage so it can
+# be downloaded and run on any x86_64 Linux distro without installation.
+# See: https://docs.github.com/en/actions/using-workflows
+
+name: DotFiles TUI CI/CD
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+# Ensure only one workflow runs per ref (cancel in-progress on new push).
+# See: https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Build & Test — runs on every push and PR
+  # ---------------------------------------------------------------------------
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: tui/go.mod
+          cache-dependency-path: tui/go.sum
+
+      - name: Download dependencies
+        working-directory: tui
+        run: go mod download
+
+      - name: Build
+        working-directory: tui
+        run: make build
+
+      - name: Run tests
+        working-directory: tui
+        run: make test
+
+      - name: Vet
+        working-directory: tui
+        run: go vet ./...
+
+  # ---------------------------------------------------------------------------
+  # Release — only runs on version tags (v*)
+  # ---------------------------------------------------------------------------
+  release:
+    name: Release AppImage
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: tui/go.mod
+          cache-dependency-path: tui/go.sum
+
+      - name: Download dependencies
+        working-directory: tui
+        run: go mod download
+
+      # Extract the version from the git tag (e.g., refs/tags/v1.0.0 → v1.0.0).
+      # GITHUB_REF_NAME is automatically set by Actions for tag triggers.
+      - name: Extract version
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      # Build a statically-linked binary with CGO disabled.
+      # This ensures the AppImage works on any Linux distro regardless of
+      # glibc version. Go supports full static linking natively.
+      # See: https://pkg.go.dev/cmd/go#hdr-Environment_variables
+      - name: Build static binary
+        working-directory: tui
+        env:
+          CGO_ENABLED: "0"
+          GOARCH: amd64
+          GOOS: linux
+        run: make build VERSION=${{ steps.version.outputs.VERSION }}
+
+      # Download appimagetool — the official tool for creating AppImages.
+      # See: https://github.com/AppImage/appimagetool
+      - name: Install appimagetool
+        run: |
+          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage \
+            -O /usr/local/bin/appimagetool
+          chmod +x /usr/local/bin/appimagetool
+
+      # Package the binary, desktop entry, icon, and AppRun into an AppImage.
+      - name: Build AppImage
+        working-directory: tui
+        run: make appimage VERSION=${{ steps.version.outputs.VERSION }}
+
+      # Also create a plain tarball for users who prefer it over AppImage.
+      - name: Create tarball
+        working-directory: tui
+        run: |
+          tar -czf build/dotfiles-tui-${{ steps.version.outputs.VERSION }}-linux-amd64.tar.gz \
+            -C build dotfiles-tui
+
+      # Generate SHA256 checksums for verifying download integrity.
+      - name: Generate checksums
+        working-directory: tui/build
+        run: |
+          sha256sum dotfiles-tui-${{ steps.version.outputs.VERSION }}-x86_64.AppImage \
+                    dotfiles-tui-${{ steps.version.outputs.VERSION }}-linux-amd64.tar.gz \
+            > checksums-${{ steps.version.outputs.VERSION }}.sha256
+
+      # Create a GitHub Release with the AppImage, tarball, and checksums.
+      # See: https://github.com/softprops/action-gh-release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: DotFiles TUI ${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            tui/build/dotfiles-tui-${{ steps.version.outputs.VERSION }}-x86_64.AppImage
+            tui/build/dotfiles-tui-${{ steps.version.outputs.VERSION }}-linux-amd64.tar.gz
+            tui/build/checksums-${{ steps.version.outputs.VERSION }}.sha256

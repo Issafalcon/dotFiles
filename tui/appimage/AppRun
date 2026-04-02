@@ -1,0 +1,9 @@
+#!/bin/bash
+# AppRun — entry point for the DotFiles TUI AppImage.
+#
+# When an AppImage is executed, FUSE mounts the squashfs filesystem and runs
+# this script. APPDIR points to the mount root so we can locate the binary.
+# See: https://docs.appimage.org/reference/appdir.html
+
+APPDIR="$(dirname "$(readlink -f "$0")")"
+exec "${APPDIR}/usr/bin/dotfiles-tui" "$@"
