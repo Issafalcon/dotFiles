@@ -54,6 +54,13 @@ else
   "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "yazi"
 fi
 
+# Install ueberzugpp for image rendering in neovim (image.nvim backend)
+if command -v ueberzugpp >/dev/null; then
+  echo "ueberzugpp found. Skipping ueberzugpp installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "ueberzugpp"
+fi
+
 # Set python virtual env
 if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
   mkdir -p "$HOME"/python3/envs
