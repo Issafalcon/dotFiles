@@ -75,6 +75,13 @@ if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
   deactivate
 fi
 
+# Register the neovim venv's ipykernel as a user-wide Jupyter kernel so that
+# Molten can launch it without the venv being active
+mkdir -p "$HOME/.local/share/jupyter/runtime"
+source "${HOME}"/python3/envs/neovim/bin/activate
+python3 -m ipykernel install --user --name python3 --display-name "Python 3 (neovim)"
+deactivate
+
 # pip3 no longer can install global packages
 # Below is needed for rnvimr
 sudo apt install python3-pynvim
