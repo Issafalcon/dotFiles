@@ -14,6 +14,12 @@ marker_convert() {
   #   --format <fmt>        Output format: markdown (default) | json | html
   #   --page-range <range>  Pages to process, e.g. "0,5-10,20"
   #   --help                Show this help message
+  #
+  # Datalab cloud API (no local RAM needed - requires DATALAB_API_KEY):
+  #   marker_convert book.pdf --datalab
+  #   marker_convert book.pdf ~/notes --datalab --force-ocr
+  #   Sign up free at https://www.datalab.to to get an API key.
+  #   Set in ~/.zshrc: export DATALAB_API_KEY="your_key"
 
   local input_file=""
   local output_dir=""
@@ -23,6 +29,7 @@ marker_convert() {
   local force_ocr=false
   local output_format="markdown"
   local page_range=""
+  local use_datalab=false
 
   local marker_venv="${XDG_DATA_HOME:-$HOME/.local/share}/marker/venv"
   local marker_bin="${marker_venv}/bin/marker_single"
@@ -50,6 +57,7 @@ marker_convert() {
   # Parse remaining flags
   while [[ $# -gt 0 ]]; do
     case "$1" in
+      --datalab)        use_datalab=true ;;
       --use-llm)        use_llm=true ;;
       --llm-service)    llm_service="$2"; shift ;;
       --llm-model)      llm_model="$2"; shift ;;
@@ -71,6 +79,76 @@ marker_convert() {
   fi
   mkdir -p "${output_dir}"
   output_dir="$(realpath "${output_dir}")"
+
+  # +------------------+
+  # | DATALAB CLOUD API|
+  # +------------------+
+  if [[ "${use_datalab}" == true ]]; then
+    if [[ -z "${DATALAB_API_KEY:-}" ]]; then
+      echo "Error: DATALAB_API_KEY is not set." >&2
+      echo "  Sign up free at https://www.datalab.to, then:" >&2
+      echo "  export DATALAB_API_KEY='your_key'  # add to ~/.zshrc to persist" >&2
+      return 1
+    fi
+
+    echo "Converting via Datalab cloud API: $(basename "${input_file}")"
+    echo "Output: ${output_dir}"
+    echo ""
+
+    # Build multipart form fields
+    local -a curl_args=(
+      -s -X POST "https://www.datalab.to/api/v1/convert"
+      -H "X-Api-Key: ${DATALAB_API_KEY}"
+      -F "file=@${input_file}"
+      -F "output_format=${output_format}"
+    )
+    [[ "${force_ocr}" == true ]]  && curl_args+=(-F "force_ocr=true")
+    [[ -n "${page_range}" ]]      && curl_args+=(-F "page_range=${page_range}")
+
+    # Submit job
+    local response request_id
+    response=$(curl "${curl_args[@]}") || { echo "Error: Upload failed." >&2; return 1; }
+    request_id=$(echo "${response}" | python3 -c "import sys,json; print(json.load(sys.stdin).get('request_id',''))" 2>/dev/null)
+
+    if [[ -z "${request_id}" ]]; then
+      echo "Error: No request_id in response: ${response}" >&2
+      return 1
+    fi
+
+    echo "Job submitted (request_id: ${request_id}). Waiting for completion..."
+
+    # Poll until done (max 10 minutes)
+    local status="" attempts=0 max_attempts=120
+    while [[ "${status}" != "complete" ]]; do
+      if (( attempts++ >= max_attempts )); then
+        echo "Error: Timed out waiting for Datalab conversion." >&2
+        return 1
+      fi
+      sleep 5
+      response=$(curl -s "https://www.datalab.to/api/v1/marker/${request_id}"         -H "X-Api-Key: ${DATALAB_API_KEY}")
+      status=$(echo "${response}" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" 2>/dev/null)
+      printf "  status: %-12s (${attempts}/${max_attempts})" "${status}"
+    done
+    echo ""
+
+    # Save markdown output
+    local out_file="${output_dir}/$(basename "${input_file%.*}").md"
+    echo "${response}" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+md = data.get('markdown') or data.get('output', {}).get('markdown', '')
+if md:
+    sys.stdout.write(md)
+else:
+    sys.stderr.write('Warning: no markdown in response
+')
+    sys.stderr.write(str(data.keys()) + '
+')
+" > "${out_file}"
+
+    echo "✓ Done! Saved to: ${out_file}"
+    return 0
+  fi
 
   # Build marker CLI args
   local -a marker_args=(
