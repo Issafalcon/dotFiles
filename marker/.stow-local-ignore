@@ -1,0 +1,12 @@
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+# Files taht should remain local
+install.sh
+path.zsh
+config.zsh
+Dockerfile
+completion.zsh
+custom_scripts
+functions

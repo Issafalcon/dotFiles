@@ -1,0 +1,204 @@
+marker_convert() {
+  # Convert PDF, EPUB, DOCX, and other documents to markdown using marker.
+  # Runs marker inside Docker. Supports local LLM enhancement via Ollama
+  # or GitHub Copilot (requires 'gh' CLI with Copilot subscription).
+  #
+  # Usage:
+  #   marker_convert <input_file> [output_dir] [options]
+  #
+  # Options:
+  #   --use-llm             Enhance conversion with an LLM (default: Ollama)
+  #   --llm-service <svc>   LLM backend: ollama (default) | copilot | gemini
+  #   --llm-model <model>   Model name (default: llama3.2 for ollama)
+  #   --force-ocr           Force OCR on entire document (good for scanned PDFs)
+  #   --format <fmt>        Output format: markdown (default) | json | html
+  #   --page-range <range>  Pages to process, e.g. "0,5-10,20"
+  #   --help                Show this help message
+  #
+  # Examples:
+  #   marker_convert ~/books/clean-code.pdf
+  #   marker_convert ~/books/book.epub ~/notes --use-llm
+  #   marker_convert scan.pdf ~/notes --use-llm --llm-service copilot
+  #   marker_convert paper.pdf --force-ocr --format json
+
+  local input_file=""
+  local output_dir=""
+  local use_llm=false
+  local llm_service="ollama"
+  local llm_model="llama3.2"
+  local force_ocr=false
+  local output_format="markdown"
+  local page_range=""
+
+  if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]]; then
+    sed -n '2,24p' "${DOTFILES}/zsh/functions/marker_convert" | sed 's/^  # \{0,1\}//'
+    return 0
+  fi
+
+  # First positional arg is the input file
+  input_file="$1"
+  shift
+
+  # Second positional arg (if not a flag) is the output dir
+  if [[ $# -gt 0 ]] && [[ "$1" != --* ]]; then
+    output_dir="$1"
+    shift
+  fi
+
+  # Parse remaining flags
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --use-llm)        use_llm=true ;;
+      --llm-service)    llm_service="$2"; shift ;;
+      --llm-model)      llm_model="$2"; shift ;;
+      --force-ocr)      force_ocr=true ;;
+      --format)         output_format="$2"; shift ;;
+      --page-range)     page_range="$2"; shift ;;
+      *) echo "Unknown option: $1. Run 'marker_convert --help' for usage." >&2; return 1 ;;
+    esac
+    shift
+  done
+
+  # Resolve absolute paths
+  input_file="$(realpath "${input_file}" 2>/dev/null)" || {
+    echo "Error: File not found: ${input_file}" >&2
+    return 1
+  }
+
+  if [[ -z "${output_dir}" ]]; then
+    output_dir="$(dirname "${input_file}")/marker-output"
+  fi
+  mkdir -p "${output_dir}"
+  output_dir="$(realpath "${output_dir}")"
+
+  # Build docker run args
+  # Marker loads several ML models; 6GB is a safe floor. Override with MARKER_MEMORY.
+  local mem_limit="${MARKER_MEMORY:-6g}"
+  local -a docker_args=(
+    run --rm
+    --memory "${mem_limit}"
+    --memory-swap "${mem_limit}"
+    -v "marker-models:/models"
+    -v "${input_file}:/workspace/input$(basename "${input_file}")"
+    -v "${output_dir}:/workspace/output"
+    --name "marker-$(date +%s)"
+  )
+
+  # Build marker CLI args
+  local -a marker_args=(
+    "/workspace/input$(basename "${input_file}")"
+    --output_dir /workspace/output
+    --output_format "${output_format}"
+  )
+
+  [[ "${force_ocr}" == true ]] && marker_args+=(--force_ocr)
+  [[ -n "${page_range}" ]] && marker_args+=(--page_range "${page_range}")
+
+  if [[ "${use_llm}" == true ]]; then
+    marker_args+=(--use_llm)
+
+    case "${llm_service}" in
+      ollama)
+        # Detect if Ollama is running on the host
+        local ollama_host="host-gateway"
+        # Docker on Linux uses host.docker.internal via --add-host; fallback to host network
+        if ! docker info 2>/dev/null | grep -q "Operating System.*Darwin"; then
+          docker_args+=(--add-host host.docker.internal:host-gateway)
+        fi
+        marker_args+=(
+          --llm_service marker.services.ollama.OllamaService
+          --ollama_base_url "http://host.docker.internal:11434"
+          --ollama_model "${llm_model}"
+        )
+
+        # Auto-start Ollama if not running
+        if ! curl -s http://localhost:11434 >/dev/null 2>&1; then
+          echo "Starting Ollama service..."
+          ollama serve &>/dev/null &
+          sleep 3
+        fi
+
+        # Pull model if not present
+        if ! ollama list 2>/dev/null | grep -q "^${llm_model}"; then
+          echo "Pulling Ollama model '${llm_model}'..."
+          ollama pull "${llm_model}"
+        fi
+        ;;
+
+      copilot)
+        # Use GitHub Copilot via its OpenAI-compatible API
+        # Requires: gh CLI authenticated with Copilot subscription
+        if ! command -v gh >/dev/null 2>&1; then
+          echo "Error: 'gh' CLI not found. Install it to use GitHub Copilot as LLM backend." >&2
+          return 1
+        fi
+
+        local copilot_token
+        copilot_token="$(gh auth token 2>/dev/null)" || {
+          echo "Error: Not authenticated with gh CLI. Run 'gh auth login' first." >&2
+          return 1
+        }
+
+        docker_args+=(-e "OPENAI_API_KEY=${copilot_token}")
+        marker_args+=(
+          --llm_service marker.services.openai.OpenAIService
+          --openai_base_url "https://api.githubcopilot.com"
+          --openai_model "gpt-4o"
+        )
+        ;;
+
+      gemini)
+        if [[ -z "${GOOGLE_API_KEY:-}" ]]; then
+          echo "Error: GOOGLE_API_KEY environment variable is not set." >&2
+          return 1
+        fi
+        docker_args+=(-e "GOOGLE_API_KEY=${GOOGLE_API_KEY}")
+        marker_args+=(--llm_service marker.services.gemini.GoogleGeminiService)
+        ;;
+
+      *)
+        echo "Unknown LLM service: ${llm_service}. Use: ollama | copilot | gemini" >&2
+        return 1
+        ;;
+    esac
+  fi
+
+  # Ensure Docker daemon is running
+  if ! docker info >/dev/null 2>&1; then
+    echo "Docker daemon is not running. Attempting to start it..."
+    if command -v systemctl >/dev/null 2>&1 && systemctl list-units --type=service 2>/dev/null | grep -q docker; then
+      sudo systemctl start docker
+    else
+      sudo service docker start
+    fi
+    local attempts=0
+    while ! docker info >/dev/null 2>&1; do
+      if (( attempts++ >= 15 )); then
+        echo "Error: Docker daemon did not start. Try: sudo service docker start" >&2
+        return 1
+      fi
+      sleep 1
+    done
+  fi
+
+  echo "Converting: $(basename "${input_file}")"
+  echo "Output:     ${output_dir}"
+  [[ "${use_llm}" == true ]] && echo "LLM:        ${llm_service}${llm_service:+ (${llm_model})}"
+  echo ""
+
+  docker "${docker_args[@]}" marker-pdf "${marker_args[@]}"
+
+  local exit_code=$?
+  if [[ ${exit_code} -eq 0 ]]; then
+    echo ""
+    echo "✓ Done! Markdown files saved to: ${output_dir}"
+  elif [[ ${exit_code} -eq 137 ]]; then
+    echo "" >&2
+    echo "✗ Conversion killed (exit code 137 = OOM). The container ran out of memory." >&2
+    echo "  Current limit: ${mem_limit}. Try: MARKER_MEMORY=8g marker_convert ..." >&2
+  else
+    echo "" >&2
+    echo "✗ Conversion failed (exit code: ${exit_code})" >&2
+  fi
+  return ${exit_code}
+}
