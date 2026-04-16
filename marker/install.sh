@@ -1,94 +1,102 @@
 #!/bin/bash
 # Marker install script
-# Installs the marker document-to-markdown tool as a Docker image,
-# and optionally installs Ollama for free local LLM-enhanced conversions.
+# Installs marker-pdf into a Python virtualenv for direct host execution.
+# This avoids Docker memory overhead which causes OOM on ML workloads.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-MARKER_IMAGE_NAME="marker-pdf"
+MARKER_VENV="${XDG_DATA_HOME:-$HOME/.local/share}/marker/venv"
 OLLAMA_DEFAULT_MODEL="llama3.2"
 
-# +---------+
-# | DOCKER  |
-# +---------+
+# +----------+
+# | SWAP     |
+# +----------+
 
-# Ensure Docker Engine (dockerd) is installed — not just the CLI
-if ! command -v dockerd >/dev/null 2>&1; then
-  echo "Docker Engine (dockerd) not found. Installing docker-ce..."
-  if ! apt-cache show docker-ce >/dev/null 2>&1; then
-    sudo apt-get update
-    sudo apt-get install -y ca-certificates curl gnupg
-    sudo install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
-      | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-      https://download.docker.com/linux/ubuntu \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
-      | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-    sudo apt-get update
-  fi
-  sudo apt-get install -y docker-ce
-  sudo usermod -aG docker "$USER"
-  echo "NOTE: Log out and back in (or run 'newgrp docker') for Docker group membership to take effect."
-else
-  echo "Docker found: $(docker --version)"
-fi
+# Marker's ML models need ~12-14GB RSS on CPU (float32 is hardcoded for CPU).
+# A swapfile ensures the kernel can handle peak usage without OOM-killing the process.
+_marker_ensure_swap() {
+  local required_gb=16
+  local swapfile="/swapfile-marker"
 
-# Ensure Docker daemon is running
-_marker_ensure_docker() {
-  if docker info >/dev/null 2>&1; then
+  local total_swap_kb
+  total_swap_kb=$(awk '/SwapTotal/ {print $2}' /proc/meminfo)
+  local total_swap_gb=$(( total_swap_kb / 1024 / 1024 ))
+
+  if (( total_swap_gb >= required_gb )); then
+    echo "✓ Swap is sufficient: ${total_swap_gb}GB available."
     return 0
   fi
 
-  echo "Docker daemon is not running. Attempting to start it..."
-  if sudo systemctl start docker 2>/dev/null; then
-    : # systemctl succeeded
-  elif sudo service docker start 2>/dev/null; then
-    : # service succeeded
-  else
-    echo "Starting dockerd directly..."
-    sudo dockerd &>/tmp/dockerd.log &
+  echo "Current swap: ${total_swap_gb}GB. Adding ${swapfile} (${required_gb}GB) for marker model loading..."
+  sudo fallocate -l "${required_gb}G" "${swapfile}"
+  sudo chmod 600 "${swapfile}"
+  sudo mkswap "${swapfile}"
+  sudo swapon "${swapfile}"
+
+  # Persist across reboots
+  if ! grep -q "${swapfile}" /etc/fstab; then
+    echo "${swapfile} none swap sw 0 0" | sudo tee -a /etc/fstab
   fi
 
-  # Wait up to 20 seconds for the daemon to become ready
-  local attempts=0
-  while ! docker info >/dev/null 2>&1; do
-    if (( attempts++ >= 20 )); then
-      echo "ERROR: Docker daemon did not start in time." >&2
-      echo "Try running: sudo dockerd &" >&2
-      return 1
-    fi
-    sleep 1
-  done
-  echo "Docker daemon started."
+  echo "✓ Swapfile created: $(free -h | awk '/Swap/ {print $2}') total swap now available."
 }
 
-_marker_ensure_docker || exit 1
+_marker_ensure_swap
 
-echo ""
-echo "Building marker Docker image (this may take several minutes on first run)..."
-docker build -t "${MARKER_IMAGE_NAME}" "${SCRIPT_DIR}"
+# +----------+
+# | PYTHON   |
+# +----------+
 
-echo ""
-echo "✓ Marker Docker image '${MARKER_IMAGE_NAME}' built successfully."
+# Prefer python3.11; marker supports 3.10+
+PYTHON_BIN=""
+for candidate in python3.11 python3.12 python3.10 python3; do
+  if command -v "${candidate}" >/dev/null 2>&1; then
+    version=$("${candidate}" -c 'import sys; print(sys.version_info[:2])')
+    if "${candidate}" -c 'import sys; sys.exit(0 if sys.version_info >= (3,10) else 1)' 2>/dev/null; then
+      PYTHON_BIN="${candidate}"
+      echo "Using ${PYTHON_BIN}: $(${PYTHON_BIN} --version)"
+      break
+    fi
+  fi
+done
 
-# +------------------+
-# | MODELS CACHE DIR |
-# +------------------+
+if [[ -z "${PYTHON_BIN}" ]]; then
+  echo "Python 3.10+ is required. Installing python3.11..."
+  sudo apt-get update && sudo apt-get install -y python3.11 python3.11-venv python3.11-dev
+  PYTHON_BIN="python3.11"
+fi
 
-MARKER_MODELS_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/marker/models"
-mkdir -p "${MARKER_MODELS_DIR}"
-echo "✓ Model cache directory: ${MARKER_MODELS_DIR}"
+# +-----------+
+# | VENV      |
+# +-----------+
+
+if [[ -f "${MARKER_VENV}/bin/marker_single" ]]; then
+  echo "Marker already installed at ${MARKER_VENV}"
+  echo "To upgrade: ${MARKER_VENV}/bin/pip install -U marker-pdf[full]"
+else
+  echo ""
+  echo "Creating virtualenv at ${MARKER_VENV}..."
+  mkdir -p "$(dirname "${MARKER_VENV}")"
+  "${PYTHON_BIN}" -m venv "${MARKER_VENV}"
+
+  echo "Installing PyTorch (CPU)..."
+  "${MARKER_VENV}/bin/pip" install --quiet --upgrade pip
+  "${MARKER_VENV}/bin/pip" install --quiet torch torchvision \
+    --index-url https://download.pytorch.org/whl/cpu
+
+  echo "Installing marker-pdf..."
+  "${MARKER_VENV}/bin/pip" install --quiet "marker-pdf[full]"
+
+  echo "✓ Marker installed at ${MARKER_VENV}"
+fi
 
 # +---------+
 # | OLLAMA  |
 # +---------+
 
 echo ""
-echo "Ollama provides free local LLMs to enhance marker's accuracy (--use_llm mode)."
+echo "Ollama provides free local LLMs to enhance marker's accuracy (--use-llm mode)."
 read -r -p "Install Ollama for local LLM support? [Y/n] " install_ollama
 install_ollama="${install_ollama:-Y}"
 
@@ -100,19 +108,23 @@ if [[ "${install_ollama,,}" == "y" ]]; then
     curl -fsSL https://ollama.com/install.sh | bash
   fi
 
+  # Install systemd resource limits to prevent Ollama freezing the system
+  if systemctl list-units --type=service 2>/dev/null | grep -q ollama; then
+    OLLAMA_DROPIN_DIR="/etc/systemd/system/ollama.service.d"
+    echo "Installing Ollama resource limits..."
+    sudo mkdir -p "${OLLAMA_DROPIN_DIR}"
+    sudo cp "${SCRIPT_DIR}/ollama-limits.conf" "${OLLAMA_DROPIN_DIR}/limits.conf"
+    sudo systemctl daemon-reload
+    sudo systemctl restart ollama 2>/dev/null || true
+    echo "✓ Ollama memory limits applied. Edit ${OLLAMA_DROPIN_DIR}/limits.conf to adjust."
+  fi
+
   echo ""
   read -r -p "Pull default model '${OLLAMA_DEFAULT_MODEL}'? [Y/n] " pull_model
   pull_model="${pull_model:-Y}"
   if [[ "${pull_model,,}" == "y" ]]; then
     ollama pull "${OLLAMA_DEFAULT_MODEL}"
     echo "✓ Model '${OLLAMA_DEFAULT_MODEL}' ready."
-  fi
-
-  # Start Ollama service if not running
-  if ! ollama list >/dev/null 2>&1; then
-    echo "Starting Ollama service..."
-    ollama serve &>/dev/null &
-    sleep 2
   fi
 fi
 
@@ -138,8 +150,5 @@ echo "  marker_convert /path/to/book.epub ~/Notes/book-notes"
 echo ""
 echo "  # Force OCR (for scanned PDFs):"
 echo "  marker_convert /path/to/scanned.pdf --force-ocr"
-echo ""
-echo "  # Using GitHub Copilot as LLM backend:"
-echo "  marker_convert /path/to/book.pdf --use-llm --llm-service copilot"
 echo ""
 echo "Run 'marker_convert --help' for all options."

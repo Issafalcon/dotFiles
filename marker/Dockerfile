@@ -20,14 +20,22 @@ RUN pip install --no-cache-dir "marker-pdf[full]"
 
 WORKDIR /workspace
 
-# All HuggingFace/transformers model cache paths unified under /models.
-# Mount a host directory or named volume here to persist between runs:
-#   docker run -v marker-models:/models ...
-# HF_HOME=/models -> hub cache lands at /models/hub/
-# TRANSFORMERS_CACHE and HF_HUB_CACHE must point to that same subdirectory.
+# All model cache paths unified under /models so a single mounted volume persists
+# everything across container runs: docker run -v marker-models:/models ...
+#
+# HuggingFace (used by marker internals)
 ENV HF_HOME=/models
 ENV HF_HUB_CACHE=/models/hub
 ENV TRANSFORMERS_CACHE=/models/hub
 ENV TORCH_HOME=/models/torch
+# Surya (OCR/layout engine used by marker) writes to its own cache dir by default
+# (/root/.cache/datalab/models). Override it to land inside the volume.
+ENV MODEL_CACHE_DIR=/models/datalab
+
+# Reduce CPU memory pressure
+ENV MALLOC_TRIM_THRESHOLD_=100000
+ENV PYTORCH_NO_CUDA_MEMORY_CACHING=1
+# Use float16 weights where possible to halve model memory usage
+ENV TORCH_DTYPE=float16
 
 ENTRYPOINT ["marker_single"]

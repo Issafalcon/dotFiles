@@ -1,7 +1,7 @@
 marker_convert() {
   # Convert PDF, EPUB, DOCX, and other documents to markdown using marker.
-  # Runs marker inside Docker. Supports local LLM enhancement via Ollama
-  # or GitHub Copilot (requires 'gh' CLI with Copilot subscription).
+  # Runs marker from a local Python virtualenv (no Docker).
+  # Supports local LLM enhancement via Ollama or GitHub Copilot.
   #
   # Usage:
   #   marker_convert <input_file> [output_dir] [options]
@@ -14,12 +14,6 @@ marker_convert() {
   #   --format <fmt>        Output format: markdown (default) | json | html
   #   --page-range <range>  Pages to process, e.g. "0,5-10,20"
   #   --help                Show this help message
-  #
-  # Examples:
-  #   marker_convert ~/books/clean-code.pdf
-  #   marker_convert ~/books/book.epub ~/notes --use-llm
-  #   marker_convert scan.pdf ~/notes --use-llm --llm-service copilot
-  #   marker_convert paper.pdf --force-ocr --format json
 
   local input_file=""
   local output_dir=""
@@ -30,9 +24,17 @@ marker_convert() {
   local output_format="markdown"
   local page_range=""
 
+  local marker_venv="${XDG_DATA_HOME:-$HOME/.local/share}/marker/venv"
+  local marker_bin="${marker_venv}/bin/marker_single"
+
   if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]]; then
-    sed -n '2,24p' "${DOTFILES}/zsh/functions/marker_convert" | sed 's/^  # \{0,1\}//'
+    sed -n '3,17p' "${DOTFILES}/marker/functions/marker_convert" | sed 's/^  # \{0,1\}//'
     return 0
+  fi
+
+  if [[ ! -x "${marker_bin}" ]]; then
+    echo "Marker is not installed. Run: bash \${DOTFILES}/marker/install.sh" >&2
+    return 1
   fi
 
   # First positional arg is the input file
@@ -59,7 +61,6 @@ marker_convert() {
     shift
   done
 
-  # Resolve absolute paths
   input_file="$(realpath "${input_file}" 2>/dev/null)" || {
     echo "Error: File not found: ${input_file}" >&2
     return 1
@@ -71,23 +72,10 @@ marker_convert() {
   mkdir -p "${output_dir}"
   output_dir="$(realpath "${output_dir}")"
 
-  # Build docker run args
-  # Marker loads several ML models; 6GB is a safe floor. Override with MARKER_MEMORY.
-  local mem_limit="${MARKER_MEMORY:-6g}"
-  local -a docker_args=(
-    run --rm
-    --memory "${mem_limit}"
-    --memory-swap "${mem_limit}"
-    -v "marker-models:/models"
-    -v "${input_file}:/workspace/input$(basename "${input_file}")"
-    -v "${output_dir}:/workspace/output"
-    --name "marker-$(date +%s)"
-  )
-
   # Build marker CLI args
   local -a marker_args=(
-    "/workspace/input$(basename "${input_file}")"
-    --output_dir /workspace/output
+    "${input_file}"
+    --output_dir "${output_dir}"
     --output_format "${output_format}"
   )
 
@@ -99,47 +87,35 @@ marker_convert() {
 
     case "${llm_service}" in
       ollama)
-        # Detect if Ollama is running on the host
-        local ollama_host="host-gateway"
-        # Docker on Linux uses host.docker.internal via --add-host; fallback to host network
-        if ! docker info 2>/dev/null | grep -q "Operating System.*Darwin"; then
-          docker_args+=(--add-host host.docker.internal:host-gateway)
-        fi
-        marker_args+=(
-          --llm_service marker.services.ollama.OllamaService
-          --ollama_base_url "http://host.docker.internal:11434"
-          --ollama_model "${llm_model}"
-        )
-
         # Auto-start Ollama if not running
         if ! curl -s http://localhost:11434 >/dev/null 2>&1; then
-          echo "Starting Ollama service..."
-          ollama serve &>/dev/null &
+          echo "Starting Ollama..."
+          sudo systemctl start ollama 2>/dev/null || ollama serve &>/dev/null &
           sleep 3
         fi
-
         # Pull model if not present
         if ! ollama list 2>/dev/null | grep -q "^${llm_model}"; then
           echo "Pulling Ollama model '${llm_model}'..."
           ollama pull "${llm_model}"
         fi
+        marker_args+=(
+          --llm_service marker.services.ollama.OllamaService
+          --ollama_base_url "http://localhost:11434"
+          --ollama_model "${llm_model}"
+        )
         ;;
 
       copilot)
-        # Use GitHub Copilot via its OpenAI-compatible API
-        # Requires: gh CLI authenticated with Copilot subscription
         if ! command -v gh >/dev/null 2>&1; then
-          echo "Error: 'gh' CLI not found. Install it to use GitHub Copilot as LLM backend." >&2
+          echo "Error: 'gh' CLI not found. Install it to use GitHub Copilot." >&2
           return 1
         fi
-
         local copilot_token
         copilot_token="$(gh auth token 2>/dev/null)" || {
-          echo "Error: Not authenticated with gh CLI. Run 'gh auth login' first." >&2
+          echo "Error: Not authenticated. Run 'gh auth login' first." >&2
           return 1
         }
-
-        docker_args+=(-e "OPENAI_API_KEY=${copilot_token}")
+        export OPENAI_API_KEY="${copilot_token}"
         marker_args+=(
           --llm_service marker.services.openai.OpenAIService
           --openai_base_url "https://api.githubcopilot.com"
@@ -149,10 +125,9 @@ marker_convert() {
 
       gemini)
         if [[ -z "${GOOGLE_API_KEY:-}" ]]; then
-          echo "Error: GOOGLE_API_KEY environment variable is not set." >&2
+          echo "Error: GOOGLE_API_KEY is not set." >&2
           return 1
         fi
-        docker_args+=(-e "GOOGLE_API_KEY=${GOOGLE_API_KEY}")
         marker_args+=(--llm_service marker.services.gemini.GoogleGeminiService)
         ;;
 
@@ -163,39 +138,19 @@ marker_convert() {
     esac
   fi
 
-  # Ensure Docker daemon is running
-  if ! docker info >/dev/null 2>&1; then
-    echo "Docker daemon is not running. Attempting to start it..."
-    if command -v systemctl >/dev/null 2>&1 && systemctl list-units --type=service 2>/dev/null | grep -q docker; then
-      sudo systemctl start docker
-    else
-      sudo service docker start
-    fi
-    local attempts=0
-    while ! docker info >/dev/null 2>&1; do
-      if (( attempts++ >= 15 )); then
-        echo "Error: Docker daemon did not start. Try: sudo service docker start" >&2
-        return 1
-      fi
-      sleep 1
-    done
-  fi
-
   echo "Converting: $(basename "${input_file}")"
   echo "Output:     ${output_dir}"
-  [[ "${use_llm}" == true ]] && echo "LLM:        ${llm_service}${llm_service:+ (${llm_model})}"
+  [[ "${use_llm}" == true ]] && echo "LLM:        ${llm_service} (${llm_model})"
   echo ""
 
-  docker "${docker_args[@]}" marker-pdf "${marker_args[@]}"
+  # Surya (marker's OCR engine) auto-sizes batches which causes memory spikes.
+  # Force batch size 1 on all models to keep activation memory flat on CPU.
+  DETECTOR_BATCH_SIZE=1   RECOGNITION_BATCH_SIZE=1   LAYOUT_BATCH_SIZE=1   TABLE_REC_BATCH_SIZE=1   OCR_ERROR_BATCH_SIZE=1   ORDER_BATCH_SIZE=1     "${marker_bin}" "${marker_args[@]}"
 
   local exit_code=$?
   if [[ ${exit_code} -eq 0 ]]; then
     echo ""
-    echo "✓ Done! Markdown files saved to: ${output_dir}"
-  elif [[ ${exit_code} -eq 137 ]]; then
-    echo "" >&2
-    echo "✗ Conversion killed (exit code 137 = OOM). The container ran out of memory." >&2
-    echo "  Current limit: ${mem_limit}. Try: MARKER_MEMORY=8g marker_convert ..." >&2
+    echo "✓ Done! Files saved to: ${output_dir}"
   else
     echo "" >&2
     echo "✗ Conversion failed (exit code: ${exit_code})" >&2
