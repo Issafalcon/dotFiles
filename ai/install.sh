@@ -23,10 +23,10 @@ YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 RESET='\033[0m'
 
-info()    { echo -e "  ${BLUE}→${RESET} $*"; }
+info() { echo -e "  ${BLUE}→${RESET} $*"; }
 success() { echo -e "  ${GREEN}✓${RESET} $*"; }
-warn()    { echo -e "  ${YELLOW}!${RESET} $*"; }
-header()  { echo -e "\n${BOLD}$*${RESET}"; }
+warn() { echo -e "  ${YELLOW}!${RESET} $*"; }
+header() { echo -e "\n${BOLD}$*${RESET}"; }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -104,7 +104,7 @@ for skill_dir in "$SKILLS_SRC"/*/; do
     echo ""
     # Skip the YAML frontmatter block when embedding
     awk '/^---/{if(NR==1){in_front=1; next} if(in_front){in_front=0; next}} !in_front' "$skill_md"
-  } > "$cursor_rule"
+  } >"$cursor_rule"
 
   success "${skill_name}.mdc → $cursor_rule (from $skill_md)"
 done
@@ -128,6 +128,20 @@ for skill_dir in "$SKILLS_SRC"/*/; do
   make_symlink "$skill_md" "$HOME/.codex/instructions/${skill_name}.md"
 done
 
+# Clone the agent-skills-creator submodule and update it
+AGENT_SKILLS_CREATOR_DIR="$HOME/dotfiles/ai/.agents/agent-skills-creator"
+if [ -d "$AGENT_SKILLS_CREATOR_DIR" ]; then
+  info "Updating agent-skills-creator submodule..."
+  git -C "$AGENT_SKILLS_CREATOR_DIR" pull --rebase
+else
+  info "Cloning agent-skills-creator submodule..."
+  git -C "$HOME/dotfiles/ai/.agents" submodule update --init --recursive
+fi
+
+# Install the symlinks for the agent-skills-creator tool.
+cd "$AGENT_SKILLS_CREATOR_DIR"
+./install.sh
+
 # Create/update the top-level instructions.md with imports
 {
   echo "# Agent Instructions"
@@ -138,7 +152,7 @@ done
     skill_name="$(basename "$skill_dir")"
     echo "@instructions/${skill_name}.md"
   done
-} > "$codex_index"
+} >"$codex_index"
 success "Updated $codex_index with skill imports"
 
 # ── 5. GitHub Copilot ─────────────────────────────────────────────────────────
