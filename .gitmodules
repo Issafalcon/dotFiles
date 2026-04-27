@@ -4,6 +4,3 @@
 [submodule "nvim-config"]
 	path = nvim/.config/nvim
 	url = https://github.com/Issafalcon/nvim-config
-[submodule "agent-skill-creator"]
-	path = ai/.agents/skills/agent-skill-creator
-	url = https://github.com/FrancyJGLisboa/agent-skill-creator.git
