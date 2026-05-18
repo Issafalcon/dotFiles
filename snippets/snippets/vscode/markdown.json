@@ -27,7 +27,7 @@
     "prefix": ["imgc"],
     "body": [
       "<div style=\"text-align: center;\">",
-      "    <img src=\"$1\" alt=\"$2\" style=\"width: 100%;\">",
+      "    <img src=\"$1\" alt=\"$2\" style=\"width: $3%;\">",
       "</div>"
     ]
   }
