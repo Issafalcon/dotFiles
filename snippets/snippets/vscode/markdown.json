@@ -22,5 +22,13 @@
   "todo": {
     "prefix": ["todo"],
     "body": ["* [ ] ${1:task} -- due:${2:today} ${3: project:}"]
+  },
+  "img_centered": {
+    "prefix": ["imgc"],
+    "body": [
+      "<div style=\"text-align: center;\">",
+      "    <img src=\"$1\" alt=\"$2\" style=\"width: 100%;\">",
+      "</div>"
+    ]
   }
 }
