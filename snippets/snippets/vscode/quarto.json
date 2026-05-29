@@ -317,6 +317,22 @@
     "description": "Add minimal yaml header",
     "prefix": "yml"
   },
+  "yaml header quarto jupyter": {
+    "body": [
+      "---",
+      "title: $1",
+      "format:",
+      "  html:",
+      "   echo: $2",
+      "   code-fold: true",
+      "  gfm:",
+      "    echo: $2",
+      "jupyter: python3",
+      "---"
+    ],
+    "description": "Add yaml header for quarto jupyter notebook",
+    "prefix": "ymlqj"
+  },
   "ref a wrap figure": {
     "body": "Fig. \\ref{fig-$1}",
     "description": "refer to a label for a wrap figure",
