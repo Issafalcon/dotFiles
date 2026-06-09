@@ -337,5 +337,10 @@
     "body": "Fig. \\ref{fig-$1}",
     "description": "refer to a label for a wrap figure",
     "prefix": "@wrap"
+  },
+  "Create Align* Math Environment in Text": {
+    "prefix": ["alignmath", "\\alignmath"],
+    "body": ["$$", "\\begin{align*}", "\t$1", "\\end{align*}", "$$"],
+    "description": "Create an align environment when the context is in the text environment."
   }
 }

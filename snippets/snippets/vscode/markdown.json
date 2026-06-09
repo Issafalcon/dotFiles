@@ -1,34 +1,181 @@
 {
   "eq": {
-    "prefix": ["eq"],
-    "body": ["\\$\\$", "$1", "\\$\\$ {#eq-${2: label}}"]
+    "prefix": [
+      "eq"
+    ],
+    "body": [
+      "\\$\\$",
+      "$1",
+      "\\$\\$ {#eq-${2: label}}"
+    ]
   },
   "def": {
-    "prefix": ["def"],
-    "body": [":::{#def-$1}", "## $2\n", "$3", ":::"]
+    "prefix": [
+      "def"
+    ],
+    "body": [
+      ":::{#def-$1}",
+      "## $2\n",
+      "$3",
+      ":::"
+    ]
   },
   "Insert Block Equation": {
     "prefix": "$$",
-    "body": ["\\$$", "${0}", "\\$$"]
+    "body": [
+      "\\$$",
+      "${0}",
+      "\\$$"
+    ]
   },
   "img": {
-    "prefix": ["img"],
-    "body": ["![](./img/$1)"]
+    "prefix": [
+      "img"
+    ],
+    "body": [
+      "![](./img/$1)"
+    ]
   },
   "br": {
-    "prefix": ["br"],
-    "body": ["<br/>"]
+    "prefix": [
+      "br"
+    ],
+    "body": [
+      "<br/>"
+    ]
   },
   "todo": {
-    "prefix": ["todo"],
-    "body": ["* [ ] ${1:task} -- due:${2:today} ${3: project:}"]
+    "prefix": [
+      "todo"
+    ],
+    "body": [
+      "* [ ] ${1:task} -- due:${2:today} ${3: project:}"
+    ]
   },
   "img_centered": {
-    "prefix": ["imgc"],
+    "prefix": [
+      "imgc"
+    ],
     "body": [
       "<div style=\"text-align: center;\">",
       "    <img src=\"$1\" alt=\"$2\" style=\"width: $3%;\">",
       "</div>"
+    ]
+  },
+  "Long Division (1 step)": {
+    "prefix": [
+      "long-div-1",
+      "long-div"
+    ],
+    "description": "MathJax long division, 1 subtraction step. Tab order: divisor \u2192 dividend \u2192 product \u2192 remainder \u2192 quotient",
+    "body": [
+      "$$",
+      "\\begin{array}{rll}",
+      "  ${5:quotient} \\\\\\\\[-3pt]",
+      "  ${1:divisor} \\overline{) ${2:dividend}} \\\\\\\\[-3pt]",
+      "  -\\underline{${3:product}} \\\\\\\\[-3pt]",
+      "  ${4:remainder}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Long Division (2 steps)": {
+    "prefix": [
+      "long-div-2"
+    ],
+    "description": "MathJax long division, 2 subtraction steps. $4 phantom shared across all 3 alignment positions",
+    "body": [
+      "$$",
+      "\\begin{array}{rll}",
+      "  ${8:quotient} \\\\\\\\[-3pt]",
+      "  ${1:divisor} \\overline{) ${2:dividend}} \\\\\\\\[-3pt]",
+      "  -\\underline{${3:first\\_product}}\\phantom{${4:0}} \\\\\\\\[-3pt]",
+      "  \\phantom{${4:0}}${5:partial\\_remainder}\\\\\\\\[-3pt]",
+      "  -\\phantom{${4:0}}\\underline{${6:second\\_product}}\\\\\\\\[-3pt]",
+      "  ${7:final\\_remainder}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Long Division (3 steps)": {
+    "prefix": [
+      "long-div-3"
+    ],
+    "description": "MathJax long division, 3 subtraction steps. $5 shared for step-1 alignment (\u00d72); $9 shared for step-2 alignment (\u00d72)",
+    "body": [
+      "$$",
+      "\\begin{array}{rll}",
+      "  ${13:quotient} \\\\\\\\[-3pt]",
+      "  ${1:divisor} \\overline{) ${2:dividend}} \\\\\\\\[-3pt]",
+      "  -\\underline{${3:first\\_product}}\\phantom{${4:00}} \\\\\\\\[-3pt]",
+      "  \\phantom{${5:0}}${6:partial\\_rem\\_1}\\\\\\\\[-3pt]",
+      "  -\\phantom{${5:0}}\\underline{${7:second\\_product}}\\phantom{${8:0}}\\\\\\\\[-3pt]",
+      "  \\phantom{${9:00}}${10:partial\\_rem\\_2}\\\\\\\\[-3pt]",
+      "  -\\phantom{${9:00}}\\underline{${11:third\\_product}}\\\\\\\\[-3pt]",
+      "  ${12:final\\_remainder}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Polynomial Long Division (degree 2)": {
+    "prefix": [
+      "poly-long-div-2",
+      "poly-long-div"
+    ],
+    "description": "MathJax poly long division degree-2 \u00f7 degree-1. Type each product once; its phantom copies auto-indent all rows below.",
+    "body": [
+      "$$",
+      "\\begin{array}{r}",
+      "  ${7:Q} \\\\\\\\[-3pt]",
+      "  ${1:d}\\,\\overline{)\\,${2:D}} \\\\\\\\[-3pt]",
+      "  \\underline{${3:P_1}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}${4:R_1} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\underline{${5:P_2}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}${6:rem}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Polynomial Long Division (degree 3)": {
+    "prefix": [
+      "poly-long-div-3"
+    ],
+    "description": "MathJax poly long division degree-3 \u00f7 degree-1. Type each product once; phantom copies auto-indent.",
+    "body": [
+      "$$",
+      "\\begin{array}{r}",
+      "  ${9:Q} \\\\\\\\[-3pt]",
+      "  ${1:d}\\,\\overline{)\\,${2:D}} \\\\\\\\[-3pt]",
+      "  \\underline{${3:P_1}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}${4:R_1} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\underline{${5:P_2}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}${6:R_2} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}\\underline{${7:P_3}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}\\phantom{${7:P_3}}${8:rem}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Polynomial Long Division (degree 4)": {
+    "prefix": [
+      "poly-long-div-4"
+    ],
+    "description": "MathJax poly long division degree-4 \u00f7 degree-1. Type each product once; phantom copies auto-indent.",
+    "body": [
+      "$$",
+      "\\begin{array}{r}",
+      "  ${11:Q} \\\\\\\\[-3pt]",
+      "  ${1:d}\\,\\overline{)\\,${2:D}} \\\\\\\\[-3pt]",
+      "  \\underline{${3:P_1}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}${4:R_1} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\underline{${5:P_2}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}${6:R_2} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}\\underline{${7:P_3}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}\\phantom{${7:P_3}}${8:R_3} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}\\phantom{${7:P_3}}\\underline{${9:P_4}} \\\\\\\\[-3pt]",
+      "  \\phantom{${3:P_1}}\\phantom{${5:P_2}}\\phantom{${7:P_3}}\\phantom{${9:P_4}}${10:rem}",
+      "\\end{array}",
+      "$$"
     ]
   }
 }
