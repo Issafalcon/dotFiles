@@ -1,125 +1,152 @@
-# Handling Conflicts with Native Neovim Features
+# Handling Conflicts with Other Plugins and Native Features
 
 ## The problem
 
-Neovim 0.10+ and many popular plugins all hook into `textDocument/signatureHelp`
-at the same time. When multiple handlers are active, users see duplicate or
-stacked floating windows. Similarly, native keymaps may conflict with plugin
-keymaps.
+Neovim plugins frequently compete for the same resources: autocmd events,
+buffer-local keymaps, floating windows, and LSP handlers. Identifying and
+handling these conflicts gracefully — while giving users escape hatches —
+distinguishes a polished plugin from a fragile one.
 
 ---
 
-## Providing an opt-out config option
+## 1. Autocmd group conflicts
 
-Always give users control with an explicit option:
+Always create autocmd groups with a namespaced name and `clear = true` to
+prevent duplicate registrations on `setup()` re-calls:
 
 ```lua
--- In configuration.lua defaults:
-{
-  override_native_handler = true,  -- default: we own the handler
-}
+local group = vim.api.nvim_create_augroup("MyPlugin", { clear = true })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = group,
+  callback = function(ev) ... end,
+})
 ```
 
-In `setup()`:
+If users call `setup()` twice (common during config reload), `clear = true`
+ensures the old autocmds are removed before re-registering.
+
+---
+
+## 2. Keymap conflicts
+
+When installing keymaps, save and restore originals so you don't permanently
+destroy the user's existing bindings:
+
 ```lua
-function M.setup(opts)
-  configuration.set(opts)
-  configuration.initialize_if_needed()
+-- Save original before installing
+local original = vim.api.nvim_buf_call(bufnr, function()
+  return vim.fn.maparg(lhs, mode, false, true)
+end)
+
+vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true })
+
+-- Restore on cleanup
+if original and original.lhs ~= "" then
+  vim.keymap.set(original.mode, lhs, original.callback or original.rhs,
+    { buffer = bufnr, expr = original.expr == 1,
+      silent = original.silent == 1, noremap = original.noremap == 1 })
+else
+  pcall(vim.keymap.del, mode, lhs, { buffer = bufnr })
 end
+```
+
+Give users the option to disable your default keymaps entirely:
+
+```lua
+-- In defaults:
+{ keymaps = { enable = true, close = "<Esc>" } }
+
+-- In setup():
+if config.keymaps.enable then
+  install_keymaps(bufnr)
+end
+```
+
+---
+
+## 3. Floating window stacking (zindex)
+
+When multiple plugins open floating windows simultaneously (completion,
+diagnostics, your plugin), `zindex` controls which float appears on top.
+
+```lua
+local bufnr, winnr = vim.lsp.util.open_floating_preview(lines, "markdown", {
+  border  = config.ui.border,
+  zindex  = config.ui.zindex,   -- default 50; let users tune this
+})
+```
+
+Document the default and mention that users may need to adjust if floats from
+other plugins appear above or below yours unexpectedly.
+
+Health check hint:
+```lua
+vim.health.info("Float zindex: " .. tostring(cfg.ui.zindex) ..
+  " (increase if other floats appear on top)")
+```
+
+---
+
+## 4. LSP handler conflicts
+
+If your plugin overrides a global LSP handler (e.g.
+`vim.lsp.handlers["textDocument/signatureHelp"]`), multiple plugins doing
+the same will silently overwrite each other. Always:
+
+1. Give users an explicit opt-out:
+
+```lua
+-- In defaults:
+{ override_native_handler = true }
 
 -- In initialize_if_needed():
-function M.initialize_if_needed()
-  if _initialized then return end
-  _initialized = true
-  local cfg = configuration.get()
-  if cfg.override_native_handler then
-    vim.lsp.handlers["textDocument/signatureHelp"] = require("my-plugin").handler
-  end
-  -- register LspAttach autocmd, etc.
+if cfg.override_native_handler then
+  vim.lsp.handlers["the/method"] = require("my-plugin").handler
 end
 ```
 
----
+2. Expose `M.handler` as a public field so power users can install it
+   themselves rather than relying on the global override.
 
-## noice.nvim
-
-`noice.nvim` by default intercepts `textDocument/signatureHelp`. Disable
-noice's signature handler so your plugin can own it:
-
-```lua
--- In user's config (document this):
-require("noice").setup({
-  lsp = {
-    signature = { enabled = false },
-  },
-})
-require("my-plugin").setup()
-```
-
-**Health check hint** — detect noice and warn if its signature is enabled:
-```lua
-local ok, noice = pcall(require, "noice")
-if ok then
-  local noice_cfg = noice.config and noice.config.options
-  if noice_cfg and noice_cfg.lsp and noice_cfg.lsp.signature
-      and noice_cfg.lsp.signature.enabled ~= false then
-    vim.health.warn(
-      "noice.nvim signature help is enabled and may conflict",
-      { "Set lsp.signature.enabled = false in noice setup" }
-    )
-  end
-end
-```
+3. Document any plugins known to set the same handler in your README.
 
 ---
 
-## lsp_signature.nvim
+## 5. Native feature conflicts
 
-`lsp_signature.nvim` installs its own global `vim.lsp.handlers["textDocument/signatureHelp"]`.
-The two plugins cannot coexist — document this clearly in README:
+When your plugin duplicates a native Neovim feature, users may end up with
+duplicate UI. Provide a config option and guide users in your README:
 
-```
-Do not load both lsp_signature.nvim and <your-plugin> simultaneously.
-Remove or disable lsp_signature.nvim from your plugin manager.
+```lua
+-- Example: plugin provides its own diagnostic float
+{ replace_native_feature = false }
 ```
 
 Health check:
 ```lua
-if package.loaded["lsp_signature"] then
+if cfg.replace_native_feature then
+  -- check if the native feature is still active and warn
   vim.health.warn(
-    "lsp_signature.nvim is loaded and will conflict",
-    { "Remove lsp_signature.nvim from your plugin list" }
+    "Native feature X is still enabled alongside my-plugin",
+    { "Consider disabling it to avoid duplicate UI" }
   )
 end
 ```
 
 ---
 
-## nvim-cmp
+## 6. Documenting known conflicts in README
 
-The `cmp-nvim-lsp-signature-help` source adds its own signature popup.
-Document how to disable it:
+Add a conflict table so users can resolve issues without opening bug reports:
 
-```lua
--- In user's config:
-require("cmp").setup({
-  sources = require("cmp").config.sources({
-    { name = "nvim_lsp" },
-    -- Remove: { name = "nvim_lsp_signature_help" }
-  }),
-})
-```
+```markdown
+## Known conflicts
 
----
-
-## blink.cmp
-
-blink.cmp has a built-in signature popup. Disable it:
-
-```lua
-require("blink.cmp").setup({
-  signature = { enabled = false },
-})
+| Plugin / Feature   | Symptom               | Fix                                        |
+|--------------------|-----------------------|--------------------------------------------|
+| some-plugin        | Duplicate popups      | Disable the overlapping feature in that plugin |
+| another-plugin     | Keymap overwritten    | Set `keymaps.enable = false` and map manually  |
+| Native feature X   | Duplicate UI          | See `replace_native_feature` config option |
 ```
 
 ---
@@ -127,49 +154,17 @@ require("blink.cmp").setup({
 ## Neovim 0.11+ `vim.lsp.config` (new server config API)
 
 With the new `vim.lsp.config` API, per-server `on_attach` is less common.
-Your `LspAttach` autocmd approach handles this correctly without any user
-wiring, since the autocmd fires regardless of how the LSP client was started.
+An `LspAttach` autocmd approach handles this correctly without any user
+wiring, since the autocmd fires regardless of how the LSP client was started:
 
 ```lua
--- This works whether the user uses lspconfig, vim.lsp.config, or manual start:
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("MyPlugin", { clear = true }),
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client and client.server_capabilities.signatureHelpProvider then
-      require("my-plugin").on_attach(client, ev.buf)
-    end
+    -- filter by server capability if your plugin is LSP-specific:
+    -- if client and client.server_capabilities.someCapability then
+    require("my-plugin").on_attach(client, ev.buf)
   end,
 })
-```
-
----
-
-## Native `vim.lsp.buf.signature_help()`
-
-When your plugin owns the `textDocument/signatureHelp` handler, calls to
-`vim.lsp.buf.signature_help()` from other plugins or user mappings will
-route through your handler — this is expected and correct behaviour.
-
-If a user wants to access the native popup (e.g. to enter the float in
-normal mode for scrolling), they can set `ui.focusable = true` and
-`ui.focus = false` in your config, then call `vim.lsp.buf.signature_help()`
-while the popup is visible — it will re-focus the existing float.
-
----
-
-## Documenting conflicts in README
-
-Add a section like:
-
-```markdown
-## Preventing Conflicting Signature Popups
-
-| Plugin         | Fix |
-|----------------|-----|
-| noice.nvim     | Set `lsp.signature.enabled = false` in noice setup |
-| lsp_signature.nvim | Remove from plugin list — cannot coexist |
-| nvim-cmp       | Remove `nvim_lsp_signature_help` source |
-| blink.cmp      | Set `signature.enabled = false` |
-| Native Neovim  | Handled automatically when `override_native_handler = true` (default) |
 ```

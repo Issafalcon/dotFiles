@@ -35,10 +35,10 @@ my-plugin/
 ### `init.lua` — public API
 
 - `M.setup(opts)` — single opts table, calls `configuration.set(opts)`,
-  registers autocmds and handler overrides.
-- `M.on_attach(client, bufnr)` — manual per-buffer setup for users who
-  don't want the auto-attach `LspAttach` approach.
-- Exported fields (e.g. `M.handler`) for advanced users.
+  registers autocmds and any handler/feature initialization.
+- Optional: `M.on_attach(bufnr)` — manual per-buffer setup for users who
+  want explicit control rather than the auto-attach autocmd approach.
+- Exported fields (e.g. `M.handler`, `M.state`) for advanced users.
 - **Do not** put implementation logic here; delegate to domain modules.
 
 ### `plugin/<name>.lua` — lazy entry point
@@ -50,8 +50,8 @@ vim.g.loaded_my_plugin_plugin = true
 -- Register user commands; do NOT call setup() here.
 -- Users call setup() in their own config.
 require("my-plugin._core.cmdparse").create("MyPlugin", {
-  signature = function(_) ... end,
-  toggle    = function(_) ... end,
+  enable  = function(_) ... end,
+  disable = function(_) ... end,
 })
 ```
 
@@ -62,8 +62,8 @@ require("my-plugin._core.cmdparse").create("MyPlugin", {
 - `M.get()` — returns current merged config.
 - `M.reset()` — restores defaults; **must** nil `vim.g.loaded_<plugin>` guard.
   Call in test `before_each` for isolation.
-- `M.initialize_if_needed()` — once-per-session side effects (e.g. setting
-  the global LSP handler).
+- `M.initialize_if_needed()` — once-per-session side effects (e.g. registering
+  autocmds, setting global handlers, or any other one-time wiring).
 
 ### `_core/log.lua` — logger
 
@@ -102,19 +102,15 @@ is run; no explicit registration needed.
 local M = {}
 function M.check()
   vim.health.start("my-plugin")
-  -- version
+  -- version check
   local v = vim.version()
   if v.minor < 11 then
     vim.health.error("Neovim 0.11+ required, got " .. tostring(v))
   else
     vim.health.ok("Neovim " .. tostring(v))
   end
-  -- handler override
-  if vim.lsp.handlers["textDocument/signatureHelp"] == require("my-plugin").handler then
-    vim.health.ok("Native signatureHelp handler overridden")
-  else
-    vim.health.warn("Native handler not overridden (override_native_handler = false?)")
-  end
+  -- dependency checks (add as appropriate for your plugin)
+  -- e.g. required executables, optional integrations, config validation
 end
 return M
 ```

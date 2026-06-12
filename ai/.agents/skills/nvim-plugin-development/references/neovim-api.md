@@ -49,37 +49,42 @@ end)
 - `replace_keycodes = false` — only needed when `expr = true` and you're
   returning raw terminal keys.
 
-### `vim.lsp.handlers`
+### `vim.lsp.handlers` (LSP plugins only)
 
-Override signature:
+Override a global LSP handler:
 ```lua
-vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
+vim.lsp.handlers["textDocument/someMethod"] = function(err, result, ctx, config)
   -- err: nil or string
-  -- result: lsp.SignatureHelp or nil
+  -- result: LSP result object or nil
   -- ctx: { bufnr, client_id, method, params }
   -- config: handler config table
 end
 ```
-Install once in `setup()` when `override_native_handler = true`. Provide
-`M.handler` as a public export so power users can install it themselves.
+Install once in `setup()` behind a config flag (e.g. `override_native_handler = true`).
+Expose `M.handler` as a public field so power users can install it themselves
+rather than relying on the global override. See [conflict-resolution.md](conflict-resolution.md)
+for how to handle conflicts with other plugins that do the same.
 
-### `vim.lsp.util.open_floating_preview`
+### `vim.lsp.util.open_floating_preview` (float-based plugins)
+
+Preferred over raw `nvim_open_win` — handles markdown rendering, resizing,
+and close events automatically:
 
 ```lua
 local bufnr, winnr = vim.lsp.util.open_floating_preview(lines, "markdown", {
-  border    = config.ui.border,
-  focusable = config.ui.focusable,
-  focus     = config.ui.focus,
-  zindex    = config.ui.zindex,        -- controls stacking above other floats
-  max_width = config.ui.max_width,
-  max_height= config.ui.max_height,
+  border       = config.ui.border,
+  focusable    = config.ui.focusable,
+  focus        = config.ui.focus,
+  zindex       = config.ui.zindex,      -- controls stacking above other floats
+  max_width    = config.ui.max_width,
+  max_height   = config.ui.max_height,
   close_events = config.ui.close_events,
   -- offset_x / offset_y shift from cursor position
 })
 ```
 
-`zindex` is critical when other plugins (noice, cmp) also open floats.
-Default to 50; document how users can adjust it.
+`zindex` matters when other plugins (noice, cmp, diagnostics) also open floats.
+Default to 50 and document how users can adjust it.
 
 ### Health checks
 
@@ -111,9 +116,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = group,
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client and client.server_capabilities.signatureHelpProvider then
-      require("my-plugin").on_attach(client, ev.buf)
-    end
+    -- filter by capability if your plugin is LSP-feature-specific:
+    -- if client and client.server_capabilities.someCapability then
+    require("my-plugin").on_attach(client, ev.buf)
   end,
 })
 ```

@@ -129,7 +129,7 @@ assert.is_true(found)
 
 Or check the module's internal tracking table if it exposes one:
 ```lua
-local state = require("my-plugin._lsp.mappings")
+local state = require("my-plugin._core.mappings")
 assert.is_not_nil(state._buf_mappings[bufnr])
 ```
 
@@ -180,29 +180,30 @@ end)
 
 it("provides tab-completion", function()
   local completions = vim.fn.getcompletion("MyPlugin ", "cmdline")
-  assert.is_true(vim.tbl_contains(completions, "signature"))
+  assert.is_true(vim.tbl_contains(completions, "enable"))
 end)
 ```
 
-### Testing LSP content rendering (no real LSP needed)
+### Testing domain modules in isolation
 
-Build a minimal `SignatureHelp` response table directly:
+Test feature modules directly by constructing inputs rather than triggering
+the full plugin flow. This makes tests fast and avoids needing a real LSP
+server, filesystem, or external process:
 
 ```lua
-local content = require("my-plugin._lsp.content")
+local renderer = require("my-plugin._<domain>.renderer")
 
-it("includes the signature label", function()
-  local sig_help = {
-    signatures = { { label = "foo(a: int, b: str)" } },
-    activeSignature = 0,
-    activeParameter = 0,
-  }
-  local lines, _ = content.to_markdown_lines(sig_help, "python", {})
-  assert.is_not_nil(lines)
-  local found = vim.tbl_contains(lines, "foo(a: int, b: str)")
-  assert.is_true(found)
+it("produces expected output for known input", function()
+  local input = { key = "value", other = 42 }
+  local result = renderer.build(input, {})
+  assert.is_not_nil(result)
+  assert.is_true(vim.tbl_contains(result, "expected line"))
 end)
 ```
+
+Build the minimal data structures your module needs rather than faking a full
+external response — it documents your module's contract and catches regressions
+without coupling tests to external APIs.
 
 ---
 

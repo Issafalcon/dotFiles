@@ -3,11 +3,12 @@ name: nvim-plugin-development
 description: >
   Write, refactor, or review Neovim plugins following modern best practices.
   Use this skill when creating a new Neovim plugin, refactoring an existing one,
-  writing busted tests for a plugin, setting up LSP-related plugin behaviour,
-  handling conflicts with native Neovim features or other plugins, or ensuring
-  compatibility with Neovim 0.11+. Covers directory structure, public API
-  design, configuration patterns, keymap lifecycle, health checks, LSP handler
-  overrides, and the busted+plenary test setup.
+  writing busted tests for a plugin, handling conflicts with native Neovim
+  features or other plugins, or ensuring compatibility with Neovim 0.11+.
+  Covers directory structure, public API design, configuration patterns, keymap
+  lifecycle, health checks, LSP integration (where applicable), and the
+  busted+plenary test setup. Trigger whenever the user is building, improving,
+  or debugging any Neovim plugin in Lua.
 compatibility: Neovim >= 0.11. Requires lua, luacheck (optional). Tests use busted via plenary runner.
 license: MIT
 ---
@@ -54,9 +55,10 @@ license: MIT
 3. **Public API in `init.lua`**:
    - `M.setup(opts)` — single options table, deep-merged with defaults.
      Never use positional non-opts arguments like `setup(client, config)`.
-   - Auto-attach via `LspAttach` autocmd (for LSP plugins) rather than
-     requiring users to call `on_attach` per server.
-   - Export `M.on_attach(client, bufnr)` for users who want manual control.
+   - Prefer event-driven auto-activation (autocmds) over requiring users to
+     call a hook function per buffer or server.
+   - Export an optional `M.on_attach(bufnr)` (or `M.enable(bufnr)`) for users
+     who want explicit per-buffer control.
 
 4. **Double-source guard** in `plugin/<plugin_name>.lua`:
    ```lua
@@ -90,9 +92,9 @@ license: MIT
 ```lua
 -- lua/<plugin>/_core/configuration.lua
 local DEFAULTS = {
-  ui = { border = "single", silent = true, zindex = 50 },
-  keymaps = { close = "<A-s>" },
-  display_automatically = true,
+  ui = { border = "single", zindex = 50 },
+  keymaps = { enable = true },
+  enabled = true,
   log_level = "warn",
 }
 
@@ -228,6 +230,8 @@ Key points:
 ## Handling conflicts with native Neovim features
 
 See [conflict-resolution.md](references/conflict-resolution.md) for how to:
-- Override `vim.lsp.handlers["textDocument/signatureHelp"]` safely.
-- Document incompatibilities with noice.nvim, lsp_signature.nvim, nvim-cmp, blink.cmp.
-- Provide an `override_native_handler = true/false` option to let users opt out.
+- Avoid duplicate autocmd registration with named groups and `clear = true`.
+- Save and restore keymaps when temporarily installing buffer-local bindings.
+- Manage floating window stacking with `zindex`.
+- Override LSP handlers safely (LSP plugins only) with an opt-out config flag.
+- Document known incompatibilities with other plugins in your README.
