@@ -26,5 +26,7 @@ if command -v claude >/dev/null; then
   # Add the pptx-posters skill from the scientific-agent-skills repository (will install the skills manager client if not already installed)
   npx skills add https://github.com/k-dense-ai/scientific-agent-skills --skill pptx-posters
 
+  # Helm charting
+  npx skills add wshobson/agents@helm-chart-scaffolding -g -y
   echo "Additional skills added."
 fi
