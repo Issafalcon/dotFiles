@@ -490,5 +490,58 @@
       "${0}"
     ],
     "description": "Insert table with 5 rows and 3 columns. First row is heading."
+  },
+  "Degree Symbol": {
+    "prefix": ["degrees", "\\degrees"],
+    "body": ["\\text{\\textdegree}"],
+    "description": "Insert degree symbol (assuming inside math mode"
+  },
+  "Inline Integral": {
+    "prefix": ["integralinline", "\\integralinline"],
+    "body": ["\\int_{$1}^{$2}$3"],
+    "description": "Insert inline integral notation, (only in the cases when the environment is inline math environment)."
+  },
+  "Inline Fraction": {
+    "prefix": ["fractioninline", "\\fractioninline"],
+    "body": ["\\frac{$1}{$2}$0"],
+    "description": [
+      "Insert inline fraction notation, (only in the cases when the environment is inline math environment)."
+    ]
+  },
+  "Vector": {
+    "prefix": ["vector", "\\vector"],
+    "body": ["\\overrightarrow{$1}$0"],
+    "description": ["Insert vector symbol"]
+  },
+  "BMatrix2x2": {
+    "prefix": ["matrix_2x2", "\\matrix_2x2"],
+    "body": [
+      "\\begin{bmatrix}",
+      "\t$1 & $2 \\\\\\",
+      "\t$3 & $4",
+      "\\end{bmatrix}$0"
+    ],
+    "description": ["Insert 2 x 2 matrix with brackets"]
+  },
+  "BMatrix3x3": {
+    "prefix": ["matrix_3x3", "\\matrix_3x3"],
+    "body": [
+      "\\begin{bmatrix}",
+      "\t$1 & $2 & $3 \\\\\\",
+      "\t$4 & $5 & $6 \\\\\\",
+      "\t$7 & $8 & $9",
+      "\\end{bmatrix}$0"
+    ],
+    "description": ["Insert 3 x 3 matrix with brackets"]
+  },
+  "Large Fraction": {
+    "prefix": ["fractionlarge", "\\fractionlarge"],
+    "body": ["\\displaystyle\\frac{$1}{$2}$0"],
+    "description": ["Insert large fraction notation"]
+  },
+  "Create Align* Environment in Text": {
+    "prefix": ["aligntext", "\\aligntext"],
+    "body": ["\\begin{align*}", "\t$1", "\\end{align*}$0"],
+    "description": "Create an align environment when the context is in the text environment."
   }
 }
