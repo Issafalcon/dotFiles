@@ -126,5 +126,47 @@
       "\\end{array}",
       "$$"
     ]
+  },
+  "Synthetic Division (degree 2)": {
+    "prefix": ["synth-div-2", "synth-div"],
+    "description": "Synthetic division degree-2 ÷ linear. Tab: root → a,b,c → products → quotient coefficients + remainder",
+    "body": [
+      "$$",
+      "\\begin{array}{r|rrr}",
+      "${1:root} & ${2:a} & ${3:b} & ${4:c} \\\\\\\\",
+      "& & ${5:p_1} & ${6:p_2} \\\\\\\\",
+      "\\hline",
+      "& ${7:q_1} & ${8:q_2} & ${9:R}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Synthetic Division (degree 3)": {
+    "prefix": ["synth-div-3"],
+    "description": "Synthetic division degree-3 ÷ linear. Tab: root → a,b,c,d → products → quotient coefficients + remainder",
+    "body": [
+      "$$",
+      "\\begin{array}{r|rrrr}",
+      "${1:root} & ${2:a} & ${3:b} & ${4:c} & ${5:d} \\\\\\\\",
+      "& & ${6:p_1} & ${7:p_2} & ${8:p_3} \\\\\\\\",
+      "\\hline",
+      "& ${9:q_1} & ${10:q_2} & ${11:q_3} & ${12:R}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Synthetic Division (degree 4)": {
+    "prefix": ["synth-div-4"],
+    "description": "Synthetic division degree-4 ÷ linear. Tab: root → a,b,c,d,e → products → quotient coefficients + remainder",
+    "body": [
+      "$$",
+      "\\begin{array}{r|rrrrr}",
+      "${1:root} & ${2:a} & ${3:b} & ${4:c} & ${5:d} & ${6:e} \\\\\\\\",
+      "& & ${7:p_1} & ${8:p_2} & ${9:p_3} & ${10:p_4} \\\\\\\\",
+      "\\hline",
+      "& ${11:q_1} & ${12:q_2} & ${13:q_3} & ${14:q_4} & ${15:R}",
+      "\\end{array}",
+      "$$"
+    ]
   }
 }
