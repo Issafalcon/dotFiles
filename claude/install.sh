@@ -22,6 +22,8 @@ fi
 if command -v claude >/dev/null; then
   echo "Adding additional skills..."
   claude plugin install superpowers@claude-plugins-official
+  claude plugin marketplace add DietrichGebert/ponytail
+  claude plugin install ponytail@ponytail
 
   # Add the pptx-posters skill from the scientific-agent-skills repository (will install the skills manager client if not already installed)
   npx skills add https://github.com/k-dense-ai/scientific-agent-skills --skill pptx-posters
