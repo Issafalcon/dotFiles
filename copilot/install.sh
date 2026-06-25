@@ -18,3 +18,12 @@ else
   copilot plugin marketplace add DietrichGebert/ponytail
   copilot plugin install ponytail@ponytail
 fi
+
+# Install rtk
+if command -v rtk >/dev/null; then
+  echo "rtk found. Skipping brew installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "rtk"
+fi
+
+rtk init -g

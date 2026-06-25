@@ -32,3 +32,12 @@ if command -v claude >/dev/null; then
   npx skills add wshobson/agents@helm-chart-scaffolding -g -y
   echo "Additional skills added."
 fi
+
+# Install rtk
+if command -v rtk >/dev/null; then
+  echo "rtk found. Skipping brew installation"
+else
+  "${SCRIPT_DIR}"/../bootstrap.sh "-i" "-m" "rtk"
+fi
+
+rtk init -g
