@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "nvim-mcp": {
+      "command": "nvim-mcp",
+      "args": ["--log-file", ".", "--log-level", "debug", "--connect", "auto"]
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "tools": ["query-docs", "resolve-library-id"]
+    }
+  }
+}
