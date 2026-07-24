@@ -73,6 +73,7 @@ appimage: build
 	else \
 		echo "appimagetool not found — AppDir ready at $(APPIMAGE_DIR)"; \
 		echo "Install appimagetool, then: cd $(BUILD_DIR) && ARCH=x86_64 appimagetool AppDir $(BINARY_NAME)-$(VERSION)-x86_64.AppImage"; \
+		if [ -n "$${CI}" ] || [ "$${APPIMAGE_REQUIRED}" = "1" ]; then exit 1; fi; \
 	fi
 
 ## help: Show this help message

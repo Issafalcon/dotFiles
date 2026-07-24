@@ -38,6 +38,19 @@ make appimage
 The image contains the TUI binary, desktop entry, icon, and docs under
 `usr/share/doc/dotfiles-tui/` — not a modules tree.
 
+## GitHub Releases
+
+Push a version tag to publish an AppImage via Actions:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The [DotFiles TUI CI/CD](../../.github/workflows/tui-release.yml) workflow builds a
+static Linux binary, packages the AppImage, and attaches it (plus a tarball and
+SHA256 checksums) to the GitHub Release.
+
 ## Keys
 
 | Key | Action |

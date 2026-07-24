@@ -13,6 +13,8 @@
 
 The AppImage does **not** bundle modules — only the TUI and documentation.
 
+Releases are published from version tags (`v*`) via GitHub Actions — see [INSTALL.md](tui/docs/INSTALL.md).
+
 ## Layout
 
 ```
