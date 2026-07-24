@@ -1,116 +1,57 @@
 # Issafalcon dotfiles
 
-> Modular installation of terminal, and terminal tools with my personal config files
+> Modular installation of terminal tools and configs, managed by a Go TUI
 > Inspired by [`caarlos0 dotFiles setup`](https://github.com/caarlos0/dotfiles)
 >
-> DISCLOSURE: Most of the contents have only been tested using Ubuntu 22.04 on native Linux machine and WSL
->             They are also an ongoing WIP and highly personalised, so please review the module code before you install to make sure it fits your needs
+> DISCLOSURE: Most of the contents have only been tested using Ubuntu 22.04 on native Linux and WSL.
+> They are an ongoing WIP and highly personalised — review module scripts before installing.
 
-The goals of my dotFiles are as follows:
- 1. Replace default shell with zsh, adding useful plugins without compromising speed
- 2. Create modular installation options for remaining dotfiles
- 3. Allow customization and extensibility
+## Goals
 
+1. Replace the default shell with zsh and useful plugins without compromising speed
+2. Modular install/uninstall of each tool’s configs via GNU Stow
+3. Drive everything from an interactive TUI (no separate bootstrap scripts)
+
+## Layout
+
+```
+go.mod / internal/   # Go module root + TUI core packages
+tui/                 # main package, Makefile, docs
+modules/<name>/      # install.sh, uninstall.sh, module.go, stow configs
+```
+
+Press `c` in the TUI to filter the sidebar by category.
 ## Installation
 
-### Setup and prerequisites intallation
-
-The following will install some prerequisite files onto your machine (requires `sudo`)
-e.g. git, curl, wget etc.
-
-It will quickly replace the default shell with zsh and add plugins using zinit.
-
-The default theme is powerline10k (you can change this)
-
-These prerequisites may change as I evolve this repo.
-
-> IMPORTANT: Clone to the ~/dotFiles directory as this will become the default stow directory (this can of course be modified)
+Clone the repo, then run the TUI:
 
 ```console
-$ git clone https://github.com/Issafalcon/dotFiles.git ~/dotFiles
-$ cd ~/dotFiles
-$ ./prerequisites.sh 
-$ zsh
+git clone https://github.com/Issafalcon/dotFiles.git ~/dotFiles
+cd ~/dotFiles/tui
+go run .
 ```
 
-Zinit plugins will be installed and you will need to restart your terminal to be taken to
-powerline10k configuration wizard.
+On first launch the app checks for `git`, `stow`, and `curl`. Install any missing tools from that screen, then use the dashboard to install modules (`i`), uninstall (`d`), or review an install script (`r` on the confirm dialog) before confirming.
 
-It is recommended that you install a NerdFont compatible font prior to setting up powerline10k.
+After installing `zsh` (or other PATH-changing modules), open a new terminal so shell config takes effect.
 
-### Module Installation
+It is recommended that you install a Nerd Font before setting up Powerlevel10k via the zsh module.
 
-Following the `prerequisites.sh` script run, modules can be installed via two scripts in the root directory:
-- `./bootstrap.sh`
-- `./bootstrap_bulk.sh`
+### Suggested install order
 
-Module names match the names of the top level subdirectories in the repo (except `docs` and `.git`)
+1. `zsh`
+2. `fzf`
+3. `homebrew` (required by some modules)
+4. `libsecret` / `git` / `tmux` / `nvim` as needed
 
-The recommended order of modules would be:
-  1. `fzf` - The `z` function (fzf search on previously visited directories) relies on this being installed
-  2. `homebrew` - Required for installation of some of the other modules
-  3. `libsecret` - Used for storing git credentials in WSL
-  4. `git` - Adds `delta` which provides prettier output for git commands
-  5. `tmux` - Terminal multiplexer
-  6. `ranger` - Terminal file explorer
-  7. `lazygit` - TUI for git
-
-#### Individual Modules
-
-To "install" a module run the following:
-
-```console
-$ ./bootstrap.sh -m <MODULE_NAME> -i
-```
-> Or, if you don't want to install the actual dependencies for the module (you may have them installed already)
-
-```console
-$ ./bootstrap.sh -m <MODULE_NAME>
-```
-#### Bulk Install Modules
-
-To install multiple modules at once (or all of them), run the following:
-
-```console
-$ ./bootstrap_bulk.sh -i [...MODULE_NAMES] # Where <MODULE_NAMES> is a space separated list of modules
-```
-> Or, if you don't want to install the actual dependencies for the module (you may have them installed already)
-
-```console
-$ ./bootstrap.sh -m [...MODULE_NAMES]
-```
-
-### Neovim Setup
-
-### MySql Setup
-
-This module folder contains a `docker-compose.yaml` file and associated `.env` and SQL script files to startup a containerized MySql server.
-
-## Further help:
+## Further help
 
 - [Opinionated Terminal Setup for WSL2 on Windows](/docs/WSL2.md)
 - [Personalize your configs](/docs/PERSONALIZATION.md)
 - [Understand how it works](/docs/DESIGN.md)
+- [TUI install notes](/tui/docs/INSTALL.md)
+- [Adding modules](/tui/docs/ADDING_MODULES.md)
 
 ## Contributing
 
-At the moment, I am not accepting PRs, but please feel free to open issues or add suggestions for improvements,
-so that setup can be made more accessible.
-
-## Feature Roadmap 🌌:
-- [x] Replace all occurences of ~/repos with $PROJECTS variable
-- [x] Replace Homebrew installations with apt package manager (and remove Homebrew from deps) (NOTE: Lazygit and some language servers / formatters still require homebrew)
-- [ ] Add uninstall scripts for modules
-  - [ ] zsh
-  - [ ] node
-  - [ ] python
-  - [ ] etc...
-- [ ] Add ability to load custom .zsh settings
-- [ ] Add detailed design guide to how it works
-- [x] Tidy up prerequisites to make as minimal as possible
-- [ ] Add silent install for modules
-  - [ ] zsh
-  - [ ] node
-  - [ ] python
-  - [ ] etc...
-
+At the moment I am not accepting PRs, but feel free to open issues or suggestions.

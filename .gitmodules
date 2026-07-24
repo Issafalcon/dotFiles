@@ -1,6 +1,6 @@
 [submodule "wezterm-config"]
-	path = wezterm/.config/wezterm
+	path = modules/wezterm/.config/wezterm
 	url = https://github.com/Issafalcon/wezterm-config
 [submodule "nvim-config"]
-	path = nvim/.config/nvim
+	path = modules/nvim/.config/nvim
 	url = https://github.com/Issafalcon/nvim-config

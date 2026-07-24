@@ -2,7 +2,7 @@
 
 ## Overview
 
-The DotFiles TUI is an interactive terminal application that replaces the shell-based `bootstrap.sh` workflow with a full-featured module management interface. It's built in Go using the [Charm](https://charm.sh/) ecosystem.
+The DotFiles TUI is an interactive terminal application for installing, stowing, and uninstalling modules under `modules/`. Install/uninstall logic lives in each module's shell scripts; Go holds metadata only. It's built using the [Charm](https://charm.sh/) ecosystem.
 
 ## Prerequisites
 
@@ -32,53 +32,19 @@ dotfiles-tui
 ## Project Structure
 
 ```
-tui/
-├── main.go                     # Entry point
-├── go.mod / go.sum             # Go module dependencies
-├── Makefile                    # Build targets
-├── internal/                   # Private packages (Go convention)
-│   ├── app/                    # Root application model
-│   │   ├── app.go              # Main model (Init/Update/View)
-│   │   └── keys.go             # Keyboard shortcuts
-│   ├── theme/                  # Visual styling
-│   │   └── theme.go            # Colours, styles, icons
-│   ├── prereqs/                # Prerequisites checking
-│   │   ├── checker.go          # Detection logic
-│   │   └── prereqs.go          # TUI screen
-│   ├── sidebar/                # Left panel — module list
-│   │   ├── sidebar.go          # List component
-│   │   └── filter.go           # Fuzzy search
-│   ├── detail/                 # Right panel — module details
-│   │   ├── detail.go           # Tab container
-│   │   ├── overview.go         # Overview tab
-│   │   ├── output.go           # Install output tab
-│   │   └── config.go           # Configuration tab
-│   ├── installer/              # Installation engine
-│   │   ├── installer.go        # Parallel orchestrator
-│   │   ├── runner.go           # Command execution
-│   │   └── verify.go           # Post-install checks
-│   ├── module/                 # Module definitions
-│   │   ├── module.go           # Module struct
-│   │   ├── registry.go         # Module registry
-│   │   └── modules/            # Individual module defs
-│   │       ├── template.go     # New module template
-│   │       ├── editors.go      # nvim, vimspector
-│   │       ├── shell.go        # zsh, powershell
-│   │       ├── languages.go    # go, rust, python, etc.
-│   │       └── ...
-│   ├── popup/                  # Modal dialogs
-│   │   ├── popup.go            # Generic overlay
-│   │   ├── confirm.go          # Install confirmation
-│   │   ├── input.go            # User input
-│   │   └── help.go             # Help overlay
-│   └── utils/                  # Shared utilities
-│       ├── exec.go             # Shell command runner
-│       ├── stow.go             # GNU Stow wrapper
-│       ├── browser.go          # URL opener
-│       └── detect.go           # Software detection
-└── docs/
-    ├── DEVELOPER.md            # This file
-    └── ADDING_MODULES.md       # Module creation guide
+/
+├── go.mod                      # Go module (repo root)
+├── modules/<name>/             # Per-module: module.go + install.sh + configs
+├── internal/                   # TUI core packages
+│   ├── app/
+│   ├── module/                 # Registry + Module type (no per-module defs)
+│   ├── sidebar/                # List + search + category filter
+│   └── ...
+└── tui/
+    ├── main.go
+    ├── modules_register.go     # Blank-imports all modules/*/module.go
+    ├── Makefile
+    └── docs/
 ```
 
 ## Architecture: The Elm Architecture (TEA)

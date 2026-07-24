@@ -1,30 +1,28 @@
 # DotFiles TUI — Makefile
-# Run `make help` to see all available targets.
+# Run from tui/ or repo root: `make -C tui build`
+# The Go module lives at the repository root (parent of this directory).
 
 BINARY_NAME := dotfiles-tui
 BUILD_DIR := ./build
 INSTALL_DIR := /usr/local/bin
 APPIMAGE_DIR := $(BUILD_DIR)/AppDir
 VERSION ?= dev
+REPO_ROOT := $(abspath ..)
+PKG := ./tui
 
-# Go build flags
-# -ldflags="-s -w" strips debug info for smaller binaries.
-# -X injects the version string at compile time via the linker.
-# See: https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies
-# See: https://pkg.go.dev/cmd/link
 GO_FLAGS := -ldflags="-s -w -X main.version=$(VERSION)"
 
-.PHONY: build run install clean lint test tidy appimage help
+.PHONY: build run install clean lint test tidy appimage help generate-modules
 
 ## build: Compile the application binary
 build:
 	@echo "Building $(BINARY_NAME) (version=$(VERSION))..."
 	@mkdir -p $(BUILD_DIR)
-	go build $(GO_FLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) .
+	cd $(REPO_ROOT) && go build $(GO_FLAGS) -o $(CURDIR)/$(BUILD_DIR)/$(BINARY_NAME) $(PKG)
 
 ## run: Build and run the application
 run:
-	go run .
+	cd $(REPO_ROOT) && go run $(PKG)
 
 ## install: Build and install the binary to /usr/local/bin
 install: build
@@ -40,18 +38,22 @@ clean:
 ## lint: Run Go linter (requires golangci-lint)
 lint:
 	@if command -v golangci-lint >/dev/null 2>&1; then \
-		golangci-lint run ./...; \
+		cd $(REPO_ROOT) && golangci-lint run ./...; \
 	else \
-		echo "golangci-lint not installed. Run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"; \
+		echo "golangci-lint not installed. Run: go install github.com/golangci-lint/cmd/golangci-lint@latest"; \
 	fi
 
 ## test: Run all tests
 test:
-	go test -v ./...
+	cd $(REPO_ROOT) && go test -v ./...
 
 ## tidy: Clean up go.mod and go.sum
 tidy:
-	go mod tidy
+	cd $(REPO_ROOT) && go mod tidy
+
+## generate-modules: Refresh tui/modules_register.go blank-imports from modules/*/module.go
+generate-modules:
+	cd $(REPO_ROOT) && go run ./tui/tools/genregister.go
 
 ## appimage: Build a Linux AppImage (requires appimagetool on PATH)
 appimage: build
