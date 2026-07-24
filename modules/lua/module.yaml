@@ -1,0 +1,10 @@
+name: lua
+icon: ""
+description: Lua 5.4 scripting language
+category: Language
+website: "https://www.lua.org/"
+repo: "https://github.com/lua/lua"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 10MB
+check_command: lua5.4 -v

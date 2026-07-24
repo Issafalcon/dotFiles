@@ -1,0 +1,10 @@
+name: helm
+icon: ""
+description: Kubernetes package manager
+category: DevOps
+website: "https://helm.sh/"
+repo: "https://github.com/helm/helm"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 50MB
+check_command: helm version

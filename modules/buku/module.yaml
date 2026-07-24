@@ -1,0 +1,10 @@
+name: buku
+icon: ""
+description: Command-line bookmark manager
+category: Utility
+website: "https://github.com/jarun/buku"
+repo: "https://github.com/jarun/buku"
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 10MB
+check_command: buku --version

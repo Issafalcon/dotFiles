@@ -1,0 +1,10 @@
+name: chromedriver
+icon: ""
+description: ChromeDriver for browser automation
+category: Utility
+website: "https://chromedriver.chromium.org/"
+repo: "https://github.com/nicedoc/chromium"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 20MB
+check_command: chromedriver --version

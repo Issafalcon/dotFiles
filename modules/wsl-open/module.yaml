@@ -1,0 +1,10 @@
+name: wsl-open
+icon: ""
+description: Open files in Windows apps from WSL
+category: Utility
+website: "https://github.com/4U6U57/wsl-open"
+repo: "https://github.com/4U6U57/wsl-open"
+stow_enabled: false
+estimated_time: 15s
+estimated_size: 5MB
+check_command: wsl-open --version

@@ -1,0 +1,11 @@
+name: homebrew
+icon: ""
+description: Homebrew package manager for Linux
+category: Utility
+website: "https://brew.sh/"
+repo: "https://github.com/Homebrew/brew"
+stow_enabled: false
+estimated_time: 3m
+estimated_size: 500MB
+check_command: brew --version
+requires_input: true

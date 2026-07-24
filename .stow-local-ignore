@@ -29,6 +29,7 @@ _darcs
 install.sh
 uninstall.sh
 module.go
+module.yaml
 path.zsh
 completion.zsh
 docs/

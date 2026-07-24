@@ -1,0 +1,10 @@
+name: gojira
+icon: ""
+description: Command-line Jira client (go-jira)
+category: Application
+website: "https://github.com/go-jira/jira"
+repo: "https://github.com/go-jira/jira"
+stow_enabled: true
+estimated_time: 15s
+estimated_size: 20MB
+check_command: jira --version

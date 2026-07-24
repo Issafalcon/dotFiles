@@ -1,0 +1,10 @@
+name: fzf
+icon: ""
+description: Command-line fuzzy finder
+category: Utility
+website: "https://junegunn.github.io/fzf/"
+repo: "https://github.com/junegunn/fzf"
+stow_enabled: true
+estimated_time: 15s
+estimated_size: 5MB
+check_command: fzf --version

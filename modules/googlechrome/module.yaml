@@ -1,0 +1,10 @@
+name: googlechrome
+icon: ""
+description: Google Chrome web browser
+category: Application
+website: "https://www.google.com/chrome/"
+repo: "https://github.com/nicedoc/chromium"
+stow_enabled: false
+estimated_time: 2m
+estimated_size: 300MB
+check_command: google-chrome --version

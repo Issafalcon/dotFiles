@@ -1,0 +1,10 @@
+name: clipboard
+icon: ""
+description: Clipboard integration (xclip)
+category: Utility
+website: "https://github.com/astrand/xclip"
+repo: "https://github.com/astrand/xclip"
+stow_enabled: false
+estimated_time: 15s
+estimated_size: 5MB
+check_command: xclip -version

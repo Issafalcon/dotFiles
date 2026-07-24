@@ -1,0 +1,19 @@
+name: dotnet
+icon: ""
+description: .NET SDK with global tools
+category: Language
+website: "https://dotnet.microsoft.com/"
+repo: "https://github.com/dotnet/sdk"
+stow_enabled: true
+estimated_time: 3m
+estimated_size: 2GB
+check_command: dotnet --version
+requires_input: true
+config_options:
+  - name: dotnet_versions
+    description: Which .NET SDK versions to install
+    default: 8.0,9.0,10.0
+    choices:
+      - 8.0
+      - 9.0
+      - 10.0

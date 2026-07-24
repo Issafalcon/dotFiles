@@ -1,0 +1,10 @@
+name: azure
+icon: ""
+description: Azure CLI with Functions Core Tools
+category: Cloud
+website: "https://docs.microsoft.com/en-us/cli/azure/"
+repo: "https://github.com/Azure/azure-cli"
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 500MB
+check_command: az --version

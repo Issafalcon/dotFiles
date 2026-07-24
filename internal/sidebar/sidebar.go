@@ -588,6 +588,18 @@ func (m Model) CategoryFilter() string {
 	return m.categoryFilter
 }
 
+// SetItems replaces the module list and re-applies active filters.
+func (m *Model) SetItems(items []ModuleItem) {
+	m.items = items
+	m.reapplyFilters()
+	m.cursor = 0
+	if len(m.filtered) > 0 {
+		m.selected = m.filtered[0].Name
+	} else {
+		m.selected = ""
+	}
+}
+
 // SetCategoryFilter sets the category filter and refreshes the list.
 // Pass "" for All categories.
 func (m *Model) SetCategoryFilter(category string) {

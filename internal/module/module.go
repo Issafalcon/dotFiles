@@ -100,10 +100,10 @@ func (s InstallStatus) String() string {
 //
 // See: https://go.dev/ref/spec#Struct_types
 type ExternalDep struct {
-	Name           string // Human-readable name of the external tool.
-	CheckCommand   string // Shell command to verify the tool is installed.
-	InstallCommand string // Shell command to install the tool if missing.
-	InstallMethod  string // Package manager used: "apt", "brew", "cargo", "npm", "pip", or "curl".
+	Name           string `yaml:"name"`            // Human-readable name of the external tool.
+	CheckCommand   string `yaml:"check_command"`   // Shell command to verify the tool is installed.
+	InstallCommand string `yaml:"install_command"` // Shell command to install the tool if missing.
+	InstallMethod  string `yaml:"install_method"`  // Package manager: apt, brew, cargo, npm, pip, or curl.
 }
 
 // ConfigOption represents a user-configurable choice for a module.
@@ -124,10 +124,10 @@ type ExternalDep struct {
 // See: https://go.dev/tour/moretypes/7
 // See: https://go.dev/blog/slices-intro
 type ConfigOption struct {
-	Name        string   // Short identifier for this option (e.g., "dotnet_version").
-	Description string   // Human-readable description shown to the user.
-	Default     string   // Default value if the user doesn't choose.
-	Choices     []string // Valid values the user can pick from. Empty means freeform.
+	Name        string   `yaml:"name"`        // Short identifier for this option (e.g., "dotnet_version").
+	Description string   `yaml:"description"` // Human-readable description shown to the user.
+	Default     string   `yaml:"default"`     // Default value if the user doesn't choose.
+	Choices     []string `yaml:"choices"`     // Valid values the user can pick from. Empty means freeform.
 }
 
 // Module represents a single dotfile module — one tool, application, or
@@ -154,74 +154,37 @@ type ConfigOption struct {
 type Module struct {
 	// --- Identity ---
 
-	// Name is the directory name in the dotfiles repo (e.g., "nvim", "zsh").
-	// This is used as the unique key to identify the module throughout the app.
-	Name string
+	// Name is the directory name under the modules path (e.g., "nvim", "zsh").
+	Name string `yaml:"name"`
 
 	// Icon is a Nerd Font glyph displayed next to the module name in the TUI.
-	// Nerd Fonts patch developer-targeted fonts with many extra glyphs.
-	// See: https://www.nerdfonts.com/cheat-sheet
-	Icon string
+	Icon string `yaml:"icon"`
 
 	// Description is a brief one-line summary of what this module is.
-	Description string
+	Description string `yaml:"description"`
 
 	// --- Categorization ---
 
 	// Category groups related modules together in the UI sidebar.
-	// Valid values: "Shell", "Editor", "Language", "DevOps", "Utility",
-	// "Application", "Cloud", "Database", "AI".
-	Category string
+	Category string `yaml:"category"`
 
 	// Website is the project's official website URL.
-	Website string
+	Website string `yaml:"website"`
 
 	// Repo is the GitHub repository URL for the project.
-	Repo string
+	Repo string `yaml:"repo"`
 
 	// --- Dependencies ---
 
-	// Dependencies lists the Names of other modules in this repo that must
-	// be installed before this one. For example, nvim depends on ["python",
-	// "node", "go", "homebrew", "yazi"].
-	//
-	// This is a slice of strings where each string matches another Module's
-	// Name field. The installer uses this to compute a topological install order.
-	Dependencies []string
-
-	// ExternalDeps lists tools needed from outside this dotfiles repo.
-	// Unlike Dependencies (which reference other modules), these are system
-	// packages that must be present for this module to work.
-	ExternalDeps []ExternalDep
+	Dependencies []string      `yaml:"dependencies"`
+	ExternalDeps []ExternalDep `yaml:"external_deps"`
 
 	// --- Installation ---
 
-	// StowEnabled indicates whether this module uses GNU Stow for symlinking
-	// config files. Stow creates symlinks from ~/.config/<module> (or similar)
-	// to the module directory under modules/ in the dotfiles repo.
-	//
-	// bool is Go's boolean type. Its zero value is false, so modules that
-	// don't use stow don't need to set this field explicitly.
-	// See: https://go.dev/ref/spec#Boolean_types
-	StowEnabled bool
-
-	// EstimatedTime is a rough human-readable install time (e.g., "30s", "2m").
-	EstimatedTime string
-
-	// EstimatedSize is a rough human-readable disk space estimate (e.g., "50MB").
-	EstimatedSize string
-
-	// CheckCommand is a shell command to verify the module is installed.
-	// For example, "nvim --version" or "docker --version".
-	// The exit code (0 = installed, non-zero = not installed) determines status.
-	CheckCommand string
-
-	// RequiresInput indicates whether the install process needs user interaction
-	// (e.g., "press y to continue" prompts). This affects how the TUI handles
-	// the installation — interactive installs may need special treatment.
-	RequiresInput bool
-
-	// ConfigOptions lists module-specific configuration choices that the user
-	// can customize before installation.
-	ConfigOptions []ConfigOption
+	StowEnabled   bool           `yaml:"stow_enabled"`
+	EstimatedTime string         `yaml:"estimated_time"`
+	EstimatedSize string         `yaml:"estimated_size"`
+	CheckCommand  string         `yaml:"check_command"`
+	RequiresInput bool           `yaml:"requires_input"`
+	ConfigOptions []ConfigOption `yaml:"config_options"`
 }

@@ -1,0 +1,10 @@
+name: plantuml
+icon: ""
+description: UML diagrams from text descriptions
+category: Utility
+website: "https://plantuml.com/"
+repo: "https://github.com/plantuml/plantuml"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 100MB
+check_command: plantuml -version

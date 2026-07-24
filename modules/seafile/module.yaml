@@ -1,0 +1,10 @@
+name: seafile
+icon: ""
+description: Self-hosted file sync and share
+category: Application
+website: "https://www.seafile.com/"
+repo: "https://github.com/haiwen/seafile"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 100MB
+check_command: test -f /usr/bin/seafile

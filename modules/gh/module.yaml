@@ -1,0 +1,10 @@
+name: gh
+icon: ""
+description: GitHub CLI
+category: Utility
+website: "https://cli.github.com/"
+repo: "https://github.com/cli/cli"
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 50MB
+check_command: gh --version

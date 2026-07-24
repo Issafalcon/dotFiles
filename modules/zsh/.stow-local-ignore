@@ -12,3 +12,4 @@ functions
 xterm-color256-italic.terminfo
 module.go
 uninstall.sh
+module.yaml

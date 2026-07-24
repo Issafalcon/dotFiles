@@ -1,0 +1,10 @@
+name: postman
+icon: ""
+description: API development and testing platform
+category: Application
+website: "https://www.postman.com/"
+repo: "https://github.com/postmanlabs/postman-app-support"
+stow_enabled: false
+estimated_time: 1m
+estimated_size: 300MB
+check_command: test -d /usr/local/Postman

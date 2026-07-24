@@ -1,0 +1,10 @@
+name: libsecret
+icon: ""
+description: Git credential storage via libsecret
+category: Utility
+website: "https://wiki.gnome.org/Projects/Libsecret"
+repo: "https://gitlab.gnome.org/GNOME/libsecret"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 20MB
+check_command: "dpkg -l | grep libsecret-1-0"

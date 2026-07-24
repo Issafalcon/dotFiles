@@ -1,0 +1,10 @@
+name: go
+icon: ""
+description: Go programming language
+category: Language
+website: "https://go.dev/"
+repo: "https://github.com/golang/go"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 500MB
+check_command: go version

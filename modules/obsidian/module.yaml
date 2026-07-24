@@ -1,0 +1,10 @@
+name: obsidian
+icon: ""
+description: Knowledge base on local Markdown files
+category: Application
+website: "https://obsidian.md/"
+repo: "https://github.com/obsidianmd/obsidian-releases"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 200MB
+check_command: test -f /usr/bin/obsidian

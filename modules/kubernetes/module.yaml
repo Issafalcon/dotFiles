@@ -1,0 +1,10 @@
+name: kubernetes
+icon: ""
+description: kubectl CLI and k9s terminal UI
+category: DevOps
+website: "https://kubernetes.io/"
+repo: "https://github.com/kubernetes/kubernetes"
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 100MB
+check_command: kubectl version --client

@@ -1,0 +1,10 @@
+name: nx
+icon: ""
+description: Nx monorepo build system CLI
+category: Application
+website: "https://nx.dev/"
+repo: "https://github.com/nrwl/nx"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 50MB
+check_command: nx --version

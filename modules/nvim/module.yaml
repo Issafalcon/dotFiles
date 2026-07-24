@@ -1,0 +1,25 @@
+name: nvim
+icon: ""
+description: Neovim editor with full plugin ecosystem
+category: Editor
+website: "https://neovim.io/"
+repo: "https://github.com/neovim/neovim"
+dependencies:
+  - python
+  - node
+  - go
+  - homebrew
+  - yazi
+external_deps:
+  - name: ripgrep
+    check_command: rg --version
+    install_command: sudo apt-get install -y ripgrep
+    install_method: apt
+  - name: cmake
+    check_command: cmake --version
+    install_command: sudo apt-get install -y cmake
+    install_method: apt
+stow_enabled: true
+estimated_time: 5m
+estimated_size: 500MB
+check_command: nvim --version

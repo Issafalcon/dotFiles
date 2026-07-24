@@ -1,0 +1,10 @@
+name: packer
+icon: ""
+description: HashiCorp Packer for machine images
+category: DevOps
+website: "https://www.packer.io/"
+repo: "https://github.com/hashicorp/packer"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 100MB
+check_command: packer --version

@@ -1,40 +1,52 @@
 # Installation
 
-## Quick start
+## AppImage (recommended for end users)
 
-```console
-git clone https://github.com/Issafalcon/dotFiles.git ~/dotFiles
+1. Download the latest `dotfiles-tui-*.AppImage` release asset.
+2. `chmod +x dotfiles-tui-*.AppImage && ./dotfiles-tui-*.AppImage`
+3. Install any missing **git / stow / curl** from the prereq screen.
+4. Enter the path to your **modules** directory (created if missing). The AppImage ships with **no** modules — you bring your own.
+
+Optional:
+
+```bash
+export DOTFILES_MODULES_DIR=~/my-dotfiles/modules
+./dotfiles-tui-*.AppImage
+```
+
+Config is saved to `~/.config/dotfiles-tui/config.yaml`.
+
+## From source (developers)
+
+```bash
+git clone <this-repo> ~/dotFiles
 cd ~/dotFiles/tui
-go run .
-# or: make run / make build && ./build/dotfiles-tui
+make run    # auto-detects ../modules
+# or: make build && ./build/dotfiles-tui
 ```
 
-The TUI checks for **git**, **stow**, and **curl** on startup and can install any that are missing. Install modules from the dashboard (`i` to install, `d` to uninstall). After shell-related installs, open a new terminal so PATH / `.zshrc` changes apply.
+## Building an AppImage
 
-Optional: set `DOTFILES_DIR` if the repo is not auto-detected from the working directory.
+Requires `appimagetool` on `PATH`:
 
-## Prerequisites
-
-| Tool | Why | Install |
-|------|-----|---------|
-| Go 1.22+ | Build/run the TUI | https://go.dev/dl/ |
-| `git` | Clone / version control | `sudo apt install git` |
-| `stow` | Symlink module configs | `sudo apt install stow` |
-| `curl` | Many module install scripts | `sudo apt install curl` |
-
-Everything else (zsh, node, build tools, …) is installed by selecting the corresponding module in the TUI.
-
-## Recommended first modules
-
-1. `zsh` — shell + zinit
-2. `fzf` — fuzzy finder / `z`
-3. `homebrew` — needed by some modules
-4. `git`, `tmux`, `nvim` — as needed
-
-## Building
-
-```console
+```bash
 cd tui
-make build          # → build/dotfiles-tui
-make install        # → /usr/local/bin/dotfiles-tui
+make appimage
+# → build/dotfiles-tui-<version>-x86_64.AppImage
 ```
+
+The image contains the TUI binary, desktop entry, icon, and docs under
+`usr/share/doc/dotfiles-tui/` — not a modules tree.
+
+## Keys
+
+| Key | Action |
+|-----|--------|
+| `c` | Filter by category |
+| `H` | Adding-modules guide |
+| `i` | Install |
+| `r` | Review install.sh on confirm |
+| `d` | Uninstall |
+| `?` | Help |
+
+See [ADDING_MODULES.md](./ADDING_MODULES.md) (also embedded; press `H`).

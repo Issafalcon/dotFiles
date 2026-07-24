@@ -20,6 +20,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/issafalcon/dotfiles-tui/internal/config"
 )
 
 // dotFileModulesFile is the name of the file that tracks installed modules.
@@ -320,9 +322,15 @@ func findDotfilesRoot(start string) string {
 	return ""
 }
 
-// GetModulesDir returns the path to the modules/ directory (stow packages).
+// GetModulesDir returns the configured modules directory (stow packages).
+// Resolution: DOTFILES_MODULES_DIR → config → DOTFILES_DIR/modules → auto-detect.
+// Returns "" when unset (first-run setup required).
 func GetModulesDir() string {
-	return filepath.Join(GetDotfilesDir(), "modules")
+	dir, err := config.ResolveModulesDir()
+	if err != nil || dir == "" {
+		return ""
+	}
+	return dir
 }
 
 // ModuleScriptPath returns the path to a module's install.sh or uninstall.sh.
@@ -333,7 +341,11 @@ func ModuleScriptPath(moduleName, scriptName string) string {
 
 // ModuleScriptExists reports whether the given module script is present.
 func ModuleScriptExists(moduleName, scriptName string) bool {
-	_, err := os.Stat(ModuleScriptPath(moduleName, scriptName))
+	dir := GetModulesDir()
+	if dir == "" {
+		return false
+	}
+	_, err := os.Stat(filepath.Join(dir, moduleName, scriptName))
 	return err == nil
 }
 

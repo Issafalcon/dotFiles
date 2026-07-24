@@ -12,7 +12,7 @@ PKG := ./tui
 
 GO_FLAGS := -ldflags="-s -w -X main.version=$(VERSION)"
 
-.PHONY: build run install clean lint test tidy appimage help generate-modules
+.PHONY: build run install clean lint test tidy appimage help
 
 ## build: Compile the application binary
 build:
@@ -40,7 +40,7 @@ lint:
 	@if command -v golangci-lint >/dev/null 2>&1; then \
 		cd $(REPO_ROOT) && golangci-lint run ./...; \
 	else \
-		echo "golangci-lint not installed. Run: go install github.com/golangci-lint/cmd/golangci-lint@latest"; \
+		echo "golangci-lint not installed. Run: go install github.com/golangci-lint/golangci-lint/cmd/golangci-lint@latest"; \
 	fi
 
 ## test: Run all tests
@@ -51,21 +51,29 @@ test:
 tidy:
 	cd $(REPO_ROOT) && go mod tidy
 
-## generate-modules: Refresh tui/modules_register.go blank-imports from modules/*/module.go
-generate-modules:
-	cd $(REPO_ROOT) && go run ./tui/tools/genregister.go
-
-## appimage: Build a Linux AppImage (requires appimagetool on PATH)
+## appimage: Build a Linux AppImage (TUI + docs only; no modules)
 appimage: build
 	@echo "Packaging AppImage..."
-	@mkdir -p $(APPIMAGE_DIR)/usr/bin
+	@rm -rf $(APPIMAGE_DIR)
+	@mkdir -p $(APPIMAGE_DIR)/usr/bin $(APPIMAGE_DIR)/usr/share/doc/dotfiles-tui
 	cp $(BUILD_DIR)/$(BINARY_NAME) $(APPIMAGE_DIR)/usr/bin/$(BINARY_NAME)
 	cp appimage/AppRun $(APPIMAGE_DIR)/AppRun
 	chmod +x $(APPIMAGE_DIR)/AppRun
 	cp appimage/dotfiles-tui.desktop $(APPIMAGE_DIR)/dotfiles-tui.desktop
 	cp appimage/dotfiles-tui.svg $(APPIMAGE_DIR)/dotfiles-tui.svg
-	cd $(BUILD_DIR) && ARCH=x86_64 appimagetool AppDir $(BINARY_NAME)-$(VERSION)-x86_64.AppImage
-	@echo "AppImage created: $(BUILD_DIR)/$(BINARY_NAME)-$(VERSION)-x86_64.AppImage"
+	cp $(REPO_ROOT)/internal/docs/ADDING_MODULES.md $(APPIMAGE_DIR)/usr/share/doc/dotfiles-tui/
+	cp $(REPO_ROOT)/internal/docs/TROUBLESHOOTING.md $(APPIMAGE_DIR)/usr/share/doc/dotfiles-tui/
+	@# Guard: AppImage must never ship module packages
+	@if [ -d "$(APPIMAGE_DIR)/modules" ] || [ -d "$(APPIMAGE_DIR)/usr/share/modules" ]; then \
+		echo "error: modules tree must not be included in AppDir"; exit 1; \
+	fi
+	@if command -v appimagetool >/dev/null 2>&1; then \
+		cd $(BUILD_DIR) && ARCH=x86_64 appimagetool AppDir $(BINARY_NAME)-$(VERSION)-x86_64.AppImage; \
+		echo "AppImage created: $(BUILD_DIR)/$(BINARY_NAME)-$(VERSION)-x86_64.AppImage"; \
+	else \
+		echo "appimagetool not found — AppDir ready at $(APPIMAGE_DIR)"; \
+		echo "Install appimagetool, then: cd $(BUILD_DIR) && ARCH=x86_64 appimagetool AppDir $(BINARY_NAME)-$(VERSION)-x86_64.AppImage"; \
+	fi
 
 ## help: Show this help message
 help:

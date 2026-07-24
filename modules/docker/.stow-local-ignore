@@ -11,3 +11,4 @@ custom_scripts
 functions
 module.go
 uninstall.sh
+module.yaml

@@ -12,3 +12,4 @@ functions
 README.MD
 module.go
 uninstall.sh
+module.yaml

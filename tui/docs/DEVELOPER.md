@@ -34,18 +34,24 @@ dotfiles-tui
 ```
 /
 ├── go.mod                      # Go module (repo root)
-├── modules/<name>/             # Per-module: module.go + install.sh + configs
+├── modules/<name>/             # Per-module: module.yaml + install.sh + configs
 ├── internal/                   # TUI core packages
 │   ├── app/
-│   ├── module/                 # Registry + Module type (no per-module defs)
+│   ├── config/                 # ~/.config/dotfiles-tui + modules path resolution
+│   ├── docs/                   # Embedded ADDING_MODULES / TROUBLESHOOTING
+│   ├── module/                 # Registry + YAML loader (runtime discovery)
 │   ├── sidebar/                # List + search + category filter
 │   └── ...
 └── tui/
     ├── main.go
-    ├── modules_register.go     # Blank-imports all modules/*/module.go
-    ├── Makefile
+    ├── Makefile                # build / run / appimage (no modules in AppImage)
+    ├── appimage/               # AppRun + desktop/icon
     └── docs/
 ```
+
+Modules are discovered at runtime from `module.yaml` under the configured modules
+directory (env `DOTFILES_MODULES_DIR`, config, or auto-detected repo `modules/`).
+The AppImage ships the TUI + docs only — zero module packages.
 
 ## Architecture: The Elm Architecture (TEA)
 

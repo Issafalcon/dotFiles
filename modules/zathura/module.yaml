@@ -1,0 +1,10 @@
+name: zathura
+icon: ""
+description: Document viewer with vim-like keybindings
+category: Utility
+website: "https://pwmt.org/projects/zathura/"
+repo: "https://git.pwmt.org/pwmt/zathura"
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 20MB
+check_command: zathura --version

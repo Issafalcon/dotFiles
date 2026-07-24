@@ -13,3 +13,4 @@ functions
 sql
 module.go
 uninstall.sh
+module.yaml

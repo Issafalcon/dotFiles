@@ -37,6 +37,7 @@ type KeyMap struct {
 	OpenURL   key.Binding
 
 	FilterCategory key.Binding
+	Docs           key.Binding
 
 	// UI
 	SwitchTab key.Binding
@@ -85,6 +86,10 @@ var DefaultKeyMap = KeyMap{
 		key.WithKeys("c"),
 		key.WithHelp("c", "filter by category"),
 	),
+	Docs: key.NewBinding(
+		key.WithKeys("H"),
+		key.WithHelp("H", "adding modules docs"),
+	),
 	SwitchTab: key.NewBinding(
 		key.WithKeys("tab"),
 		key.WithHelp("tab", "switch tab"),
@@ -120,8 +125,8 @@ func (k KeyMap) ShortHelp() []key.Binding {
 func (k KeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Up, k.Down, k.Select},           // Navigation
-		{k.Install, k.Uninstall, k.OpenURL},        // Actions
-		{k.SwitchTab, k.Search, k.FilterCategory}, // UI
-		{k.Help, k.Cancel, k.Quit},                // App
+		{k.Install, k.Uninstall, k.OpenURL}, // Actions
+		{k.SwitchTab, k.Search, k.FilterCategory, k.Docs}, // UI
+		{k.Help, k.Cancel, k.Quit},                         // App
 	}
 }

@@ -22,12 +22,16 @@ package app
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/bubbles/v2/key"
 	lipgloss "charm.land/lipgloss/v2"
 
+	"github.com/issafalcon/dotfiles-tui/internal/config"
 	"github.com/issafalcon/dotfiles-tui/internal/detail"
+	"github.com/issafalcon/dotfiles-tui/internal/docs"
 	"github.com/issafalcon/dotfiles-tui/internal/installer"
 	"github.com/issafalcon/dotfiles-tui/internal/module"
 	"github.com/issafalcon/dotfiles-tui/internal/popup"
@@ -46,6 +50,8 @@ type AppState int
 const (
 	// StatePrereqCheck shows the prerequisites checking screen.
 	StatePrereqCheck AppState = iota
+	// StateModulesSetup asks for the modules directory on first run.
+	StateModulesSetup
 	// StateDashboard shows the main module browsing interface.
 	StateDashboard
 	// StateInstalling indicates a module is being installed.
@@ -127,26 +133,22 @@ type Model struct {
 	installScriptPath  string              // path to install.sh / uninstall.sh (may be empty)
 	installStowEnabled bool                // whether to stow/unstow after the script finishes
 	pendingAction      popup.ConfirmAction // tracks whether sudo pre-auth is for install or uninstall
+
+	loadWarnings []string // module.yaml load issues shown once on dashboard
+	showDocs     bool
+	docsPopup    popup.ScriptModel
 }
 
-// NewModel creates and returns the initial application model.
-//
-// In Go, constructor functions are conventionally named New<Type> or New.
-// They return an initialized struct, since Go doesn't have constructors.
-// See: https://go.dev/doc/effective_go#composite_literals
-func NewModel() Model {
-	// Build the sidebar items from the module registry.
-	// The registry was populated by init() functions in the modules package.
+func buildSidebarItems() []sidebar.ModuleItem {
 	allModules := module.DefaultRegistry.All()
 	installedModules, _ := utils.GetInstalledModules()
 	installedSet := make(map[string]bool)
 	for _, name := range installedModules {
 		installedSet[name] = true
 	}
-
-	sidebarItems := make([]sidebar.ModuleItem, 0, len(allModules))
+	items := make([]sidebar.ModuleItem, 0, len(allModules))
 	for _, mod := range allModules {
-		sidebarItems = append(sidebarItems, sidebar.ModuleItem{
+		items = append(items, sidebar.ModuleItem{
 			Name:        mod.Name,
 			Icon:        mod.Icon,
 			Description: mod.Description,
@@ -154,14 +156,26 @@ func NewModel() Model {
 			Installed:   installedSet[mod.Name],
 		})
 	}
+	return items
+}
+
+// NewModel creates and returns the initial application model.
+func NewModel() Model {
+	dir := utils.GetModulesDir()
+	var warnings []string
+	if dir != "" {
+		res := module.LoadFromDir(dir)
+		warnings = res.Errors
+	}
 
 	return Model{
 		state:        StatePrereqCheck,
 		focus:        FocusSidebar,
 		prereqModel:  prereqs.New(),
-		sidebarModel: sidebar.NewModel(sidebarItems, 40, 30), // Sizes updated on first resize
-		detailModel:  detail.NewModel(60, 30),                 // Sizes updated on first resize
-		helpPopup:    popup.NewHelpPopup(nil),                 // Uses default bindings
+		sidebarModel: sidebar.NewModel(buildSidebarItems(), 40, 30),
+		detailModel:  detail.NewModel(60, 30),
+		helpPopup:    popup.NewHelpPopup(nil),
+		loadWarnings: warnings,
 	}
 }
 
@@ -223,6 +237,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil // Consume all keys while help is open
 		}
 
+		if m.showDocs {
+			var cmd tea.Cmd
+			m.docsPopup, cmd = m.docsPopup.Update(msg)
+			return m, cmd
+		}
+
 		if m.showScript {
 			return m.updateScriptPopup(msg)
 		}
@@ -261,13 +281,72 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// --- Cross-cutting messages from sub-models ---
 
-	// PrereqsPassedMsg: All prerequisites met, transition to dashboard.
+	// PrereqsPassedMsg: All prerequisites met — configure modules path or open dashboard.
 	case prereqs.PrereqsPassedMsg:
+		if utils.GetModulesDir() == "" {
+			m.state = StateModulesSetup
+			m.inputPopup = popup.NewInputDialog(
+				"Modules directory",
+				"Path to your modules/ folder (created if missing):",
+			)
+			m.showInput = true
+			return m, nil
+		}
+		m.reloadModules()
 		m.state = StateDashboard
-		// Select the first module to show its details.
 		if sel := m.sidebarModel.Selected(); sel != "" {
 			m.selectedMod = sel
 			m.updateDetailForModule(sel)
+		}
+		return m, nil
+
+	case popup.InputSubmitMsg:
+		m.showInput = false
+		if m.state == StateModulesSetup {
+			path := expandHome(msg.Value)
+			if path == "" {
+				m.showInput = true
+				m.inputPopup = popup.NewInputDialog(
+					"Modules directory",
+					"Path cannot be empty. Enter a modules/ folder path:",
+				)
+				return m, nil
+			}
+			if err := os.MkdirAll(path, 0o755); err != nil {
+				m.showInput = true
+				m.inputPopup = popup.NewInputDialog(
+					"Modules directory",
+					fmt.Sprintf("Could not create dir (%v). Try another path:", err),
+				)
+				return m, nil
+			}
+			if err := config.SetModulesDir(path); err != nil {
+				m.showInput = true
+				m.inputPopup = popup.NewInputDialog(
+					"Modules directory",
+					fmt.Sprintf("Could not save config (%v). Try again:", err),
+				)
+				return m, nil
+			}
+			m.reloadModules()
+			m.state = StateDashboard
+			if sel := m.sidebarModel.Selected(); sel != "" {
+				m.selectedMod = sel
+				m.updateDetailForModule(sel)
+			}
+			return m, nil
+		}
+		return m, nil
+
+	case popup.InputCancelMsg:
+		m.showInput = false
+		if m.state == StateModulesSetup {
+			m.showInput = true
+			m.inputPopup = popup.NewInputDialog(
+				"Modules directory",
+				"A modules path is required. Enter a folder path:",
+			)
+			return m, nil
 		}
 		return m, nil
 
@@ -438,6 +517,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// ScriptDismissMsg: return from script viewer to confirm dialog.
 	case popup.ScriptDismissMsg:
+		if m.showDocs {
+			m.showDocs = false
+			return m, nil
+		}
 		m.showScript = false
 		return m, nil
 
@@ -506,6 +589,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch m.state {
 	case StatePrereqCheck:
 		return m.updatePrereqs(msg, cmds)
+	case StateModulesSetup:
+		// Waiting on input popup; keys already handled when showInput.
+		return m, tea.Batch(cmds...)
 	case StateDashboard, StateInstalling:
 		return m.updateDashboard(msg, cmds)
 	}
@@ -563,6 +649,11 @@ func (m Model) updateDashboard(msg tea.Msg, cmds []tea.Cmd) (tea.Model, tea.Cmd)
 				m.sidebarModel.CategoryFilter(),
 			)
 			m.showCategory = true
+			return m, nil
+
+		case key.Matches(keyMsg, DefaultKeyMap.Docs):
+			m.docsPopup = popup.NewScriptViewer("Adding modules", docs.AddingModules)
+			m.showDocs = true
 			return m, nil
 
 		// Install the selected module
@@ -703,10 +794,10 @@ func (m *Model) updateDetailForModule(name string) {
 	deps := make([]detail.DepStatus, 0, len(mod.ExternalDeps))
 	for _, dep := range mod.ExternalDeps {
 		deps = append(deps, detail.DepStatus{
-			Name:     dep.Name,
-			Method:   dep.InstallMethod,
+			Name:      dep.Name,
+			Method:    dep.InstallMethod,
 			Installed: utils.IsCommandAvailable(dep.Name),
-			Checking: false,
+			Checking:  false,
 		})
 	}
 
@@ -730,6 +821,31 @@ func (m *Model) updateDetailForModule(name string) {
 		})
 	}
 	m.detailModel.ConfigModel().SetModule(mod.Name, configOpts)
+}
+
+func (m *Model) reloadModules() {
+	dir := utils.GetModulesDir()
+	res := module.LoadFromDir(dir)
+	m.loadWarnings = res.Errors
+	m.sidebarModel.SetItems(buildSidebarItems())
+}
+
+func expandHome(path string) string {
+	path = strings.TrimSpace(path)
+	if path == "" {
+		return ""
+	}
+	if path == "~" || strings.HasPrefix(path, "~/") {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return path
+		}
+		if path == "~" {
+			return home
+		}
+		return filepath.Join(home, path[2:])
+	}
+	return path
 }
 
 // contentDimensions returns the inner content width and height
@@ -776,6 +892,11 @@ func (m Model) View() tea.View {
 	switch m.state {
 	case StatePrereqCheck:
 		content = m.prereqModel.View()
+	case StateModulesSetup:
+		content = theme.Title.Render("Modules path setup") + "\n\n" +
+			theme.NormalText.Render("Point the TUI at a folder that contains your modules") + "\n" +
+			theme.DimText.Render("(each subfolder has module.yaml + optional install.sh).") + "\n\n" +
+			theme.DimText.Render("Enter a path in the dialog (use ~ for your home directory).")
 	case StateDashboard, StateInstalling:
 		content = m.viewDashboard(contentWidth, contentHeight)
 	}
@@ -806,6 +927,9 @@ func (m Model) View() tea.View {
 	}
 	if m.showScript {
 		finalView = m.scriptPopup.Render(contentWidth+2, contentHeight+2)
+	}
+	if m.showDocs {
+		finalView = m.docsPopup.Render(contentWidth+2, contentHeight+2)
 	}
 	if m.showCategory {
 		finalView = m.categoryPopup.Render(contentWidth+2, contentHeight+2)
@@ -838,7 +962,7 @@ func (m Model) viewDashboard(width, height int) string {
 
 	// Help bar at the bottom showing available shortcuts.
 	help := theme.HelpStyle.Render(
-		"q: quit • ?: help • j/k: navigate • shift+tab: switch panel • tab: switch tab • i: install • d: uninstall • o: open URL • s: search",
+		"q: quit • ?: help • H: docs • j/k: navigate • shift+tab: switch panel • tab: switch tab • i: install • d: uninstall • o: open URL • s: search • c: category",
 	)
 
 	// Reserve vertical space for title (1 line + MarginBottom 1 + "\n\n" = ~3 lines)

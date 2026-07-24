@@ -1,0 +1,10 @@
+name: pandoc
+icon: ""
+description: Universal document converter
+category: Utility
+website: "https://pandoc.org/"
+repo: "https://github.com/jgm/pandoc"
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 50MB
+check_command: pandoc --version
