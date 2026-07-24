@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
+
 # Check if cursor is installed first
 if command -v agent >/dev/null; then
   echo "Cursor CLI found. Skipping Cursor CLI installation"

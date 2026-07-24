@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
+
 # Install brew
 if command -v brew >/dev/null; then
   echo "brew found. Skipping brew installation"
