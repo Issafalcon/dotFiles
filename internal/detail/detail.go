@@ -300,7 +300,8 @@ func (m Model) View() string {
 	// Stack the tab bar, separator, and content vertically.
 	// lipgloss.Left aligns everything to the left edge.
 	// See: https://pkg.go.dev/charm.land/lipgloss/v2#JoinVertical
-	return lipgloss.JoinVertical(lipgloss.Left, tabBar, separator, content)
+	out := lipgloss.JoinVertical(lipgloss.Left, tabBar, separator, content)
+	return theme.Clip(out, m.width, m.height)
 }
 
 // ---------------------------------------------------------------------------

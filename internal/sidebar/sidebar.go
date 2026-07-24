@@ -122,6 +122,10 @@ type Model struct {
 	// selected is the Name of the currently highlighted module. It's updated
 	// whenever the cursor moves, so the parent can read it at any time.
 	selected string
+
+	// focused is true when the sidebar panel has keyboard focus. Affects how
+	// strongly the cursor item is highlighted vs dimmed siblings.
+	focused bool
 }
 
 // NewModel creates and returns an initialised sidebar model.
@@ -170,6 +174,7 @@ func NewModel(items []ModuleItem, width int, height int) Model {
 		searchMode:  false,
 		searchInput: ti,
 		selected:    initialSelected,
+		focused:     true,
 	}
 }
 
@@ -249,30 +254,19 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 func (m Model) handleSearchModeKey(msg tea.KeyPressMsg, cmds []tea.Cmd) (Model, tea.Cmd) {
 	switch msg.String() {
 
-	// Escape exits search mode, blurs the input, and clears the query.
+	// Escape exits the search input but keeps the current filter so the user
+	// can j/k through the filtered list. Clear the filter with Esc again
+	// in normal mode (see handleNormalModeKey).
 	case "esc":
 		m.searchMode = false
-
-		// Blur() removes focus from the text input so it stops capturing keys.
-		// It's a pointer receiver method, so we call it on &m.searchInput.
-		// See: https://pkg.go.dev/charm.land/bubbles/v2/textinput#Model.Blur
 		m.searchInput.Blur()
-
-		// Reset the search: clear the input and re-apply category filter only.
-		m.searchInput.SetValue("")
-		m.reapplyFilters()
-		m.cursor = 0
-
-		// Update the selected item after resetting the filter.
-		if len(m.filtered) > 0 {
-			m.selected = m.filtered[0].Name
-		}
-
 		return m, nil
 
 	// Enter in search mode selects the currently highlighted module.
 	case "enter":
 		if len(m.filtered) > 0 {
+			m.searchMode = false
+			m.searchInput.Blur()
 			m.selected = m.filtered[m.cursor].Name
 
 			// Return a command that produces a ModuleSelectedMsg.
@@ -285,7 +279,8 @@ func (m Model) handleSearchModeKey(msg tea.KeyPressMsg, cmds []tea.Cmd) (Model, 
 		}
 		return m, nil
 
-	// Allow cursor navigation even while searching.
+	// Allow cursor navigation even while searching (arrow keys / emacs bindings).
+	// Do not bind j/k here — those are typed into the filter query.
 	case "up", "ctrl+p":
 		m = m.moveCursorUp()
 		cmds = append(cmds, m.cursorChangedCmd())
@@ -329,6 +324,22 @@ func (m Model) handleSearchModeKey(msg tea.KeyPressMsg, cmds []tea.Cmd) (Model, 
 // handleNormalModeKey processes key presses when search mode is NOT active.
 func (m Model) handleNormalModeKey(msg tea.KeyPressMsg, cmds []tea.Cmd) (Model, tea.Cmd) {
 	switch msg.String() {
+
+	// Esc clears an active text filter (category filter is unchanged).
+	case "esc":
+		if m.searchInput.Value() == "" {
+			return m, tea.Batch(cmds...)
+		}
+		m.searchInput.SetValue("")
+		m.reapplyFilters()
+		m.cursor = 0
+		if len(m.filtered) > 0 {
+			m.selected = m.filtered[0].Name
+		} else {
+			m.selected = ""
+		}
+		cmds = append(cmds, m.cursorChangedCmd())
+		return m, tea.Batch(cmds...)
 
 	// j or down arrow moves the cursor down.
 	case "j", "down":
@@ -500,7 +511,18 @@ func (m *Model) SetYOffset(y int) {
 // This allows the parent to trigger search from any focus context.
 func (m *Model) ActivateSearch() tea.Cmd {
 	m.searchMode = true
+	m.focused = true
 	return m.searchInput.Focus()
+}
+
+// SetFocused marks whether the sidebar panel has keyboard focus.
+func (m *Model) SetFocused(focused bool) {
+	m.focused = focused
+}
+
+// HasFilter reports whether a text search filter is active.
+func (m Model) HasFilter() bool {
+	return m.searchInput.Value() != ""
 }
 
 // SetInstalled updates the install status of a module by name.
@@ -536,23 +558,12 @@ func (m *Model) SetInstalled(name string, installed bool) {
 //
 // See: https://pkg.go.dev/charm.land/bubbletea/v2#Model
 func (m Model) View() string {
-	// strings.Builder is an efficient way to build strings incrementally.
-	// Unlike string concatenation (s += "text"), Builder minimises memory
-	// allocations by writing to an internal byte buffer.
-	// See: https://pkg.go.dev/strings#Builder
 	var b strings.Builder
 
-	// -----------------------------------------------------------------------
-	// Search Bar
-	// -----------------------------------------------------------------------
 	b.WriteString(m.renderSearchBar())
 	b.WriteString("\n")
 
-	// -----------------------------------------------------------------------
-	// Module List
-	// -----------------------------------------------------------------------
 	if len(m.filtered) == 0 {
-		// Show a friendly message when no modules match the search.
 		noResults := theme.DimText.Render("  No modules match your search.")
 		b.WriteString(noResults)
 		b.WriteString("\n")
@@ -560,7 +571,8 @@ func (m Model) View() string {
 		b.WriteString(m.renderModuleList())
 	}
 
-	return b.String()
+	// Hard-clip to the size the parent allocated so panel borders stay intact.
+	return theme.Clip(b.String(), m.width, m.height)
 }
 
 // renderSearchBar renders the search input area at the top of the sidebar.
@@ -578,7 +590,7 @@ func (m Model) renderSearchBar() string {
 	hint := theme.DimText.Render("  / search")
 	if m.searchInput.Value() != "" {
 		hint = theme.NormalText.Render("  filter: "+m.searchInput.Value()) +
-			theme.DimText.Render("  (esc clear)")
+			theme.DimText.Render("  (esc clear · / edit)")
 	}
 	return catLine + "\n" + hint
 }
@@ -626,48 +638,20 @@ func (m *Model) reapplyFilters() {
 func (m Model) renderModuleList() string {
 	var b strings.Builder
 
-	// Calculate how many items we can display at once.
-	// Each item occupies a fixed number of lines (name line + description + status
-	// + border top/bottom). We estimate ~4 lines per item to compute the window.
-	linesPerItem := 4
-
-	// Reserve space for the category line + search bar.
-	reservedLines := 5
-	availableLines := m.height - reservedLines
-	if availableLines < linesPerItem {
-		availableLines = linesPerItem
-	}
-
-	// Calculate how many items fit in the visible area.
-	visibleCount := availableLines / linesPerItem
-	if visibleCount < 1 {
-		visibleCount = 1
-	}
-	if visibleCount > len(m.filtered) {
-		visibleCount = len(m.filtered)
-	}
-
-	// Determine the start and end indices for the visible window.
-	// We centre the window around the cursor position.
+	visibleCount := m.visibleItemCount()
 	start, end := m.visibleRange(visibleCount)
 
-	// Render each visible item.
-	// range with a slice sub-expression (filtered[start:end]) iterates over
-	// a portion of the slice. Go slices use half-open ranges: [start, end).
-	// See: https://go.dev/tour/moretypes/10
 	for i := start; i < end; i++ {
 		item := m.filtered[i]
 		isActive := i == m.cursor
 
 		b.WriteString(m.renderItem(item, isActive))
 
-		// Add a newline between items, but not after the last one.
 		if i < end-1 {
 			b.WriteString("\n")
 		}
 	}
 
-	// If the list is scrollable, show a scroll indicator.
 	if len(m.filtered) > visibleCount {
 		scrollInfo := theme.DimText.Render(
 			fmt.Sprintf("  ↕ %d/%d", m.cursor+1, len(m.filtered)),
@@ -717,73 +701,66 @@ func (m Model) visibleRange(visibleCount int) (int, int) {
 //   - Line 2: Description (dimmed)
 //   - Line 3: Install status indicator (✓ green / ✗ red)
 func (m Model) renderItem(item ModuleItem, isActive bool) string {
-	// Build the icon + name line. Sprintf formats a string using verb placeholders.
-	// %s inserts a string. This is similar to printf in C.
-	// See: https://pkg.go.dev/fmt#Sprintf
 	icon := item.Icon
 	if icon == "" {
 		icon = theme.GetModuleIcon(item.Name)
 	}
 
-	// Add a left indicator for the active item to make it visually prominent.
-	var nameLine string
-	if isActive {
-		indicator := lipgloss.NewStyle().
-			Foreground(theme.ColorPink).
-			Bold(true).
-			Render("▸ ")
-		nameLine = indicator + theme.Subtitle.
-			Bold(true).
-			Foreground(theme.ColorPink).
-			Render(fmt.Sprintf("%s  %s", icon, item.Name))
-	} else {
-		nameLine = lipgloss.NewStyle().
-			Foreground(theme.ColorForegroundDim).
-			Render(fmt.Sprintf("  %s  %s", icon, item.Name))
-	}
-
-	// Render the description. Truncate if it's too long.
 	desc := item.Description
-	maxDescLen := m.contentWidth() - 4 // Leave room for padding and border.
+	maxDescLen := m.contentWidth() - 4
 	if maxDescLen > 0 && len(desc) > maxDescLen {
 		desc = desc[:maxDescLen-1] + "…"
 	}
-	var descLine string
+
+	var nameLine, descLine, statusLine string
 	if isActive {
-		descLine = theme.NormalText.Render(desc)
+		// Nested styles must set the same Background — otherwise ANSI resets
+		// from Foreground-only spans punch holes in the highlight fill.
+		bg := lipgloss.NewStyle().
+			Background(theme.ColorSurface).
+			ColorWhitespace(true)
+		nameLine = bg.Foreground(theme.ColorPink).Bold(true).
+			Render(fmt.Sprintf("▸ %s  %s", icon, item.Name))
+		descLine = bg.Foreground(theme.ColorForeground).Render(desc)
+		if item.Installed {
+			statusLine = bg.Foreground(theme.ColorGreen).
+				Render(theme.IconInstalled + " installed")
+		} else {
+			statusLine = bg.Foreground(theme.ColorForegroundDim).
+				Render(theme.IconNotInstalled + " not installed")
+		}
 	} else {
-		descLine = theme.DimText.Render(desc)
+		nameLine = lipgloss.NewStyle().
+			Foreground(theme.ColorForegroundDim).
+			Faint(true).
+			Render(fmt.Sprintf("  %s  %s", icon, item.Name))
+		descLine = lipgloss.NewStyle().
+			Foreground(theme.ColorForegroundMuted).
+			Faint(true).
+			Render(desc)
+		if item.Installed {
+			statusLine = theme.StatusInstalled.Render() + " " + theme.SuccessText.Render("installed")
+		} else {
+			statusLine = lipgloss.NewStyle().Faint(true).Render(
+				theme.StatusNotInstalled.Render() + " " + theme.DimText.Render("not installed"),
+			)
+		}
 	}
 
-	// Render the install status indicator using predefined theme styles.
-	// StatusInstalled and StatusNotInstalled have SetString() applied, so
-	// calling Render() with no arguments uses that preset string.
-	// See: https://pkg.go.dev/charm.land/lipgloss/v2#Style.SetString
-	var statusLine string
-	if item.Installed {
-		statusLine = theme.StatusInstalled.Render() + " " + theme.SuccessText.Render("installed")
-	} else {
-		statusLine = theme.StatusNotInstalled.Render() + " " + theme.DimText.Render("not installed")
-	}
-
-	// Combine all lines with newlines.
-	// strings.Join is more efficient than manual concatenation for multiple strings.
-	// See: https://pkg.go.dev/strings#Join
 	content := strings.Join([]string{nameLine, descLine, statusLine}, "\n")
 
-	// Choose the border style based on the item's state.
-	// The priority is: active (bright, bold border) > installed (green border) > default.
 	var style lipgloss.Style
 	if isActive {
 		style = theme.SidebarItemActive
+		if !m.focused {
+			style = theme.SidebarItemActive.BorderForeground(theme.ColorPurple)
+		}
 	} else if item.Installed {
 		style = theme.SidebarItemInstalled
 	} else {
 		style = theme.SidebarItem
 	}
 
-	// Apply the width and render the final bordered box.
-	// Width() sets the content area width (the border adds ~2 characters).
 	return style.
 		Width(m.contentWidth()).
 		Render(content)
@@ -810,21 +787,38 @@ func (m Model) searchBarLines() int {
 	return lipgloss.Height(m.renderSearchBar()) + 1
 }
 
-// visibleItemCount returns how many module items fit in the visible area,
-// using the same calculation as renderModuleList.
+// visibleItemCount returns how many module items fit in the visible area.
+//
+// Each item is a rounded box: top border + 3 content lines + bottom border = 5,
+// plus a 1-line gap between items. The search bar height is measured, and one
+// line is reserved for the scroll indicator when the list is longer than the window.
 func (m Model) visibleItemCount() int {
-	linesPerItem := 4
-	reservedLines := 3
-	availableLines := m.height - reservedLines
-	if availableLines < linesPerItem {
-		availableLines = linesPerItem
+	const (
+		itemLines = 5 // bordered module card
+		itemGap   = 1 // newline between cards
+	)
+
+	avail := m.height - m.searchBarLines()
+	if avail < itemLines {
+		return 1
 	}
-	vc := availableLines / linesPerItem
-	if vc < 1 {
-		vc = 1
+
+	// Reserve a footer line when scrolling will be needed. We don't know the
+	// final count yet, so reserve if there is more than one module overall.
+	if len(m.filtered) > 1 {
+		avail--
 	}
-	if vc > len(m.filtered) {
-		vc = len(m.filtered)
+	if avail < itemLines {
+		return 1
 	}
-	return vc
+
+	// n*itemLines + (n-1)*itemGap <= avail  →  n <= (avail+itemGap)/(itemLines+itemGap)
+	n := (avail + itemGap) / (itemLines + itemGap)
+	if n < 1 {
+		n = 1
+	}
+	if n > len(m.filtered) {
+		n = len(m.filtered)
+	}
+	return n
 }

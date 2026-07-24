@@ -118,19 +118,20 @@ var (
 		BorderForeground(ColorSurface).
 		Padding(0, 2)
 
-	// SidebarItem renders a module entry in the sidebar.
+	// SidebarItem renders a non-selected module entry.
 	SidebarItem = lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(ColorSurface).
 		Padding(0, 1).
 		MarginBottom(0)
 
-	// SidebarItemActive is for the currently highlighted sidebar item.
-	// Uses a bold border, bright background tint, and prominent colours
-	// so the active item is unmistakably distinct from inactive items.
+	// SidebarItemActive is the cursor/highlighted module.
+	// ColorWhitespace ensures padding/gaps use the same background as the text.
 	SidebarItemActive = lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(ColorPink).
+		Background(ColorSurface).
+		ColorWhitespace(true).
 		Bold(true).
 		Foreground(ColorForeground).
 		Padding(0, 1).
@@ -266,4 +267,21 @@ func GetModuleIcon(name string) string {
 		return icon
 	}
 	return IconPackage
+}
+
+// Clip forces s into a fixed w×h cell box. Content taller/wider than the box
+// is truncated so parent borders cannot be pushed off-screen.
+func Clip(s string, w, h int) string {
+	if w < 1 {
+		w = 1
+	}
+	if h < 1 {
+		h = 1
+	}
+	return lipgloss.NewStyle().
+		Width(w).
+		Height(h).
+		MaxWidth(w).
+		MaxHeight(h).
+		Render(s)
 }

@@ -355,6 +355,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.selectedMod = msg.Name
 		m.updateDetailForModule(msg.Name)
 		m.focus = FocusDetail
+		m.sidebarModel.SetFocused(false)
 		return m, nil
 
 	// CursorChangedMsg: User navigated to a different module in the sidebar.
@@ -627,6 +628,7 @@ func (m Model) updateDashboard(msg tea.Msg, cmds []tea.Cmd) (tea.Model, tea.Cmd)
 		// Search shortcut — works from any panel, not just the sidebar.
 		case key.Matches(keyMsg, DefaultKeyMap.Search) && m.focus != FocusSidebar:
 			m.focus = FocusSidebar
+			m.sidebarModel.SetFocused(true)
 			cmd := m.sidebarModel.ActivateSearch()
 			return m, cmd
 
@@ -641,6 +643,7 @@ func (m Model) updateDashboard(msg tea.Msg, cmds []tea.Cmd) (tea.Model, tea.Cmd)
 			} else {
 				m.focus = FocusSidebar
 			}
+			m.sidebarModel.SetFocused(m.focus == FocusSidebar)
 			return m, nil
 
 		case key.Matches(keyMsg, DefaultKeyMap.FilterCategory):
@@ -765,19 +768,23 @@ func (m Model) updateInputPopup(msg tea.Msg) (tea.Model, tea.Cmd) {
 // updateSubModelSizes recalculates and propagates sizes to sub-models
 // when the terminal is resized.
 func (m *Model) updateSubModelSizes() {
+	m.sidebarModel.SetFocused(m.focus == FocusSidebar)
+
 	contentWidth, contentHeight := m.contentDimensions()
 
 	// Sidebar gets ~30% of width.
 	sidebarWidth := int(float64(contentWidth) * 0.3)
-	// Detail gets the rest minus a gap.
 	detailWidth := contentWidth - sidebarWidth - 1
 
-	m.sidebarModel.SetSize(sidebarWidth, contentHeight-4)     // -4 for title + help bar
-	m.detailModel.SetSize(detailWidth, contentHeight-4)
+	// Match viewDashboard: both panels always get a 1-cell border frame, so
+	// inner content is (panelW-2) x (panelH-2) and total size never shifts.
+	panelHeight := contentHeight - 5
+	if panelHeight < 10 {
+		panelHeight = 10
+	}
+	m.sidebarModel.SetSize(sidebarWidth-2, panelHeight-2)
+	m.detailModel.SetSize(detailWidth-2, panelHeight-2)
 
-	// Calculate the sidebar's Y offset in the terminal for mouse support.
-	// The floating window (contentHeight + 2 for border) is centered vertically.
-	// Inside: 1 (top border) + ~3 lines (title with MarginBottom + "\n\n" gap).
 	windowHeight := contentHeight + 2
 	yPad := (m.height - windowHeight) / 2
 	m.sidebarModel.SetYOffset(yPad + 1 + 3)
@@ -958,38 +965,71 @@ func (m Model) View() tea.View {
 
 // viewDashboard renders the main module browsing dashboard with sidebar + detail.
 func (m Model) viewDashboard(width, height int) string {
-	title := theme.Title.Render("⚡ DotFiles Manager")
+	focusLabel := "modules"
+	if m.focus == FocusDetail {
+		focusLabel = "detail"
+	}
+	title := theme.Title.Render("⚡ DotFiles Manager") +
+		theme.DimText.Render("  · focus: ") +
+		theme.Subtitle.Render(focusLabel)
 
-	// Help bar at the bottom showing available shortcuts.
 	help := theme.HelpStyle.Render(
 		"q: quit • ?: help • H: docs • j/k: navigate • shift+tab: switch panel • tab: switch tab • i: install • d: uninstall • o: open URL • s: search • c: category",
 	)
 
-	// Reserve vertical space for title (1 line + MarginBottom 1 + "\n\n" = ~3 lines)
-	// and help bar (~1 line + "\n\n" gap = ~3 lines). Total overhead ≈ 5 lines.
 	panelHeight := height - 5
 	if panelHeight < 10 {
 		panelHeight = 10
 	}
 
-	// Force sidebar and detail views to exact heights using Height (min) + MaxHeight (max).
-	panelStyle := lipgloss.NewStyle().
-		Height(panelHeight).
-		MaxHeight(panelHeight)
+	sidebarWidth := int(float64(width) * 0.3)
+	detailWidth := width - sidebarWidth - 1
 
-	sidebarView := panelStyle.Render(m.sidebarModel.View())
-	detailView := panelStyle.Render(m.detailModel.View())
+	sidebarContent := m.sidebarModel.View()
+	detailContent := m.detailModel.View()
+	if m.focus != FocusSidebar {
+		sidebarContent = lipgloss.NewStyle().Faint(true).Render(sidebarContent)
+	}
+	if m.focus != FocusDetail {
+		detailContent = lipgloss.NewStyle().Faint(true).Render(detailContent)
+	}
 
-	// Render the sidebar and detail panel side by side.
-	// lipgloss.JoinHorizontal places rendered strings horizontally.
-	// See: https://pkg.go.dev/charm.land/lipgloss/v2#JoinHorizontal
+	// Always frame both panels (same geometry). Focus = cyan border; other = muted.
+	sidebarView := framePanel(sidebarContent, m.focus == FocusSidebar, sidebarWidth, panelHeight)
+	detailView := framePanel(detailContent, m.focus == FocusDetail, detailWidth, panelHeight)
+
 	body := lipgloss.JoinHorizontal(lipgloss.Top, sidebarView, " ", detailView)
-
-	// Force body to fixed height so it doesn't vary with content.
-	body = lipgloss.NewStyle().
-		Height(panelHeight).
-		MaxHeight(panelHeight).
-		Render(body)
+	body = theme.Clip(body, width, panelHeight)
 
 	return fmt.Sprintf("%s\n\n%s\n\n%s", title, body, help)
+}
+
+// framePanel draws a fixed-size panel border. Width/Height are the TOTAL outer
+// size. Content is clipped to the inner area before the border is applied so
+// overflowing module cards cannot push the bottom border off-screen.
+func framePanel(content string, focused bool, width, height int) string {
+	innerW := width - 2
+	innerH := height - 2
+	if innerW < 1 {
+		innerW = 1
+	}
+	if innerH < 1 {
+		innerH = 1
+	}
+
+	borderColor := theme.ColorSurface
+	if focused {
+		borderColor = theme.ColorCyan
+	}
+
+	clipped := theme.Clip(content, innerW, innerH)
+	framed := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(borderColor).
+		Width(innerW).
+		Render(clipped)
+
+	// Final clamp — keeps the bottom border visible even if lipgloss border
+	// math differs slightly across terminals.
+	return theme.Clip(framed, width, height)
 }
