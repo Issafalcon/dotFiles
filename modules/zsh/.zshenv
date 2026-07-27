@@ -34,4 +34,3 @@ export LC_ALL=en_US.UTF-8
 # fi
 
 [ -s "$HOME/.zshenv_local" ] && source "$HOME/.zshenv_local"
-. "$HOME/.cargo/env"
