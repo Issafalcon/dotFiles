@@ -6,15 +6,6 @@ sudo tar xvzf localstack-cli-4.3.0-linux-*-onefile.tar.gz -C /usr/local/bin
 # Remove the downloaded tarball
 rm localstack-cli-4.3.0-linux-*-onefile.tar.gz
 
-# Setup awslocal
-# Need python and pip to install below
-if command -v python3 >/dev/null; then
-  echo "Python 3 found. Skipping python 3 installation"
-else
-	echo "python module is required. Install it from the TUI first." >&2
-	exit 1
-fi
-
 if [[ ! -d "$HOME/python3/envs/awslocal" ]]; then
   mkdir -p "$HOME"/python3/envs
   cd "$HOME"/python3/envs || exit

@@ -1,8 +1,6 @@
 #!/bin/bash
-SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
-# Claude code
-# Check if claude is installed first
+# Claude Code
 if command -v claude >/dev/null; then
   echo "Claude CLI found. Skipping Claude installation"
 else
@@ -19,27 +17,19 @@ if command -v claude >/dev/null; then
   echo "MCP servers registered."
 fi
 
-# Add additinal useful skills
+# Additional useful skills
 if command -v claude >/dev/null; then
   echo "Adding additional skills..."
   claude plugin install superpowers@claude-plugins-official
   claude plugin marketplace add DietrichGebert/ponytail
   claude plugin install ponytail@ponytail
 
-  # Add the pptx-posters skill from the scientific-agent-skills repository (will install the skills manager client if not already installed)
+  # pptx-posters skill (installs skills manager client if needed)
   npx skills add https://github.com/k-dense-ai/scientific-agent-skills --skill pptx-posters
 
   # Helm charting
   npx skills add wshobson/agents@helm-chart-scaffolding -g -y
   echo "Additional skills added."
-fi
-
-# Install rtk
-if command -v rtk >/dev/null; then
-  echo "rtk found. Skipping brew installation"
-else
-  echo "rtk module is required. Install it from the TUI first." >&2
-  exit 1
 fi
 
 rtk init -g

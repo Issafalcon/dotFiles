@@ -22,48 +22,6 @@ sudo apt-get install -y libjpeg8-dev \
   lua5.1 \
   liblua5.1-dev
 
-SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
-
-# Need python and pip to install below
-if command -v python3 >/dev/null; then
-  echo "Python 3 found. Skipping python 3 installation"
-else
-  echo "python module is required. Install it from the TUI first." >&2
-  exit 1
-fi
-
-# Also need to use node for npm
-# check if node is installed
-if command -v node >/dev/null; then
-  echo "Node found. Skipping node installation"
-else
-  echo "node module is required. Install it from the TUI first." >&2
-  exit 1
-fi
-
-# Install go
-if command -v go >/dev/null; then
-  echo "go found. Skipping go installation"
-else
-  echo "go module is required. Install it from the TUI first." >&2
-  exit 1
-fi
-
-# Install yazi (also install brew)
-if command -v yazi >/dev/null; then
-  echo "yazi found. Skipping yazi and homebrew installation"
-else
-  echo "yazi module is required. Install it from the TUI first." >&2
-  exit 1
-fi
-
-# Install ueberzugpp for image rendering in neovim (image.nvim backend)
-if command -v ueberzugpp >/dev/null; then
-  echo "ueberzugpp found. Skipping ueberzugpp installation"
-else
-  echo "ueberzugpp module is required. Install it from the TUI first." >&2
-  exit 1
-fi
 
 # Set python virtual env
 if [[ ! -d "$HOME/python3/envs/neovim" ]]; then

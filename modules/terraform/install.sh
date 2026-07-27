@@ -16,14 +16,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashi
 sudo apt update
 sudo apt-get install terraform
 
-# Terragrunt install
-if command -v brew >/dev/null; then
-  echo "Homebrew found. Skipping homebrew installation"
-else
-	echo "homebrew module is required. Install it from the TUI first." >&2
-	exit 1
-fi
-
 brew install terragrunt
 terragrunt --install-autocomplete
 

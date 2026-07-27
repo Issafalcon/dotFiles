@@ -133,6 +133,7 @@ type Model struct {
 	installScriptPath  string              // path to install.sh / uninstall.sh (may be empty)
 	installStowEnabled bool                // whether to stow/unstow after the script finishes
 	pendingAction      popup.ConfirmAction // tracks whether sudo pre-auth is for install or uninstall
+	installQueue       []string            // remaining modules to install (deps then target)
 
 	loadWarnings []string // module.yaml load issues shown once on dashboard
 	showDocs     bool
@@ -382,46 +383,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.state = StateInstalling
 			m.detailModel.OutputModel().SetInstalling(msg.ModuleName, true)
 
-			scriptPath := ""
-			if utils.ModuleScriptExists(msg.ModuleName, "install.sh") {
-				scriptPath = utils.ModuleScriptPath(msg.ModuleName, "install.sh")
-			}
-			modulesDir := utils.GetModulesDir()
-
-			// Stow-only modules (no install.sh): just create symlinks.
-			if scriptPath == "" {
-				if mod.StowEnabled {
-					if err := utils.Stow(msg.ModuleName, modulesDir); err != nil {
-						m.detailModel.OutputModel().AppendLine(
-							fmt.Sprintf("✗ Stow failed: %s", err))
-					} else {
-						m.detailModel.OutputModel().AppendLine("✓ Stow links created")
-					}
-				}
-				_ = utils.SetModuleInstalled(msg.ModuleName)
-				m.sidebarModel.SetInstalled(msg.ModuleName, true)
+			queue, err := planInstallQueue(msg.ModuleName)
+			if err != nil {
 				m.detailModel.OutputModel().SetInstalling(msg.ModuleName, false)
 				m.detailModel.OutputModel().AppendLine(
-					fmt.Sprintf("\n✓ %s installed successfully!", msg.ModuleName))
+					fmt.Sprintf("✗ Could not plan install: %s", err))
+				m.state = StateDashboard
+				return m, nil
+			}
+			if len(queue) == 0 {
+				m.detailModel.OutputModel().SetInstalling(msg.ModuleName, false)
+				m.detailModel.OutputModel().AppendLine(
+					fmt.Sprintf("✓ %s and its dependencies are already installed", msg.ModuleName))
+				m.sidebarModel.SetInstalled(msg.ModuleName, true)
 				m.state = StateDashboard
 				return m, nil
 			}
 
-			// If the script needs sudo, pre-authenticate first so the password
-			// prompt can use the real terminal. After that, the streaming
-			// install runs non-interactively with cached credentials.
-			if installer.NeedsSudoScript(scriptPath) {
-				m.installingMod = msg.ModuleName
-				m.installScriptPath = scriptPath
-				m.installStowEnabled = mod.StowEnabled
-				m.pendingAction = popup.ActionInstall
-				return m, installer.RunSudoAuth(msg.ModuleName)
-			}
-
-			// No sudo needed — start streaming directly.
-			return m, installer.RunInstallStreaming(
-				m.program, msg.ModuleName, scriptPath,
-				modulesDir, mod.StowEnabled)
+			m.installQueue = queue[1:]
+			return m.beginModuleInstall(queue[0])
 
 		// --- Uninstall flow ---
 		case popup.ActionUninstall:
@@ -475,6 +455,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.detailModel.OutputModel().SetInstalling(m.installingMod, false)
 			m.detailModel.OutputModel().AppendLine(
 				fmt.Sprintf("\n✗ sudo authentication failed: %s", msg.Error))
+			if len(m.installQueue) > 0 {
+				m.detailModel.OutputModel().AppendLine(
+					fmt.Sprintf("✗ Skipping remaining: %s", strings.Join(m.installQueue, ", ")))
+			}
+			m.installQueue = nil
 			m.installingMod = ""
 			m.installScriptPath = ""
 			m.pendingAction = ""
@@ -543,22 +528,41 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.detailModel.OutputModel().AppendLine(msg.Line)
 		return m, nil
 
-	// InstallCompleteMsg: All install commands finished (streaming or orchestrator path).
+	// InstallCompleteMsg: one module finished (may continue dep queue).
 	case installer.InstallCompleteMsg:
-		m.state = StateDashboard
 		m.detailModel.OutputModel().SetInstalling(msg.ModuleName, false)
 		if msg.Success {
 			m.detailModel.OutputModel().AppendLine(
 				fmt.Sprintf("\n✓ %s installed successfully!", msg.ModuleName))
 			m.sidebarModel.SetInstalled(msg.ModuleName, true)
-		} else {
-			errMsg := "unknown error"
-			if msg.Error != nil {
-				errMsg = msg.Error.Error()
+
+			if len(m.installQueue) > 0 {
+				next := m.installQueue[0]
+				m.installQueue = m.installQueue[1:]
+				m.detailModel.OutputModel().AppendLine(
+					fmt.Sprintf("\n—— next: %s ——", next))
+				m.detailModel.OutputModel().SetInstalling(next, true)
+				return m.beginModuleInstall(next)
 			}
-			m.detailModel.OutputModel().AppendLine(
-				fmt.Sprintf("\n✗ %s installation failed: %s", msg.ModuleName, errMsg))
+
+			m.state = StateDashboard
+			m.installingMod = ""
+			m.installScriptPath = ""
+			return m, nil
 		}
+
+		errMsg := "unknown error"
+		if msg.Error != nil {
+			errMsg = msg.Error.Error()
+		}
+		m.detailModel.OutputModel().AppendLine(
+			fmt.Sprintf("\n✗ %s installation failed: %s", msg.ModuleName, errMsg))
+		if len(m.installQueue) > 0 {
+			m.detailModel.OutputModel().AppendLine(
+				fmt.Sprintf("✗ Skipping remaining: %s", strings.Join(m.installQueue, ", ")))
+		}
+		m.installQueue = nil
+		m.state = StateDashboard
 		m.installingMod = ""
 		m.installScriptPath = ""
 		return m, nil
@@ -665,12 +669,23 @@ func (m Model) updateDashboard(msg tea.Msg, cmds []tea.Cmd) (tea.Model, tea.Cmd)
 				mod := module.DefaultRegistry.Get(m.selectedMod)
 				if mod != nil {
 					items := []string{mod.Name + " — " + mod.Description}
-					for _, depName := range mod.Dependencies {
-						depMod := module.DefaultRegistry.Get(depName)
-						if depMod != nil {
-							items = append(items, depMod.Name+" — "+depMod.Description)
-						} else {
-							items = append(items, depName)
+					queue, err := planInstallQueue(m.selectedMod)
+					if err != nil {
+						items = append(items, "  ✗ "+err.Error())
+					} else {
+						for _, name := range queue {
+							if name == m.selectedMod {
+								continue
+							}
+							depMod := module.DefaultRegistry.Get(name)
+							if depMod != nil {
+								items = append(items, "  ▸ dep: "+depMod.Name+" — "+depMod.Description)
+							} else {
+								items = append(items, "  ▸ dep: "+name)
+							}
+						}
+						if len(queue) == 0 {
+							items = append(items, "  (already installed)")
 						}
 					}
 					hasScript := utils.ModuleScriptExists(m.selectedMod, "install.sh")
@@ -853,6 +868,81 @@ func expandHome(path string) string {
 		return filepath.Join(home, path[2:])
 	}
 	return path
+}
+
+// planInstallQueue returns modules to install for target (deps first), skipping
+// anything already satisfied via tracking file or check_command.
+func planInstallQueue(target string) ([]string, error) {
+	order, err := module.DefaultRegistry.GetInstallOrder([]string{target})
+	if err != nil {
+		return nil, err
+	}
+	var todo []string
+	for _, name := range order {
+		mod := module.DefaultRegistry.Get(name)
+		if mod == nil {
+			return nil, fmt.Errorf("unknown module %q", name)
+		}
+		if utils.ModuleSatisfied(name, mod.CheckCommand) {
+			continue
+		}
+		todo = append(todo, name)
+	}
+	return todo, nil
+}
+
+// beginModuleInstall starts install.sh/stow for one module (possibly mid-queue).
+func (m Model) beginModuleInstall(name string) (tea.Model, tea.Cmd) {
+	mod := module.DefaultRegistry.Get(name)
+	if mod == nil {
+		return m, func() tea.Msg {
+			return installer.InstallCompleteMsg{
+				ModuleName: name,
+				Success:    false,
+				Error:      fmt.Errorf("unknown module"),
+			}
+		}
+	}
+
+	scriptPath := ""
+	if utils.ModuleScriptExists(name, "install.sh") {
+		scriptPath = utils.ModuleScriptPath(name, "install.sh")
+	}
+	modulesDir := utils.GetModulesDir()
+	m.installingMod = name
+	m.installScriptPath = scriptPath
+	m.installStowEnabled = mod.StowEnabled
+
+	m.detailModel.OutputModel().AppendLine(
+		fmt.Sprintf("\n▸ Installing %s...", name))
+
+	// Stow-only: finish via InstallCompleteMsg so the dep queue advances.
+	if scriptPath == "" {
+		if mod.StowEnabled {
+			if err := utils.Stow(name, modulesDir); err != nil {
+				return m, func() tea.Msg {
+					return installer.InstallCompleteMsg{
+						ModuleName: name,
+						Success:    false,
+						Error:      err,
+					}
+				}
+			}
+			m.detailModel.OutputModel().AppendLine("✓ Stow links created")
+		}
+		_ = utils.SetModuleInstalled(name)
+		return m, func() tea.Msg {
+			return installer.InstallCompleteMsg{ModuleName: name, Success: true}
+		}
+	}
+
+	if installer.NeedsSudoScript(scriptPath) {
+		m.pendingAction = popup.ActionInstall
+		return m, installer.RunSudoAuth(name)
+	}
+
+	return m, installer.RunInstallStreaming(
+		m.program, name, scriptPath, modulesDir, mod.StowEnabled)
 }
 
 // contentDimensions returns the inner content width and height

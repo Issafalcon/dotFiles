@@ -26,7 +26,7 @@ description: One-line summary
 category: Utility             # Shell, Editor, Language, DevOps, Cloud, Database, Utility, Application, AI
 website: https://example.com
 repo: https://github.com/example/tool
-dependencies: []              # other module directory names
+dependencies: []              # other module directory names (TUI installs these first)
 external_deps:
   - name: curl
     check_command: curl --version
@@ -46,7 +46,10 @@ The directory name is the source of truth for `name` if they disagree.
 - `install.sh` — run by the TUI before stow (when present)
 - `uninstall.sh` — run before unstow (when present)
 
-Ignore both (and `module.yaml`) in `.stow-local-ignore` so they are not linked into `$HOME`.
+Do **not** install other modules from `install.sh`. List them under `dependencies`
+in `module.yaml`; the TUI installs missing deps (in order) before your script runs.
+
+Ignore both scripts (and `module.yaml`) in `.stow-local-ignore` so they are not linked into `$HOME`.
 
 ## AppImage users
 
