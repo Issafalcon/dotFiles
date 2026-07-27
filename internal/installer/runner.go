@@ -34,6 +34,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -127,6 +128,42 @@ func RunSudoAuth(moduleName string) tea.Cmd {
 	c := exec.Command("sudo", "-v")
 	return tea.ExecProcess(c, func(err error) tea.Msg {
 		return SudoAuthCompleteMsg{ModuleName: moduleName, Error: err}
+	})
+}
+
+// RunInstallInteractive suspends the TUI and runs install.sh with a real TTY
+// (stdin/stdout/stderr). Use for modules with requires_input: true so prompts
+// (rustup, installers, etc.) work. After the process exits, stow + tracking run
+// and InstallCompleteMsg is returned so the dep queue can continue.
+func RunInstallInteractive(moduleName, scriptPath, modulesDir string, stowEnabled bool) tea.Cmd {
+	c := exec.Command("bash", scriptPath)
+	c.Env = utils.BrewAwareEnv()
+	c.Dir = filepath.Dir(scriptPath)
+	return tea.ExecProcess(c, func(err error) tea.Msg {
+		if err != nil {
+			return InstallCompleteMsg{
+				ModuleName: moduleName,
+				Success:    false,
+				Error:      fmt.Errorf("install.sh: %w", err),
+			}
+		}
+		if stowEnabled {
+			if err := utils.Stow(moduleName, modulesDir); err != nil {
+				return InstallCompleteMsg{
+					ModuleName: moduleName,
+					Success:    false,
+					Error:      fmt.Errorf("stow: %w", err),
+				}
+			}
+		}
+		if err := utils.SetModuleInstalled(moduleName); err != nil {
+			return InstallCompleteMsg{
+				ModuleName: moduleName,
+				Success:    false,
+				Error:      fmt.Errorf("tracking install: %w", err),
+			}
+		}
+		return InstallCompleteMsg{ModuleName: moduleName, Success: true}
 	})
 }
 

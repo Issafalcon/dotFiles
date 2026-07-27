@@ -1003,6 +1003,14 @@ func (m Model) beginModuleInstall(name string) (tea.Model, tea.Cmd) {
 		}
 	}
 
+	// Interactive installers need a real TTY — suspend the TUI via ExecProcess.
+	if mod.RequiresInput {
+		m.detailModel.OutputModel().AppendLine(
+			"▸ Switching to interactive terminal for this install (TUI pauses)…")
+		return m, installer.RunInstallInteractive(
+			name, scriptPath, modulesDir, mod.StowEnabled)
+	}
+
 	if installer.NeedsSudoScript(scriptPath) {
 		m.pendingAction = popup.ActionInstall
 		m.detailModel.OutputModel().AppendLine("▸ Authenticating sudo…")

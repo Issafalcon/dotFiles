@@ -347,6 +347,12 @@ func readLines(r io.Reader) []string {
 	return lines
 }
 
+// BrewAwareEnv returns the process environment with common Homebrew bin dirs
+// prepended to PATH when those installs exist.
+func BrewAwareEnv() []string {
+	return brewAwareEnv()
+}
+
 // brewAwareEnv returns os.Environ with common Homebrew bin dirs prepended to PATH
 // when those installs exist. Needed so modules after homebrew (imagemagick, yazi, …)
 // can find `brew` in the TUI's non-login shell.

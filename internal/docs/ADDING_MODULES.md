@@ -36,7 +36,7 @@ stow_enabled: true
 estimated_time: 30s
 estimated_size: 10MB
 check_command: my-tool --version
-requires_input: false
+requires_input: false   # true = TUI suspends and runs install.sh with a real TTY (prompts work)
 ```
 
 The directory name is the source of truth for `name` if they disagree.
@@ -45,6 +45,10 @@ The directory name is the source of truth for `name` if they disagree.
 
 - `install.sh` — run by the TUI before stow (when present)
 - `uninstall.sh` — run before unstow (when present)
+
+Prefer **non-interactive** scripts (`-y`, `NONINTERACTIVE=1`, etc.) so output streams in the Output tab.
+Set `requires_input: true` only when the installer must prompt (password, menu, confirmation).
+The TUI then briefly leaves alt-screen, runs `bash install.sh` with a real terminal, and resumes.
 
 Do **not** install other modules from `install.sh`. List them under `dependencies`
 in `module.yaml`; the TUI installs missing deps (in order) before your script runs.

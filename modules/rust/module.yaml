@@ -8,4 +8,4 @@ stow_enabled: true
 estimated_time: 2m
 estimated_size: 500MB
 check_command: rustc --version
-requires_input: true
+requires_input: false
