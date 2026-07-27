@@ -22,5 +22,151 @@
   "todo": {
     "prefix": ["todo"],
     "body": ["* [ ] ${1:task} -- due:${2:today} ${3: project:}"]
+  },
+  "img_centered": {
+    "prefix": ["imgc"],
+    "body": [
+      "<div style=\"text-align: center;\">",
+      "    <img src=\"$1\" alt=\"$2\" style=\"width: $3%;\">",
+      "</div>"
+    ]
+  },
+  "Long Division (1 step)": {
+    "prefix": ["long-div-1", "long-div"],
+    "description": "MathJax long division, 1 subtraction step. Tab order: divisor \u2192 dividend \u2192 product \u2192 remainder \u2192 quotient",
+    "body": [
+      "$$",
+      "\\begin{array}{rll}",
+      "  ${5:quotient} \\\\\\\\[-3pt]",
+      "  ${1:divisor} \\overline{) ${2:dividend}} \\\\\\\\[-3pt]",
+      "  -\\underline{${3:product}} \\\\\\\\[-3pt]",
+      "  ${4:remainder}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Long Division (2 steps)": {
+    "prefix": ["long-div-2"],
+    "description": "MathJax long division, 2 subtraction steps. $4 phantom shared across all 3 alignment positions",
+    "body": [
+      "$$",
+      "\\begin{array}{rll}",
+      "  ${8:quotient} \\\\\\\\[-3pt]",
+      "  ${1:divisor} \\overline{) ${2:dividend}} \\\\\\\\[-3pt]",
+      "  -\\underline{${3:first\\_product}}\\phantom{${4:0}} \\\\\\\\[-3pt]",
+      "  \\phantom{${4:0}}${5:partial\\_remainder}\\\\\\\\[-3pt]",
+      "  -\\phantom{${4:0}}\\underline{${6:second\\_product}}\\\\\\\\[-3pt]",
+      "  ${7:final\\_remainder}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Long Division (3 steps)": {
+    "prefix": ["long-div-3"],
+    "description": "MathJax long division, 3 subtraction steps. $5 shared for step-1 alignment (\u00d72); $9 shared for step-2 alignment (\u00d72)",
+    "body": [
+      "$$",
+      "\\begin{array}{rll}",
+      "  ${13:quotient} \\\\\\\\[-3pt]",
+      "  ${1:divisor} \\overline{) ${2:dividend}} \\\\\\\\[-3pt]",
+      "  -\\underline{${3:first\\_product}}\\phantom{${4:00}} \\\\\\\\[-3pt]",
+      "  \\phantom{${5:0}}${6:partial\\_rem\\_1}\\\\\\\\[-3pt]",
+      "  -\\phantom{${5:0}}\\underline{${7:second\\_product}}\\phantom{${8:0}}\\\\\\\\[-3pt]",
+      "  \\phantom{${9:00}}${10:partial\\_rem\\_2}\\\\\\\\[-3pt]",
+      "  -\\phantom{${9:00}}\\underline{${11:third\\_product}}\\\\\\\\[-3pt]",
+      "  ${12:final\\_remainder}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Polynomial Long Division (degree 2)": {
+    "prefix": ["poly-long-div-2", "poly-long-div"],
+    "description": "MathJax poly long division degree-2 \u00f7 degree-1. Type each product once; its phantom copies auto-indent all rows below.",
+    "body": [
+      "$$",
+      "\\begin{array}{r}",
+      "${3:t_1} \\\\\\\\[-3pt]",
+      "${1:d}\\overline{)\\,${2:D}} \\\\\\\\[-3pt]",
+      "-\\underline{(${4:p_1})}\\phantom{000000}\\\\\\\\[-3pt]",
+      "${5:R} \\\\\\\\[-3pt]",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Polynomial Long Division (degree 3)": {
+    "prefix": ["poly-long-div-3"],
+    "description": "MathJax poly long division degree-3 \u00f7 degree-1. Type each product once; phantom copies auto-indent.",
+    "body": [
+      "$$",
+      "\\begin{array}{r}",
+      "${3:t_1} ${6:t_2} \\\\\\\\[-3pt]",
+      "${1:d}\\overline{)\\,${2:D}} \\\\\\\\[-3pt]",
+      "-\\underline{(${4:p_1})}\\phantom{0000}\\\\\\\\[-3pt]",
+      "${5} \\\\\\\\[-3pt]",
+      "-\\underline{(${7:p_2})} \\\\\\\\[-3pt]",
+      "${8:R} \\\\\\\\[-3pt]",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Polynomial Long Division (degree 4)": {
+    "prefix": ["poly-long-div-4"],
+    "description": "MathJax poly long division degree-4 \u00f7 degree-1. Type each product once; phantom copies auto-indent.",
+    "body": [
+      "$$",
+      "\\begin{array}{r}",
+      "${3:t_1} ${6:t_2} ${9:t_3} \\\\\\\\[-3pt]",
+      "${1:d}\\overline{)\\,${2:D}} \\\\\\\\[-3pt]",
+      "-\\underline{(${4:p_1})}\\phantom{00000000}\\\\\\\\[-3pt]",
+      "${5}\\phantom{000000}\\\\\\\\[-3pt]",
+      "-\\underline{(${7:p_2})} \\phantom{0000} \\\\\\\\[-3pt]",
+      "${8} \\\\\\\\[-3pt]",
+      "-\\underline{(${10:p_3})}\\\\\\\\[-3pt]",
+      "${11:R}\\\\\\\\[-3pt]",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Synthetic Division (degree 2)": {
+    "prefix": ["synth-div-2", "synth-div"],
+    "description": "Synthetic division degree-2 ÷ linear. Tab: root → a,b,c → products → quotient coefficients + remainder",
+    "body": [
+      "$$",
+      "\\begin{array}{r|rrr}",
+      "${1:root} & ${2:a} & ${3:b} & ${4:c} \\\\\\\\",
+      "& & ${5:p_1} & ${6:p_2} \\\\\\\\",
+      "\\hline",
+      "& ${7:q_1} & ${8:q_2} & ${9:R}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Synthetic Division (degree 3)": {
+    "prefix": ["synth-div-3"],
+    "description": "Synthetic division degree-3 ÷ linear. Tab: root → a,b,c,d → products → quotient coefficients + remainder",
+    "body": [
+      "$$",
+      "\\begin{array}{r|rrrr}",
+      "${1:root} & ${2:a} & ${3:b} & ${4:c} & ${5:d} \\\\\\\\",
+      "& & ${6:p_1} & ${7:p_2} & ${8:p_3} \\\\\\\\",
+      "\\hline",
+      "& ${9:q_1} & ${10:q_2} & ${11:q_3} & ${12:R}",
+      "\\end{array}",
+      "$$"
+    ]
+  },
+  "Synthetic Division (degree 4)": {
+    "prefix": ["synth-div-4"],
+    "description": "Synthetic division degree-4 ÷ linear. Tab: root → a,b,c,d,e → products → quotient coefficients + remainder",
+    "body": [
+      "$$",
+      "\\begin{array}{r|rrrrr}",
+      "${1:root} & ${2:a} & ${3:b} & ${4:c} & ${5:d} & ${6:e} \\\\\\\\",
+      "& & ${7:p_1} & ${8:p_2} & ${9:p_3} & ${10:p_4} \\\\\\\\",
+      "\\hline",
+      "& ${11:q_1} & ${12:q_2} & ${13:q_3} & ${14:q_4} & ${15:R}",
+      "\\end{array}",
+      "$$"
+    ]
   }
 }

@@ -6,6 +6,7 @@ website: "https://yazi-rs.github.io/"
 repo: "https://github.com/sxyazi/yazi"
 dependencies:
   - homebrew
+  - imagemagick
 stow_enabled: true
 estimated_time: 2m
 estimated_size: 100MB

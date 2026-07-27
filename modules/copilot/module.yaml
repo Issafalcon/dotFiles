@@ -1,0 +1,13 @@
+name: copilot
+icon: ""
+description: GitHub Copilot CLI with plugins
+category: AI
+website: "https://github.com/features/copilot"
+repo: "https://github.com/github/copilot-cli"
+dependencies:
+  - node
+  - rtk
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 100MB
+check_command: copilot --version

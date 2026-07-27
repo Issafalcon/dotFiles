@@ -10,6 +10,7 @@ dependencies:
   - go
   - homebrew
   - yazi
+  - ueberzugpp
 external_deps:
   - name: ripgrep
     check_command: rg --version

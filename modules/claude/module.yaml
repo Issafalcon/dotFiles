@@ -1,10 +1,11 @@
-name: ai-tools
+name: claude
 icon: ""
-description: AI coding tools (Claude, Copilot, MCP Hub)
+description: Claude Code CLI with MCP servers and skills
 category: AI
 website: "https://claude.ai/"
 repo: "https://github.com/anthropics/claude-code"
 dependencies:
+  - rtk
   - node
 external_deps:
   - name: npm
@@ -12,6 +13,6 @@ external_deps:
     install_command: "Install the 'node' module first"
     install_method: npm
 stow_enabled: true
-estimated_time: 1m
-estimated_size: 100MB
+estimated_time: 2m
+estimated_size: 200MB
 check_command: claude --version

@@ -9,6 +9,7 @@ config.zsh
 completion.zsh
 custom_scripts
 functions
-module.go
-uninstall.sh
+anthropic-skills
 module.yaml
+uninstall.sh
+module.go

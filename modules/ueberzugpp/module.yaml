@@ -1,0 +1,12 @@
+name: ueberzugpp
+icon: ""
+description: Terminal image preview backend (image.nvim / yazi)
+category: Utility
+website: "https://github.com/jstkdng/ueberzugpp"
+repo: "https://github.com/jstkdng/ueberzugpp"
+dependencies:
+  - homebrew
+stow_enabled: false
+estimated_time: 2m
+estimated_size: 50MB
+check_command: ueberzugpp --version

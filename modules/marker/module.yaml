@@ -1,0 +1,12 @@
+name: marker
+icon: ""
+description: Convert PDF/docs to markdown via local ML models
+category: Utility
+website: "https://github.com/VikParuchuri/marker"
+repo: "https://github.com/VikParuchuri/marker"
+dependencies:
+  - python
+stow_enabled: true
+estimated_time: 10m
+estimated_size: 5GB
+check_command: true

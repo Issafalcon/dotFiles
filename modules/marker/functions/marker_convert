@@ -1,0 +1,237 @@
+marker_convert() {
+  # Convert PDF, EPUB, DOCX, and other documents to markdown using marker.
+  # Runs marker from a local Python virtualenv (no Docker).
+  # Supports local LLM enhancement via Ollama or GitHub Copilot.
+  #
+  # Usage:
+  #   marker_convert <input_file> [output_dir] [options]
+  #
+  # Options:
+  #   --use-llm             Enhance conversion with an LLM (default: Ollama)
+  #   --llm-service <svc>   LLM backend: ollama (default) | copilot | gemini
+  #   --llm-model <model>   Model name (default: llama3.2 for ollama)
+  #   --force-ocr           Force OCR on entire document (good for scanned PDFs)
+  #   --format <fmt>        Output format: markdown (default) | json | html
+  #   --page-range <range>  Pages to process, e.g. "0,5-10,20"
+  #   --help                Show this help message
+  #
+  # Datalab cloud API (no local RAM needed - requires DATALAB_API_KEY):
+  #   marker_convert book.pdf --datalab
+  #   marker_convert book.pdf ~/notes --datalab --force-ocr
+  #   Sign up free at https://www.datalab.to to get an API key.
+  #   Set in ~/.zshrc: export DATALAB_API_KEY="your_key"
+
+  local input_file=""
+  local output_dir=""
+  local use_llm=false
+  local llm_service="ollama"
+  local llm_model="llama3.2"
+  local force_ocr=false
+  local output_format="markdown"
+  local page_range=""
+  local use_datalab=false
+
+  local marker_venv="${XDG_DATA_HOME:-$HOME/.local/share}/marker/venv"
+  local marker_bin="${marker_venv}/bin/marker_single"
+
+  if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]]; then
+    sed -n '3,17p' "${DOTFILES}/marker/functions/marker_convert" | sed 's/^  # \{0,1\}//'
+    return 0
+  fi
+
+  if [[ ! -x "${marker_bin}" ]]; then
+    echo "Marker is not installed. Run: bash \${DOTFILES}/marker/install.sh" >&2
+    return 1
+  fi
+
+  # First positional arg is the input file
+  input_file="$1"
+  shift
+
+  # Second positional arg (if not a flag) is the output dir
+  if [[ $# -gt 0 ]] && [[ "$1" != --* ]]; then
+    output_dir="$1"
+    shift
+  fi
+
+  # Parse remaining flags
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --datalab)        use_datalab=true ;;
+      --use-llm)        use_llm=true ;;
+      --llm-service)    llm_service="$2"; shift ;;
+      --llm-model)      llm_model="$2"; shift ;;
+      --force-ocr)      force_ocr=true ;;
+      --format)         output_format="$2"; shift ;;
+      --page-range)     page_range="$2"; shift ;;
+      *) echo "Unknown option: $1. Run 'marker_convert --help' for usage." >&2; return 1 ;;
+    esac
+    shift
+  done
+
+  input_file="$(realpath "${input_file}" 2>/dev/null)" || {
+    echo "Error: File not found: ${input_file}" >&2
+    return 1
+  }
+
+  if [[ -z "${output_dir}" ]]; then
+    output_dir="$(dirname "${input_file}")/marker-output"
+  fi
+  mkdir -p "${output_dir}"
+  output_dir="$(realpath "${output_dir}")"
+
+  # +------------------+
+  # | DATALAB CLOUD API|
+  # +------------------+
+  if [[ "${use_datalab}" == true ]]; then
+    if [[ -z "${DATALAB_API_KEY:-}" ]]; then
+      echo "Error: DATALAB_API_KEY is not set." >&2
+      echo "  Sign up free at https://www.datalab.to, then:" >&2
+      echo "  export DATALAB_API_KEY='your_key'  # add to ~/.zshrc to persist" >&2
+      return 1
+    fi
+
+    echo "Converting via Datalab cloud API: $(basename "${input_file}")"
+    echo "Output: ${output_dir}"
+    echo ""
+
+    # Build multipart form fields
+    local -a curl_args=(
+      -s -X POST "https://www.datalab.to/api/v1/convert"
+      -H "X-Api-Key: ${DATALAB_API_KEY}"
+      -F "file=@${input_file}"
+      -F "output_format=${output_format}"
+    )
+    [[ "${force_ocr}" == true ]]  && curl_args+=(-F "force_ocr=true")
+    [[ -n "${page_range}" ]]      && curl_args+=(-F "page_range=${page_range}")
+
+    # Submit job
+    local response request_id
+    response=$(curl "${curl_args[@]}") || { echo "Error: Upload failed." >&2; return 1; }
+    request_id=$(echo "${response}" | python3 -c "import sys,json; print(json.load(sys.stdin).get('request_id',''))" 2>/dev/null)
+
+    if [[ -z "${request_id}" ]]; then
+      echo "Error: No request_id in response: ${response}" >&2
+      return 1
+    fi
+
+    echo "Job submitted (request_id: ${request_id}). Waiting for completion..."
+
+    # Poll until done (max 10 minutes)
+    local status="" attempts=0 max_attempts=120
+    while [[ "${status}" != "complete" ]]; do
+      if (( attempts++ >= max_attempts )); then
+        echo "Error: Timed out waiting for Datalab conversion." >&2
+        return 1
+      fi
+      sleep 5
+      response=$(curl -s "https://www.datalab.to/api/v1/marker/${request_id}"         -H "X-Api-Key: ${DATALAB_API_KEY}")
+      status=$(echo "${response}" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" 2>/dev/null)
+      printf "  status: %-12s (${attempts}/${max_attempts})" "${status}"
+    done
+    echo ""
+
+    # Save markdown output
+    local out_file="${output_dir}/$(basename "${input_file%.*}").md"
+    echo "${response}" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+md = data.get('markdown') or data.get('output', {}).get('markdown', '')
+if md:
+    sys.stdout.write(md)
+else:
+    sys.stderr.write('Warning: no markdown in response
+')
+    sys.stderr.write(str(data.keys()) + '
+')
+" > "${out_file}"
+
+    echo "✓ Done! Saved to: ${out_file}"
+    return 0
+  fi
+
+  # Build marker CLI args
+  local -a marker_args=(
+    "${input_file}"
+    --output_dir "${output_dir}"
+    --output_format "${output_format}"
+  )
+
+  [[ "${force_ocr}" == true ]] && marker_args+=(--force_ocr)
+  [[ -n "${page_range}" ]] && marker_args+=(--page_range "${page_range}")
+
+  if [[ "${use_llm}" == true ]]; then
+    marker_args+=(--use_llm)
+
+    case "${llm_service}" in
+      ollama)
+        # Auto-start Ollama if not running
+        if ! curl -s http://localhost:11434 >/dev/null 2>&1; then
+          echo "Starting Ollama..."
+          sudo systemctl start ollama 2>/dev/null || ollama serve &>/dev/null &
+          sleep 3
+        fi
+        # Pull model if not present
+        if ! ollama list 2>/dev/null | grep -q "^${llm_model}"; then
+          echo "Pulling Ollama model '${llm_model}'..."
+          ollama pull "${llm_model}"
+        fi
+        marker_args+=(
+          --llm_service marker.services.ollama.OllamaService
+          --ollama_base_url "http://localhost:11434"
+          --ollama_model "${llm_model}"
+        )
+        ;;
+
+      copilot)
+        if ! command -v gh >/dev/null 2>&1; then
+          echo "Error: 'gh' CLI not found. Install it to use GitHub Copilot." >&2
+          return 1
+        fi
+        local copilot_token
+        copilot_token="$(gh auth token 2>/dev/null)" || {
+          echo "Error: Not authenticated. Run 'gh auth login' first." >&2
+          return 1
+        }
+        export OPENAI_API_KEY="${copilot_token}"
+        marker_args+=(
+          --llm_service marker.services.openai.OpenAIService
+          --openai_base_url "https://api.githubcopilot.com"
+          --openai_model "gpt-4o"
+        )
+        ;;
+
+      gemini)
+        if [[ -z "${GOOGLE_API_KEY:-}" ]]; then
+          echo "Error: GOOGLE_API_KEY is not set." >&2
+          return 1
+        fi
+        marker_args+=(--llm_service marker.services.gemini.GoogleGeminiService)
+        ;;
+
+      *)
+        echo "Unknown LLM service: ${llm_service}. Use: ollama | copilot | gemini" >&2
+        return 1
+        ;;
+    esac
+  fi
+
+  echo "Converting: $(basename "${input_file}")"
+  echo "Output:     ${output_dir}"
+  [[ "${use_llm}" == true ]] && echo "LLM:        ${llm_service} (${llm_model})"
+  echo ""
+
+  # Surya (marker's OCR engine) auto-sizes batches which causes memory spikes.
+  # Force batch size 1 on all models to keep activation memory flat on CPU.
+  DETECTOR_BATCH_SIZE=1   RECOGNITION_BATCH_SIZE=1   LAYOUT_BATCH_SIZE=1   TABLE_REC_BATCH_SIZE=1   OCR_ERROR_BATCH_SIZE=1   ORDER_BATCH_SIZE=1     "${marker_bin}" "${marker_args[@]}"
+
+  local exit_code=$?
+  if [[ ${exit_code} -eq 0 ]]; then
+    echo ""
+    echo "✓ Done! Files saved to: ${output_dir}"
+  else
+    echo "" >&2
+    echo "✗ Conversion failed (exit code: ${exit_code})" >&2
+  fi
+  return ${exit_code}
+}
