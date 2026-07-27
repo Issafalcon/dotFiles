@@ -335,6 +335,8 @@ func (m OverviewModel) View() string {
 	// --- Dependency Table ---
 	if len(m.deps) > 0 {
 		b.WriteString(theme.Subtitle.Render("Dependencies:"))
+		b.WriteString("\n")
+		b.WriteString(theme.DimText.Render("  module = TUI package · apt/brew = external"))
 		b.WriteString("\n\n")
 
 		// Iterate over dependencies and render each row.
@@ -358,9 +360,13 @@ func (m OverviewModel) View() string {
 			// Format the dependency name and install method.
 			name := dep.Name
 			method := theme.DimText.Render(fmt.Sprintf("(%s)", dep.Method))
+			statusLabel := theme.ErrorText.Render("not installed")
+			if dep.Installed {
+				statusLabel = theme.SuccessText.Render("installed")
+			}
 
 			// Build the row. If this row is the cursor position, highlight it.
-			row := fmt.Sprintf("  %s  %-20s %s", statusIcon, name, method)
+			row := fmt.Sprintf("  %s  %-16s %-12s %s", statusIcon, name, method, statusLabel)
 
 			if i == m.depCursor {
 				// Highlight the selected row with a cyan foreground and a
@@ -368,7 +374,7 @@ func (m OverviewModel) View() string {
 				row = lipgloss.NewStyle().
 					Foreground(theme.ColorCyan).
 					Bold(true).
-					Render(fmt.Sprintf("▸ %s  %-20s %s", statusIcon, name, method))
+					Render(fmt.Sprintf("▸ %s  %-16s %-12s %s", statusIcon, name, method, statusLabel))
 			}
 
 			b.WriteString(row)
@@ -377,12 +383,11 @@ func (m OverviewModel) View() string {
 
 		// --- Help Hint ---
 		b.WriteString("\n")
-		hint := theme.KeyStyle.Render("Enter") +
-			theme.DescStyle.Render(" install selected dependency")
+		hint := theme.DimText.Render("Install the parent module (i) to pull in missing module deps")
 		b.WriteString(hint)
 	} else {
 		// No dependencies — show a message.
-		b.WriteString(theme.DimText.Render("No external dependencies for this module."))
+		b.WriteString(theme.DimText.Render("No dependencies for this module."))
 	}
 
 	return b.String()

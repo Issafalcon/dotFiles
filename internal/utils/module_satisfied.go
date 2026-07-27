@@ -26,12 +26,14 @@ func ModuleSatisfied(name, checkCommand string) bool {
 		}
 	}
 
-	cmd := strings.TrimSpace(checkCommand)
-	if cmd == "" || cmd == "true" || cmd == "false" {
+	check := strings.TrimSpace(checkCommand)
+	if check == "" || check == "true" || check == "false" {
 		return false
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	return exec.CommandContext(ctx, "sh", "-c", cmd).Run() == nil
+	cmd := exec.CommandContext(ctx, "sh", "-c", check)
+	cmd.Env = brewAwareEnv()
+	return cmd.Run() == nil
 }

@@ -18,7 +18,9 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 	"syscall"
@@ -86,6 +88,7 @@ func RunCommand(ctx context.Context, command string) (CommandResult, error) {
 	// process in its own process group, allowing us to kill it and all its children.
 	// See: https://pkg.go.dev/syscall#SysProcAttr
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.Env = brewAwareEnv()
 
 	// NOTE: We intentionally do NOT set cmd.Stdin = os.Stdin here.
 	// Interactive commands (e.g. sudo prompts) are handled via tea.ExecProcess
@@ -240,6 +243,7 @@ func isExitError(err error, target **exec.ExitError) bool {
 func RunCommandStreaming(ctx context.Context, command string, onLine func(line string, isStderr bool)) error {
 	cmd := exec.CommandContext(ctx, "sh", "-c", command)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.Env = brewAwareEnv()
 
 	// NOTE: We intentionally do NOT set cmd.Stdin here — see RunCommand above.
 
@@ -341,4 +345,50 @@ func readLines(r io.Reader) []string {
 		lines = append(lines, strings.TrimRight(scanner.Text(), "\r\n"))
 	}
 	return lines
+}
+
+// brewAwareEnv returns os.Environ with common Homebrew bin dirs prepended to PATH
+// when those installs exist. Needed so modules after homebrew (imagemagick, yazi, …)
+// can find `brew` in the TUI's non-login shell.
+func brewAwareEnv() []string {
+	env := os.Environ()
+	var bins []string
+	for _, dir := range []string{
+		"/home/linuxbrew/.linuxbrew/bin",
+		"/home/linuxbrew/.linuxbrew/sbin",
+		"/opt/homebrew/bin",
+		"/usr/local/bin",
+	} {
+		if st, err := os.Stat(dir); err == nil && st.IsDir() {
+			bins = append(bins, dir)
+		}
+	}
+	if len(bins) == 0 {
+		return env
+	}
+	prefix := strings.Join(bins, string(os.PathListSeparator))
+	for i, kv := range env {
+		if strings.HasPrefix(kv, "PATH=") {
+			env[i] = "PATH=" + prefix + string(os.PathListSeparator) + strings.TrimPrefix(kv, "PATH=")
+			return env
+		}
+	}
+	return append(env, "PATH="+prefix)
+}
+
+// BrewBin returns the preferred brew executable path, or "brew" for PATH lookup.
+func BrewBin() string {
+	for _, p := range []string{
+		"/home/linuxbrew/.linuxbrew/bin/brew",
+		"/opt/homebrew/bin/brew",
+		"/usr/local/bin/brew",
+	} {
+		if st, err := os.Stat(p); err == nil && !st.IsDir() {
+			return p
+		}
+	}
+	if p, err := exec.LookPath("brew"); err == nil {
+		return p
+	}
+	return filepath.Join("/home/linuxbrew/.linuxbrew/bin", "brew")
 }

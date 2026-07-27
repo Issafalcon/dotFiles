@@ -154,6 +154,13 @@ func shellQuote(s string) string {
 //   - stowEnabled: Whether to run stow after the script succeeds.
 func RunInstallStreaming(p *tea.Program, moduleName string, scriptPath string, modulesDir string, stowEnabled bool) tea.Cmd {
 	return func() tea.Msg {
+		if p == nil {
+			return InstallCompleteMsg{
+				ModuleName: moduleName,
+				Success:    false,
+				Error:      fmt.Errorf("internal: tea program not ready"),
+			}
+		}
 		p.Send(InstallStartMsg{ModuleName: moduleName})
 
 		if scriptPath != "" {
@@ -163,6 +170,15 @@ func RunInstallStreaming(p *tea.Program, moduleName string, scriptPath string, m
 			})
 
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+			defer cancel()
+
+			// Refresh sudo timestamp while long scripts run (default timeout ~15m).
+			// Without this, a late `sudo` in install.sh hangs with no TTY after brew.
+			if NeedsSudoScript(scriptPath) {
+				stopKeepAlive := keepSudoAlive(ctx)
+				defer stopKeepAlive()
+			}
+
 			err := utils.RunCommandStreaming(ctx, scriptCommand(scriptPath), func(line string, isStderr bool) {
 				p.Send(InstallOutputMsg{
 					ModuleName: moduleName,
@@ -170,7 +186,6 @@ func RunInstallStreaming(p *tea.Program, moduleName string, scriptPath string, m
 					IsStderr:   isStderr,
 				})
 			})
-			cancel()
 
 			if err != nil {
 				return InstallCompleteMsg{
@@ -212,6 +227,27 @@ func RunInstallStreaming(p *tea.Program, moduleName string, scriptPath string, m
 			Success:    true,
 		}
 	}
+}
+
+// keepSudoAlive periodically runs `sudo -n true` so an earlier sudo -v stays
+// valid across long install scripts. Returns a stop function.
+func keepSudoAlive(ctx context.Context) func() {
+	done := make(chan struct{})
+	go func() {
+		ticker := time.NewTicker(60 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-done:
+				return
+			case <-ticker.C:
+				_ = exec.CommandContext(ctx, "sudo", "-n", "true").Run()
+			}
+		}
+	}()
+	return func() { close(done) }
 }
 
 // RunInstallWithSend executes the install script and sends progress messages via

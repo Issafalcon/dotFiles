@@ -134,6 +134,7 @@ type Model struct {
 	installStowEnabled bool                // whether to stow/unstow after the script finishes
 	pendingAction      popup.ConfirmAction // tracks whether sudo pre-auth is for install or uninstall
 	installQueue       []string            // remaining modules to install (deps then target)
+	installPlan        []string            // full ordered plan for progress labels
 
 	loadWarnings []string // module.yaml load issues shown once on dashboard
 	showDocs     bool
@@ -400,7 +401,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
+			m.installPlan = queue
 			m.installQueue = queue[1:]
+			m.detailModel.OutputModel().AppendLine(
+				fmt.Sprintf("Install plan (%d): %s", len(queue), strings.Join(queue, " → ")))
 			return m.beginModuleInstall(queue[0])
 
 		// --- Uninstall flow ---
@@ -460,6 +464,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					fmt.Sprintf("✗ Skipping remaining: %s", strings.Join(m.installQueue, ", ")))
 			}
 			m.installQueue = nil
+			m.installPlan = nil
 			m.installingMod = ""
 			m.installScriptPath = ""
 			m.pendingAction = ""
@@ -474,6 +479,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		// Default: install flow
 		m.pendingAction = ""
+		m.detailModel.OutputModel().AppendLine(
+			fmt.Sprintf("▸ Starting %s after sudo…", m.installingMod))
 		return m, installer.RunInstallStreaming(
 			m.program, m.installingMod, m.installScriptPath,
 			modulesDir, m.installStowEnabled)
@@ -535,19 +542,21 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.detailModel.OutputModel().AppendLine(
 				fmt.Sprintf("\n✓ %s installed successfully!", msg.ModuleName))
 			m.sidebarModel.SetInstalled(msg.ModuleName, true)
+			if m.selectedMod != "" {
+				m.updateDetailForModule(m.selectedMod)
+			}
 
 			if len(m.installQueue) > 0 {
 				next := m.installQueue[0]
 				m.installQueue = m.installQueue[1:]
-				m.detailModel.OutputModel().AppendLine(
-					fmt.Sprintf("\n—— next: %s ——", next))
-				m.detailModel.OutputModel().SetInstalling(next, true)
+				m.state = StateInstalling
 				return m.beginModuleInstall(next)
 			}
 
 			m.state = StateDashboard
 			m.installingMod = ""
 			m.installScriptPath = ""
+			m.installPlan = nil
 			return m, nil
 		}
 
@@ -562,6 +571,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				fmt.Sprintf("✗ Skipping remaining: %s", strings.Join(m.installQueue, ", ")))
 		}
 		m.installQueue = nil
+		m.installPlan = nil
 		m.state = StateDashboard
 		m.installingMod = ""
 		m.installScriptPath = ""
@@ -812,13 +822,36 @@ func (m *Model) updateDetailForModule(name string) {
 		return
 	}
 
-	// Build dependency status list for the overview tab.
-	deps := make([]detail.DepStatus, 0, len(mod.ExternalDeps))
+	// Module dependencies (from module.yaml) plus external package deps.
+	deps := make([]detail.DepStatus, 0, len(mod.Dependencies)+len(mod.ExternalDeps))
+	for _, depName := range mod.Dependencies {
+		depMod := module.DefaultRegistry.Get(depName)
+		check := ""
+		if depMod != nil {
+			check = depMod.CheckCommand
+		}
+		deps = append(deps, detail.DepStatus{
+			Name:      depName,
+			Method:    "module",
+			Installed: utils.ModuleSatisfied(depName, check),
+			Checking:  false,
+		})
+	}
 	for _, dep := range mod.ExternalDeps {
+		installed := false
+		if dep.CheckCommand != "" {
+			installed = utils.ModuleSatisfied(dep.Name, dep.CheckCommand)
+		} else {
+			installed = utils.IsCommandAvailable(dep.Name)
+		}
+		method := dep.InstallMethod
+		if method == "" {
+			method = "external"
+		}
 		deps = append(deps, detail.DepStatus{
 			Name:      dep.Name,
-			Method:    dep.InstallMethod,
-			Installed: utils.IsCommandAvailable(dep.Name),
+			Method:    method,
+			Installed: installed,
 			Checking:  false,
 		})
 	}
@@ -913,8 +946,17 @@ func (m Model) beginModuleInstall(name string) (tea.Model, tea.Cmd) {
 	m.installScriptPath = scriptPath
 	m.installStowEnabled = mod.StowEnabled
 
+	step, total := installProgress(m.installPlan, m.installQueue, name)
+	m.detailModel.OutputModel().SetInstalling(name, true)
+	m.detailModel.OutputModel().AppendLine("")
 	m.detailModel.OutputModel().AppendLine(
-		fmt.Sprintf("\n▸ Installing %s...", name))
+		fmt.Sprintf("━━━ [%d/%d] Installing %s ━━━", step, total, name))
+	if len(m.installQueue) > 0 {
+		m.detailModel.OutputModel().AppendLine(
+			fmt.Sprintf("    queued next: %s", strings.Join(m.installQueue, ", ")))
+	} else if total > 1 {
+		m.detailModel.OutputModel().AppendLine("    (last module in plan)")
+	}
 
 	// Stow-only: finish via InstallCompleteMsg so the dep queue advances.
 	if scriptPath == "" {
@@ -938,11 +980,40 @@ func (m Model) beginModuleInstall(name string) (tea.Model, tea.Cmd) {
 
 	if installer.NeedsSudoScript(scriptPath) {
 		m.pendingAction = popup.ActionInstall
+		m.detailModel.OutputModel().AppendLine("▸ Authenticating sudo…")
 		return m, installer.RunSudoAuth(name)
+	}
+
+	if m.program == nil {
+		return m, func() tea.Msg {
+			return installer.InstallCompleteMsg{
+				ModuleName: name,
+				Success:    false,
+				Error:      fmt.Errorf("internal: tea program not ready"),
+			}
+		}
 	}
 
 	return m, installer.RunInstallStreaming(
 		m.program, name, scriptPath, modulesDir, mod.StowEnabled)
+}
+
+// installProgress returns 1-based step and total for the current module.
+func installProgress(plan, remaining []string, current string) (step, total int) {
+	total = len(plan)
+	if total == 0 {
+		return 1, 1
+	}
+	// remaining is modules after current; completed = total - len(remaining) - 1
+	step = total - len(remaining)
+	if step < 1 {
+		step = 1
+	}
+	if step > total {
+		step = total
+	}
+	_ = current
+	return step, total
 }
 
 // contentDimensions returns the inner content width and height
