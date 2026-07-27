@@ -1,6 +1,6 @@
 #!/bin/bash
+# Idempotent ImageMagick install via Homebrew.
 set -euo pipefail
-SCRIPT_DIR=$(cd ${0%/*} && pwd -P)
 
 brew_bin="$(command -v brew 2>/dev/null || true)"
 if [[ -z "$brew_bin" ]]; then
@@ -12,8 +12,9 @@ if [[ -z "$brew_bin" ]]; then
   done
 fi
 if [[ -z "$brew_bin" ]]; then
-  echo "brew not found; install the homebrew module first" >&2
+  echo "brew not found; install (or re-run) the homebrew module first" >&2
   exit 1
 fi
 
+eval "$("$brew_bin" shellenv)"
 "$brew_bin" install imagemagick

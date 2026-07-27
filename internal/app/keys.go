@@ -32,6 +32,7 @@ type KeyMap struct {
 
 	// Actions
 	Install   key.Binding
+	Reinstall key.Binding
 	Uninstall key.Binding
 	Search    key.Binding
 	OpenURL   key.Binding
@@ -69,6 +70,10 @@ var DefaultKeyMap = KeyMap{
 	Install: key.NewBinding(
 		key.WithKeys("i"),
 		key.WithHelp("i", "install module"),
+	),
+	Reinstall: key.NewBinding(
+		key.WithKeys("r"),
+		key.WithHelp("r", "re-run install script"),
 	),
 	Uninstall: key.NewBinding(
 		key.WithKeys("d"),
@@ -125,7 +130,7 @@ func (k KeyMap) ShortHelp() []key.Binding {
 func (k KeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Up, k.Down, k.Select},           // Navigation
-		{k.Install, k.Uninstall, k.OpenURL}, // Actions
+		{k.Install, k.Reinstall, k.Uninstall, k.OpenURL}, // Actions
 		{k.SwitchTab, k.Search, k.FilterCategory, k.Docs}, // UI
 		{k.Help, k.Cancel, k.Quit},                         // App
 	}

@@ -380,25 +380,35 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		switch msg.Action {
 		// --- Install flow ---
-		case popup.ActionInstall:
+		case popup.ActionInstall, popup.ActionReinstall:
 			m.state = StateInstalling
 			m.detailModel.OutputModel().SetInstalling(msg.ModuleName, true)
 
-			queue, err := planInstallQueue(msg.ModuleName)
-			if err != nil {
-				m.detailModel.OutputModel().SetInstalling(msg.ModuleName, false)
+			var queue []string
+			var err error
+			if msg.Action == popup.ActionReinstall {
+				queue = []string{msg.ModuleName}
 				m.detailModel.OutputModel().AppendLine(
-					fmt.Sprintf("✗ Could not plan install: %s", err))
-				m.state = StateDashboard
-				return m, nil
-			}
-			if len(queue) == 0 {
-				m.detailModel.OutputModel().SetInstalling(msg.ModuleName, false)
-				m.detailModel.OutputModel().AppendLine(
-					fmt.Sprintf("✓ %s and its dependencies are already installed", msg.ModuleName))
-				m.sidebarModel.SetInstalled(msg.ModuleName, true)
-				m.state = StateDashboard
-				return m, nil
+					fmt.Sprintf("Force re-run: %s (deps skipped)", msg.ModuleName))
+			} else {
+				queue, err = planInstallQueue(msg.ModuleName)
+				if err != nil {
+					m.detailModel.OutputModel().SetInstalling(msg.ModuleName, false)
+					m.detailModel.OutputModel().AppendLine(
+						fmt.Sprintf("✗ Could not plan install: %s", err))
+					m.state = StateDashboard
+					return m, nil
+				}
+				if len(queue) == 0 {
+					m.detailModel.OutputModel().SetInstalling(msg.ModuleName, false)
+					m.detailModel.OutputModel().AppendLine(
+						fmt.Sprintf("✓ %s and its dependencies are already installed", msg.ModuleName))
+					m.detailModel.OutputModel().AppendLine(
+						"  Tip: press r to force re-run this module's install script")
+					m.sidebarModel.SetInstalled(msg.ModuleName, true)
+					m.state = StateDashboard
+					return m, nil
+				}
 			}
 
 			m.installPlan = queue
@@ -695,7 +705,7 @@ func (m Model) updateDashboard(msg tea.Msg, cmds []tea.Cmd) (tea.Model, tea.Cmd)
 							}
 						}
 						if len(queue) == 0 {
-							items = append(items, "  (already installed)")
+							items = append(items, "  (already installed — press r to re-run)")
 						}
 					}
 					hasScript := utils.ModuleScriptExists(m.selectedMod, "install.sh")
@@ -706,6 +716,21 @@ func (m Model) updateDashboard(msg tea.Msg, cmds []tea.Cmd) (tea.Model, tea.Cmd)
 						items = append(items, "  ▸ Create stow symlinks")
 					}
 					m.confirmPopup = popup.NewConfirmDialog(m.selectedMod, items, hasScript)
+					m.showConfirm = true
+					return m, nil
+				}
+			}
+
+		// Force re-run install.sh for the selected module (even if already installed).
+		case key.Matches(keyMsg, DefaultKeyMap.Reinstall):
+			if m.selectedMod != "" {
+				mod := module.DefaultRegistry.Get(m.selectedMod)
+				if mod != nil {
+					hasScript := utils.ModuleScriptExists(m.selectedMod, "install.sh")
+					if !hasScript && !mod.StowEnabled {
+						return m, nil
+					}
+					m.confirmPopup = popup.NewReinstallDialog(m.selectedMod, hasScript)
 					m.showConfirm = true
 					return m, nil
 				}

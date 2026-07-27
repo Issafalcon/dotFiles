@@ -97,6 +97,7 @@ func defaultBindings() []HelpBinding {
 		{Key: "enter", Description: "Select item"},
 		// Actions
 		{Key: "i", Description: "Install module"},
+		{Key: "r", Description: "Re-run install script"},
 		{Key: "d", Description: "Uninstall module"},
 		{Key: "o", Description: "Open URL in browser"},
 		// UI

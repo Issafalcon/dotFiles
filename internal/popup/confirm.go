@@ -21,6 +21,7 @@ type ConfirmAction string
 
 const (
 	ActionInstall   ConfirmAction = "install"
+	ActionReinstall ConfirmAction = "reinstall"
 	ActionUninstall ConfirmAction = "uninstall"
 )
 
@@ -61,6 +62,23 @@ func NewConfirmDialog(moduleName string, deps []string, hasScript bool) ConfirmM
 		subtitle:   "The following will be installed:",
 		hasScript:  hasScript,
 		cursor:     0,
+	}
+}
+
+// NewReinstallDialog confirms forcing a re-run of install.sh for one module.
+func NewReinstallDialog(moduleName string, hasScript bool) ConfirmModel {
+	return ConfirmModel{
+		Model:      NewPopup(fmt.Sprintf("Re-run %s install?", moduleName), "", 54, 14).Show(),
+		moduleName: moduleName,
+		action:     ActionReinstall,
+		items: []string{
+			"Re-run install.sh (and stow if enabled)",
+			"Ignores installed / satisfied status",
+			"Dependencies are not reinstalled",
+		},
+		subtitle:  "Force reinstall:",
+		hasScript: hasScript,
+		cursor:    0,
 	}
 }
 
