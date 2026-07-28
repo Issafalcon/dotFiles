@@ -16,11 +16,18 @@ tic "$DIR"/xterm-256color-italic.terminfo
 
 sudo apt-get install -y fonts-powerline powerline
 
-# Switch default shell to zsh (previously done by bootstrap.sh)
-if command -v zsh >/dev/null 2>&1 && command -v chsh >/dev/null 2>&1; then
-  ZSH="$(command -v zsh)"
-  if grep -qx "$ZSH" /etc/shells 2>/dev/null || true; then
-    chsh -s "$ZSH" || true
+# Switch default login shell to zsh (previously done by bootstrap.sh).
+# Must use sudo: streaming install has no TTY for chsh's PAM password prompt;
+# the TUI already ran sudo -v before this script.
+ZSH="$(command -v zsh)"
+if [[ -n "$ZSH" ]]; then
+  if ! grep -qx "$ZSH" /etc/shells 2>/dev/null; then
+    echo "$ZSH" | sudo tee -a /etc/shells >/dev/null
+  fi
+  current="$(getent passwd "${USER:-$(id -un)}" | cut -d: -f7)"
+  if [[ "$current" != "$ZSH" ]]; then
+    sudo chsh -s "$ZSH" "${USER:-$(id -un)}"
+    echo "set $($ZSH --version) at $ZSH as default shell"
   fi
 fi
 
