@@ -140,6 +140,7 @@ func RunInstallInteractive(moduleName, scriptPath, modulesDir string, stowEnable
 	c.Env = utils.BrewAwareEnv()
 	c.Dir = filepath.Dir(scriptPath)
 	return tea.ExecProcess(c, func(err error) tea.Msg {
+		logInstallSession(moduleName, "install-interactive", scriptPath, err)
 		if err != nil {
 			return InstallCompleteMsg{
 				ModuleName: moduleName,
@@ -201,9 +202,10 @@ func RunInstallStreaming(p *tea.Program, moduleName string, scriptPath string, m
 		p.Send(InstallStartMsg{ModuleName: moduleName})
 
 		if scriptPath != "" {
+			header := fmt.Sprintf("\n▸ Running %s", scriptPath)
 			p.Send(InstallOutputMsg{
 				ModuleName: moduleName,
-				Line:       fmt.Sprintf("\n▸ Running %s", scriptPath),
+				Line:       header,
 			})
 
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
@@ -216,7 +218,11 @@ func RunInstallStreaming(p *tea.Program, moduleName string, scriptPath string, m
 				defer stopKeepAlive()
 			}
 
+			onLine, closeLog := streamWithInstallLog(moduleName, "install", header)
+			defer closeLog()
+
 			err := utils.RunCommandStreaming(ctx, scriptCommand(scriptPath), func(line string, isStderr bool) {
+				onLine(line, isStderr)
 				p.Send(InstallOutputMsg{
 					ModuleName: moduleName,
 					Line:       line,
@@ -225,6 +231,7 @@ func RunInstallStreaming(p *tea.Program, moduleName string, scriptPath string, m
 			})
 
 			if err != nil {
+				onLine(fmt.Sprintf("ERROR: %v", err), true)
 				return InstallCompleteMsg{
 					ModuleName: moduleName,
 					Success:    false,
@@ -300,7 +307,12 @@ func RunInstallWithSend(ctx context.Context, moduleName string, scriptPath strin
 			TotalSteps: 1,
 		})
 
+		header := fmt.Sprintf("▸ Running %s", scriptPath)
+		onLine, closeLog := streamWithInstallLog(moduleName, "install", header)
+		defer closeLog()
+
 		err := utils.RunCommandStreaming(ctx, scriptCommand(scriptPath), func(line string, isStderr bool) {
+			onLine(line, isStderr)
 			send(InstallOutputMsg{
 				ModuleName: moduleName,
 				Line:       line,
@@ -309,6 +321,7 @@ func RunInstallWithSend(ctx context.Context, moduleName string, scriptPath strin
 		})
 
 		if err != nil {
+			onLine(fmt.Sprintf("ERROR: %v", err), true)
 			send(InstallCompleteMsg{
 				ModuleName: moduleName,
 				Success:    false,
@@ -353,19 +366,26 @@ func RunUninstallStreaming(p *tea.Program, moduleName string, scriptPath string,
 		p.Send(UninstallStartMsg{ModuleName: moduleName})
 
 		if scriptPath != "" {
+			header := fmt.Sprintf("\n▸ Running %s", scriptPath)
 			p.Send(InstallOutputMsg{
 				ModuleName: moduleName,
-				Line:       fmt.Sprintf("\n▸ Running %s", scriptPath),
+				Line:       header,
 			})
 
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+			onLine, closeLog := streamWithInstallLog(moduleName, "uninstall", header)
 			err := utils.RunCommandStreaming(ctx, scriptCommand(scriptPath), func(line string, isStderr bool) {
+				onLine(line, isStderr)
 				p.Send(InstallOutputMsg{
 					ModuleName: moduleName,
 					Line:       line,
 					IsStderr:   isStderr,
 				})
 			})
+			if err != nil {
+				onLine(fmt.Sprintf("ERROR: %v", err), true)
+			}
+			closeLog()
 			cancel()
 
 			if err != nil {
@@ -408,4 +428,34 @@ func RunUninstallStreaming(p *tea.Program, moduleName string, scriptPath string,
 			Success:    true,
 		}
 	}
+}
+
+// streamWithInstallLog opens a dated install log and returns an onLine callback
+// plus a close function. Logging failures are ignored so installs still run.
+func streamWithInstallLog(moduleName, action, header string) (onLine func(string, bool), close func()) {
+	log, err := utils.OpenInstallLog(moduleName, action)
+	if err != nil || log == nil {
+		return func(string, bool) {}, func() {}
+	}
+	if header != "" {
+		log.Line(strings.TrimSpace(header), false)
+	}
+	return log.Line, log.Close
+}
+
+// logInstallSession records start/result for interactive installs (no streamed lines).
+func logInstallSession(moduleName, action, scriptPath string, runErr error) {
+	log, err := utils.OpenInstallLog(moduleName, action)
+	if err != nil || log == nil {
+		return
+	}
+	defer log.Close()
+	if scriptPath != "" {
+		log.Line("script: "+scriptPath, false)
+	}
+	if runErr != nil {
+		log.Line(fmt.Sprintf("ERROR: %v", runErr), true)
+		return
+	}
+	log.Line("OK", false)
 }

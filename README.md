@@ -30,6 +30,20 @@ git clone <repo> ~/dotFiles
 cd ~/dotFiles/tui && make run
 ```
 
+## Install logs
+
+Install and uninstall script output is appended to dated files under:
+
+```text
+~/.local/state/dotfiles-tui/logs/install-YYYY-MM-DD.log
+```
+
+(or `$XDG_STATE_HOME/dotfiles-tui/logs/` if set). Only the last two calendar days are kept; older logs are removed automatically.
+
+```console
+tail -f ~/.local/state/dotfiles-tui/logs/install-$(date +%F).log
+```
+
 ## Further help
 
 - [Install / AppImage](tui/docs/INSTALL.md)

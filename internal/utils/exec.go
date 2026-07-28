@@ -348,16 +348,24 @@ func readLines(r io.Reader) []string {
 }
 
 // BrewAwareEnv returns the process environment with common Homebrew bin dirs
-// prepended to PATH when those installs exist.
+// prepended to PATH when those installs exist, and system CA trust for TLS.
 func BrewAwareEnv() []string {
 	return brewAwareEnv()
 }
 
+// systemCABundle is the Debian/Ubuntu aggregated trust store (includes
+// corporate roots installed via update-ca-certificates).
+const systemCABundle = "/etc/ssl/certs/ca-certificates.crt"
+
 // brewAwareEnv returns os.Environ with common Homebrew bin dirs prepended to PATH
 // when those installs exist. Needed so modules after homebrew (imagemagick, yazi, …)
 // can find `brew` in the TUI's non-login shell.
+//
+// It also points TLS clients at the system CA bundle when brew is on PATH.
+// Homebrew's curl/openssl ship their own CA bundle and do not see roots added
+// via update-ca-certificates (e.g. corporate MITM CAs on WSL).
 func brewAwareEnv() []string {
-	env := os.Environ()
+	env := ensureSystemCABundle(os.Environ())
 	var bins []string
 	for _, dir := range []string{
 		"/home/linuxbrew/.linuxbrew/bin",
@@ -380,6 +388,26 @@ func brewAwareEnv() []string {
 		}
 	}
 	return append(env, "PATH="+prefix)
+}
+
+// ensureSystemCABundle sets SSL_CERT_FILE / CURL_CA_BUNDLE to the system
+// trust store when present and not already set by the user.
+func ensureSystemCABundle(env []string) []string {
+	if st, err := os.Stat(systemCABundle); err != nil || st.IsDir() {
+		return env
+	}
+	have := make(map[string]bool, 4)
+	for _, kv := range env {
+		if i := strings.IndexByte(kv, '='); i > 0 {
+			have[kv[:i]] = true
+		}
+	}
+	for _, key := range []string{"SSL_CERT_FILE", "CURL_CA_BUNDLE"} {
+		if !have[key] {
+			env = append(env, key+"="+systemCABundle)
+		}
+	}
+	return env
 }
 
 // BrewBin returns the preferred brew executable path, or "brew" for PATH lookup.

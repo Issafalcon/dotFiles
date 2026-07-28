@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo apt update && sudo apt install buku
+sudo apt update && sudo apt install buku -y
