@@ -22,7 +22,6 @@ sudo apt-get install -y libjpeg8-dev \
   lua5.1 \
   liblua5.1-dev
 
-
 # Set python virtual env
 if [[ ! -d "$HOME/python3/envs/neovim" ]]; then
   mkdir -p "$HOME"/python3/envs
@@ -47,7 +46,7 @@ deactivate
 # pip3 no longer can install global packages
 # Below is needed for rnvimr
 sudo apt install python3-pynvim
-npm install -g tree-sitter-cli
+npm install -g tree-sitter-cli --allow-scripts=tree-sitter-cli
 npm install -g neovim
 
 # Get Neovim latest release as app image and move to /usr/bin/nvim
