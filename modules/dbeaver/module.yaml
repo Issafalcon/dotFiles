@@ -1,0 +1,10 @@
+name: dbeaver
+icon: ""
+description: DBeaver universal database manager
+category: Database
+website: "https://dbeaver.io/"
+repo: "https://github.com/dbeaver/dbeaver"
+stow_enabled: false
+estimated_time: 2m
+estimated_size: 300MB
+check_command: dbeaver --version

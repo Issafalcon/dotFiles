@@ -1,0 +1,10 @@
+name: drawio
+icon: ""
+description: Diagramming application (draw.io)
+category: Application
+website: "https://www.drawio.com/"
+repo: "https://github.com/jgraph/drawio-desktop"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 150MB
+check_command: test -f /usr/bin/drawio

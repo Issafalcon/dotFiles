@@ -1,0 +1,10 @@
+name: oracle
+icon: ""
+description: Oracle Cloud Infrastructure CLI
+category: Cloud
+website: "https://docs.oracle.com/en-us/iaas/tools/oci-cli/latest/"
+repo: "https://github.com/oracle/oci-cli"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 100MB
+check_command: ~/oci-cli-env/bin/oci --version

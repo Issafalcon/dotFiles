@@ -1,0 +1,12 @@
+name: terraform
+icon: ""
+description: Terraform and Terragrunt for IaC
+category: DevOps
+website: "https://www.terraform.io/"
+repo: "https://github.com/hashicorp/terraform"
+dependencies:
+  - homebrew
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 200MB
+check_command: terraform --version

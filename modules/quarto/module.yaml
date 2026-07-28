@@ -1,0 +1,10 @@
+name: quarto
+icon: ""
+description: Scientific and technical publishing
+category: Utility
+website: "https://quarto.org/"
+repo: "https://github.com/quarto-dev/quarto-cli"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 200MB
+check_command: quarto --version

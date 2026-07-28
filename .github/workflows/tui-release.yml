@@ -1,0 +1,153 @@
+# DotFiles TUI — CI/CD Pipeline
+#
+# Triggers:
+#   - Push / PR to main: build + test
+#   - Tag v*: build + test + AppImage + GitHub Release
+#   - workflow_dispatch: same as push (no release unless the ref is a v* tag)
+#
+# AppImage ships the TUI binary + docs only (no modules tree).
+
+name: DotFiles TUI CI/CD
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build
+        run: make -C tui build
+
+      - name: Run tests
+        run: make -C tui test
+
+      - name: Vet
+        run: go vet ./...
+
+  release:
+    name: Release AppImage
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Extract version
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      # FUSE is unavailable on GitHub-hosted runners; extract appimagetool and
+      # invoke AppRun directly. See: https://github.com/AppImage/AppImageKit/wiki/FUSE
+      - name: Install appimagetool
+        run: |
+          cd /tmp
+          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage \
+            -O appimagetool.AppImage
+          chmod +x appimagetool.AppImage
+          ./appimagetool.AppImage --appimage-extract
+          sudo rm -rf /opt/appimagetool
+          sudo mv squashfs-root /opt/appimagetool
+          sudo ln -sf /opt/appimagetool/AppRun /usr/local/bin/appimagetool
+          appimagetool --version || true
+
+      - name: Build AppImage
+        env:
+          CGO_ENABLED: "0"
+          GOOS: linux
+          GOARCH: amd64
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+        run: make -C tui appimage VERSION=${{ steps.version.outputs.VERSION }}
+
+      - name: Verify AppImage artifact
+        working-directory: tui/build
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+        run: |
+          set -euo pipefail
+          APPIMAGE="dotfiles-tui-${{ steps.version.outputs.VERSION }}-x86_64.AppImage"
+          test -f "$APPIMAGE"
+          chmod +x "$APPIMAGE"
+          # Extract and confirm zero modules shipped + binary + docs present
+          ./"$APPIMAGE" --appimage-extract
+          test -x squashfs-root/usr/bin/dotfiles-tui
+          test -f squashfs-root/usr/share/doc/dotfiles-tui/ADDING_MODULES.md
+          test -f squashfs-root/usr/share/doc/dotfiles-tui/TROUBLESHOOTING.md
+          if [ -d squashfs-root/modules ] || [ -d squashfs-root/usr/share/modules ]; then
+            echo "error: AppImage must not contain modules" >&2
+            exit 1
+          fi
+          ./squashfs-root/usr/bin/dotfiles-tui --version
+          rm -rf squashfs-root
+
+      - name: Create tarball
+        working-directory: tui
+        run: |
+          tar -czf build/dotfiles-tui-${{ steps.version.outputs.VERSION }}-linux-amd64.tar.gz \
+            -C build dotfiles-tui
+
+      - name: Generate checksums
+        working-directory: tui/build
+        run: |
+          sha256sum \
+            "dotfiles-tui-${{ steps.version.outputs.VERSION }}-x86_64.AppImage" \
+            "dotfiles-tui-${{ steps.version.outputs.VERSION }}-linux-amd64.tar.gz" \
+            > "checksums-${{ steps.version.outputs.VERSION }}.sha256"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: DotFiles TUI ${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            1. Download `dotfiles-tui-*-x86_64.AppImage`
+            2. `chmod +x` and run it
+            3. Install git / stow / curl if prompted
+            4. Point the TUI at your **modules** directory (AppImage ships none)
+
+            See [INSTALL.md](https://github.com/${{ github.repository }}/blob/main/tui/docs/INSTALL.md).
+          files: |
+            tui/build/dotfiles-tui-${{ steps.version.outputs.VERSION }}-x86_64.AppImage
+            tui/build/dotfiles-tui-${{ steps.version.outputs.VERSION }}-linux-amd64.tar.gz
+            tui/build/checksums-${{ steps.version.outputs.VERSION }}.sha256

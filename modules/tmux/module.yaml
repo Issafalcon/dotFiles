@@ -1,0 +1,10 @@
+name: tmux
+icon: ""
+description: Terminal multiplexer
+category: Utility
+website: "https://github.com/tmux/tmux/wiki"
+repo: "https://github.com/tmux/tmux"
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 20MB
+check_command: tmux -V

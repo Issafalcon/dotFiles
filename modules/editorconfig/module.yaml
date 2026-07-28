@@ -1,0 +1,10 @@
+name: editorconfig
+icon: ""
+description: Editor configuration for consistent coding styles
+category: Utility
+website: "https://editorconfig.org/"
+repo: "https://github.com/editorconfig/editorconfig"
+stow_enabled: true
+estimated_time: 5s
+estimated_size: 1KB
+check_command: test -f $HOME/.editorconfig

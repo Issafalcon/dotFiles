@@ -1,0 +1,10 @@
+name: jira-cli
+icon: ""
+description: Interactive Jira CLI tool
+category: Application
+website: "https://github.com/ankitpokhrel/jira-cli"
+repo: "https://github.com/ankitpokhrel/jira-cli"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 30MB
+check_command: test -d /usr/local/jira_1.1.0_linux_x86_64

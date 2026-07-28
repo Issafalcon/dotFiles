@@ -1,0 +1,12 @@
+name: cursor
+icon: ""
+description: Cursor agent CLI
+category: AI
+website: "https://cursor.com/"
+repo: "https://github.com/getcursor/cursor"
+dependencies:
+  - rtk
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 100MB
+check_command: agent --version

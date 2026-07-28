@@ -1,0 +1,10 @@
+name: snippets
+icon: ""
+description: Custom code snippet definitions
+category: Utility
+website: "https://github.com/Issafalcon/dotFiles"
+repo: "https://github.com/Issafalcon/dotFiles"
+stow_enabled: true
+estimated_time: 5s
+estimated_size: 10KB
+check_command: test -d $HOME/.config/snippets

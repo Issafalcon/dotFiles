@@ -1,0 +1,12 @@
+name: latex
+icon: ""
+description: Full TeX Live distribution
+category: Utility
+website: "https://www.latex-project.org/"
+repo: "https://github.com/latex3/latex3"
+dependencies:
+  - python
+stow_enabled: true
+estimated_time: 10m
+estimated_size: 5GB
+check_command: latex --version

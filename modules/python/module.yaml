@@ -1,0 +1,10 @@
+name: python
+icon: ""
+description: Python 3 with pip and venv support
+category: Language
+website: "https://www.python.org/"
+repo: "https://github.com/python/cpython"
+stow_enabled: false
+estimated_time: 1m
+estimated_size: 150MB
+check_command: python3 --version

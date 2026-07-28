@@ -1,0 +1,11 @@
+name: rust
+icon: ""
+description: Rust programming language via rustup
+category: Language
+website: "https://www.rust-lang.org/"
+repo: "https://github.com/rust-lang/rust"
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 500MB
+check_command: rustc --version
+requires_input: false

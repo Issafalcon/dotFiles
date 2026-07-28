@@ -1,0 +1,10 @@
+name: ranger
+icon: ""
+description: Console file manager with VI bindings
+category: Utility
+website: "https://ranger.github.io/"
+repo: "https://github.com/ranger/ranger"
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 20MB
+check_command: ranger --version

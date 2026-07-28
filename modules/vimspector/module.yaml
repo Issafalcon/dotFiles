@@ -1,0 +1,10 @@
+name: vimspector
+icon: ""
+description: Multi-language debugging for Vim/Neovim
+category: Editor
+website: "https://puremourning.github.io/vimspector-web/"
+repo: "https://github.com/puremourning/vimspector"
+stow_enabled: true
+estimated_time: 10s
+estimated_size: 1MB
+check_command: test -d $HOME/.config/vimspector

@@ -1,0 +1,11 @@
+name: sqltools
+icon: ""
+description: MS SQL Server command-line tools
+category: Database
+website: "https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility"
+repo: "https://github.com/microsoft/mssql-tools"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 100MB
+check_command: sqlcmd -?
+requires_input: true

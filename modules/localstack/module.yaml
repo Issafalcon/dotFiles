@@ -1,0 +1,12 @@
+name: localstack
+icon: ""
+description: Local AWS cloud stack for testing
+category: DevOps
+website: "https://localstack.cloud/"
+repo: "https://github.com/localstack/localstack"
+dependencies:
+  - python
+stow_enabled: false
+estimated_time: 1m
+estimated_size: 100MB
+check_command: localstack --version

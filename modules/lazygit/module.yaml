@@ -1,0 +1,12 @@
+name: lazygit
+icon: ""
+description: Simple terminal UI for Git
+category: Utility
+website: "https://github.com/jesseduffield/lazygit"
+repo: "https://github.com/jesseduffield/lazygit"
+dependencies:
+  - homebrew
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 30MB
+check_command: lazygit --version

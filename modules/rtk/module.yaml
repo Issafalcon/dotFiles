@@ -1,0 +1,12 @@
+name: rtk
+icon: ""
+description: Rust Token Killer — compress tool output for AI agents
+category: AI
+website: "https://github.com/rtk-ai/rtk"
+repo: "https://github.com/rtk-ai/rtk"
+dependencies:
+  - homebrew
+stow_enabled: false
+estimated_time: 1m
+estimated_size: 20MB
+check_command: rtk --version

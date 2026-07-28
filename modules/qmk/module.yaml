@@ -1,0 +1,20 @@
+name: qmk
+icon: ""
+description: QMK keyboard firmware tools
+category: Utility
+website: "https://qmk.fm/"
+repo: "https://github.com/qmk/qmk_firmware"
+dependencies:
+  - python
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 500MB
+check_command: "test -d \"$HOME/python3/envs/qmk\""
+requires_input: true
+config_options:
+  - name: qmk_variant
+    description: QMK firmware variant to set up
+    default: default
+    choices:
+      - default
+      - vial

@@ -1,0 +1,12 @@
+name: imagemagick
+icon: ""
+description: ImageMagick image processing toolkit
+category: Utility
+website: "https://imagemagick.org/"
+repo: "https://github.com/ImageMagick/ImageMagick"
+dependencies:
+  - homebrew
+stow_enabled: false
+estimated_time: 2m
+estimated_size: 100MB
+check_command: magick --version

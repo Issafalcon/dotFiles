@@ -1,0 +1,12 @@
+name: git
+icon: ""
+description: Git with delta diff viewer
+category: Utility
+website: "https://git-scm.com/"
+repo: "https://github.com/git/git"
+dependencies:
+  - homebrew
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 20MB
+check_command: git --version

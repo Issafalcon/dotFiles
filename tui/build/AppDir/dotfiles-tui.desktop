@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=DotFiles TUI
+Comment=Interactive terminal UI for managing dotfile configurations
+Exec=dotfiles-tui
+Icon=dotfiles-tui
+Categories=Utility;System;TerminalEmulator;
+Terminal=true

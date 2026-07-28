@@ -1,0 +1,15 @@
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+# Files taht should remain local
+install.sh
+path.zsh
+config.zsh
+completion.zsh
+custom_scripts
+functions
+anthropic-skills
+module.yaml
+uninstall.sh
+module.go

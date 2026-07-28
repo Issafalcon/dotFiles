@@ -1,0 +1,11 @@
+name: ai
+icon: ""
+description: Shared agent skills (Agent Skills standard, Claude, Cursor, Copilot)
+category: AI
+website: "https://github.com/anthropics/skills"
+repo: "https://github.com/Issafalcon/dotFiles"
+dependencies: []
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 50MB
+check_command: true

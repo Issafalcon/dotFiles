@@ -1,0 +1,10 @@
+name: zsh
+icon: ""
+description: Z Shell with zinit plugin manager
+category: Shell
+website: "https://www.zsh.org/"
+repo: "https://github.com/zsh-users/zsh"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 50MB
+check_command: zsh --version

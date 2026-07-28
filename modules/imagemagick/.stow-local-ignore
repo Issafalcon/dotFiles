@@ -1,0 +1,11 @@
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+install.sh
+uninstall.sh
+module.go
+module.yaml
+path.zsh
+config.zsh
+completion.zsh

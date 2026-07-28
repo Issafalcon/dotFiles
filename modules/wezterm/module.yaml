@@ -1,0 +1,10 @@
+name: wezterm
+icon: ""
+description: GPU-accelerated terminal emulator
+category: Utility
+website: "https://wezfurlong.org/wezterm/"
+repo: "https://github.com/wez/wezterm"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 100MB
+check_command: wezterm --version

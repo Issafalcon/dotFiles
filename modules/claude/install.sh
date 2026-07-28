@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Claude Code
+if command -v claude >/dev/null; then
+  echo "Claude CLI found. Skipping Claude installation"
+else
+  curl -fsSL https://claude.ai/install.sh | bash
+fi
+
+# Register MCP servers at user scope (global across all projects)
+if command -v claude >/dev/null; then
+  echo "Registering MCP servers..."
+
+  claude mcp add --scope user nvim-mcp -- nvim-mcp --log-file . --log-level debug --connect auto
+  claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp@latest
+
+  echo "MCP servers registered."
+fi
+
+# Additional useful skills
+if command -v claude >/dev/null; then
+  echo "Adding additional skills..."
+  claude plugin install superpowers@claude-plugins-official
+  claude plugin marketplace add DietrichGebert/ponytail
+  claude plugin install ponytail@ponytail
+
+  # pptx-posters skill (installs skills manager client if needed)
+  npx skills add https://github.com/k-dense-ai/scientific-agent-skills --skill pptx-posters
+
+  # Helm charting
+  npx skills add wshobson/agents@helm-chart-scaffolding -g -y
+  echo "Additional skills added."
+fi
+
+rtk init -g

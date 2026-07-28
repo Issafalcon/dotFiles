@@ -1,0 +1,10 @@
+name: mysql
+icon: ""
+description: MySQL client tools
+category: Database
+website: "https://www.mysql.com/"
+repo: "https://github.com/mysql/mysql-server"
+stow_enabled: true
+estimated_time: 30s
+estimated_size: 50MB
+check_command: mysql --version

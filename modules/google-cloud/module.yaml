@@ -1,0 +1,11 @@
+name: google-cloud
+icon: ""
+description: Google Cloud SDK (gcloud CLI)
+category: Cloud
+website: "https://cloud.google.com/sdk"
+repo: "https://github.com/GoogleCloudPlatform/cloud-sdk-docker"
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 500MB
+check_command: gcloud --version
+requires_input: true

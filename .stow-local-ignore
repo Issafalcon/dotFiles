@@ -25,8 +25,13 @@ _darcs
 ^/LICENSE.*
 ^/COPYING
 
-# Files taht should remain local
+# Files that should remain local
 install.sh
+uninstall.sh
+module.go
+module.yaml
 path.zsh
 completion.zsh
 docs/
+tui/
+modules/

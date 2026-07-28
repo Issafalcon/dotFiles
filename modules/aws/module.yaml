@@ -1,0 +1,10 @@
+name: aws
+icon: ""
+description: AWS CLI v2
+category: Cloud
+website: "https://aws.amazon.com/cli/"
+repo: "https://github.com/aws/aws-cli"
+stow_enabled: true
+estimated_time: 1m
+estimated_size: 200MB
+check_command: aws --version
