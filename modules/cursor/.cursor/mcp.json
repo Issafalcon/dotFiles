@@ -1,8 +1,19 @@
 {
   "mcpServers": {
     "nvim-mcp": {
+      "type": "stdio",
       "command": "nvim-mcp",
-      "args": ["--log-file", ".", "--log-level", "debug", "--connect", "auto"]
+      "args": [
+        "--log-file",
+        "/tmp/nvim-mcp.log",
+        "--log-level",
+        "debug",
+        "--connect",
+        "auto"
+      ],
+      "env": {
+        "XDG_RUNTIME_DIR": "/run/user/1000"
+      }
     },
     "context7": {
       "type": "stdio",
