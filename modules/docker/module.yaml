@@ -1,10 +1,12 @@
 name: docker
 icon: ""
-description: Docker container runtime and tools
+description: Docker Engine install (skip if Docker Desktop WSL integration already provides docker)
 category: DevOps
 website: "https://www.docker.com/"
 repo: "https://github.com/docker/cli"
-stow_enabled: true
+dependencies:
+  - docker-extras
+stow_enabled: false
 estimated_time: 2m
 estimated_size: 500MB
 check_command: docker --version

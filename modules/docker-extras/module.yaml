@@ -1,0 +1,10 @@
+name: docker-extras
+icon: ""
+description: Docker shell completions and compose aliases (no Engine install)
+category: DevOps
+website: "https://www.docker.com/"
+repo: "https://github.com/docker/cli"
+stow_enabled: false
+estimated_time: 5s
+estimated_size: 1KB
+check_command: true
