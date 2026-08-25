@@ -13,3 +13,6 @@ anthropic-skills
 module.yaml
 uninstall.sh
 module.go
+
+# Script already symlinks this outside stow
+.agents/skills/nvim-plugin-development
