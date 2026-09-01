@@ -1,0 +1,13 @@
+name: graphify
+icon: ""
+description: Codebase knowledge graphs (/graphify) for AI coding assistants
+category: AI
+website: "https://github.com/Graphify-Labs/graphify"
+repo: "https://github.com/Graphify-Labs/graphify"
+dependencies:
+  - uv
+stow_enabled: false
+estimated_time: 1m
+estimated_size: 50MB
+check_command: graphify --version
+requires_input: false

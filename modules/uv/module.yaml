@@ -1,0 +1,11 @@
+name: uv
+icon: ""
+description: Astral uv — fast Python package and project manager
+category: Language
+website: "https://docs.astral.sh/uv/"
+repo: "https://github.com/astral-sh/uv"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 30MB
+check_command: uv --version
+requires_input: false
