@@ -1,0 +1,10 @@
+name: postgresql
+icon: ""
+description: PostgreSQL client tools (psql) for DBeaver, dadbod, and friends
+category: Database
+website: "https://www.postgresql.org/"
+repo: "https://github.com/postgres/postgres"
+stow_enabled: false
+estimated_time: 30s
+estimated_size: 20MB
+check_command: psql --version
