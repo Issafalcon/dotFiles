@@ -1,0 +1,13 @@
+name: nativescript
+icon: ""
+description: NativeScript CLI for native cross-platform mobile apps
+category: Language
+website: "https://nativescript.org/"
+repo: "https://github.com/NativeScript/NativeScript"
+dependencies:
+  - node
+  - java
+stow_enabled: true
+estimated_time: 2m
+estimated_size: 150MB
+check_command: ns --version
