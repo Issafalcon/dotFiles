@@ -7,4 +7,4 @@ repo: "https://github.com/openjdk/jdk"
 stow_enabled: true
 estimated_time: 1m
 estimated_size: 300MB
-check_command: java --version
+check_command: javac --version
