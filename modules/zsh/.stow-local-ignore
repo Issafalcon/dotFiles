@@ -9,7 +9,7 @@ config.zsh
 completion.zsh
 custom_scripts
 functions
-xterm-color256-italic.terminfo
+xterm-256color-italic.terminfo
 module.go
 uninstall.sh
 module.yaml
