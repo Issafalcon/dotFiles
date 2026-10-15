@@ -1,15 +1,145 @@
 ---
+description:
+  Coordinate one Jira ticket across several repositories under wcc/ when running the wcc-ai-guidance harness skills (plan-issue, implement-issue, review-issues) from this workspace root.
+  Also trigger when any work is being done that mentions a JIRA ticket with the prefix INFSAAS- or mentions Waters Connect Cloud (wcc) repositories.
 alwaysApply: false
 ---
 
-# Waters Connect Cloud Context Guidance
+# Waters Connect Cloud multi-repo workspace
 
+This workspace root is **not** a git repository and has **no** `.beads` database, but the
+`wcc-ai-guidance` skills (`plan-issue`, `implement-issue`, `review-issues`) each assume a
+single repo root. The overrides below make them work across repos; they win wherever they
+conflict with the skill text, and everything else in those skills applies unchanged.
 
-You are operating in a multi-repository workspace. To understand dependencies and summarize code accurately without blowing past your token budget:
+When this rule is triggered via an agent, inform the user that it has been triggered and prompt them to confirm whether it should have been.
+- If the user confirms, proceed with the multi-repo workflow.
+- Otherwise, unload the rule and carry on as if it had not been triggered.
 
-1. Prioritize reading the `graphify-out/GRAPH_REPORT.md` file inside the target project directory before querying raw source files.
-2. Use absolute/relative paths from the workspace root (e.g., `wcc/project-A/...`) to safely execute cross-repo summaries.
-3. If structural details are missing, invoke the `graphify` slash command or run a shell query against the localized workspace index.
-4. Only include source materials from repositories in the `wcc` subdirectory. Ignore repositories or files outside of this workspace unless explicitly requested.
+## Scope
 
-## Interacting with the wcc-ai-guidance repository skills and workflows
+Only repositories under `wcc/` participate. Ignore `obsidian-notes/`, `windows-config/`,
+`buku-bookmarks/`, and `adam-nx-poc-v3/` unless explicitly asked. Each repo carries its own
+`graphify-out/` — read the one inside the target repo; there is no workspace-wide graph.
+
+## Ticket topology
+
+A cross-repo ticket has exactly one **lead repo** and a list of **participating repos**:
+
+- `$LEAD_REPO` — the repo owning the ticket's primary change. It hosts all beads for the ticket.
+- `$REPOS` — every repo the ticket touches, lead included.
+
+Decide both during `plan-issue` Step 3 and confirm them with the user before creating anything.
+
+## Bead coordination contract
+
+All beads for the ticket live in **one** database — the lead repo's. Reach it with an
+absolute `-C` path, so the same command works from the root and from inside any subagent's
+worktree:
+
+```bash
+LEAD_ROOT="/home/ukafig/repos/wcc/$LEAD_REPO"
+bd -C "$LEAD_ROOT" <command>
+```
+
+Prefix **every** `bd` call in every skill this way. Then:
+
+- Parent bead carries `--external-ref jira-<KEY>` (unchanged) plus
+  `--set-metadata lead=<lead-repo>` and `--set-metadata repos="<comma-separated list>"`.
+- Every child bead names exactly one repo at creation: `--metadata '{"repo":"<repo>"}'`.
+  Split work spanning two repos into two beads.
+- A child's ID comes from the lead's database, so its `repo` key is the only reliable
+  signal of where its code lives. Read it before touching any file.
+- Never run `bd init` at the workspace root — there must be no `/home/ukafig/repos/.beads`.
+
+`bd context` resolves the git root from the original working directory and ignores `-C`, so
+it fails here. `cd` into the repo for that one command.
+
+## plan-issue overrides
+
+- **Branch name (Steps 4-5)** — derive **one** name and reuse it verbatim in every
+  participating repo. Record it once with `--set-metadata branch=<name>`, so
+  `implement-issue`'s single `.metadata.branch` read resolves correctly in all of them.
+- **Design (Step 8)** — state which repo owns which part of the change, so each child bead
+  can name a single repo.
+- **Test plan (Step 10a)** — no repo under `wcc/` has `.agents/manifest.yaml`, so do **not**
+  read `component_tier`: it resolves to the global `~/.agents/manifest.yaml`
+  (`domain_service_tier2`) and is wrong for SPA and library repos. Detect per repo by shape:
+
+  | Signal in `wcc/<repo>` | Tier |
+  |---|---|
+  | `**/ClientApp/angular.json` | `spa_client`, plus `presentation_api_tier1` for its .NET host |
+  | `*.Domain` and `*.Server` projects | `domain_service_tier2` |
+  | NuGet library (`wcc-lib-*`, no service host) | Library — Unit and Backward Compatibility only; Component, System Integration and UI layers are N/A |
+
+  Run Steps 10a-10d **once per participating repo** and emit the markers per repo:
+
+  ```
+  [TESTING] testing-skills-brain PLAN mode — repo=<repo> <NEW|EXISTING>, tier=<tier> (evidence=suite detection)
+  ```
+
+- **Decomposition (Step 11)** — wire cross-repo ordering with `bd dep add` as normal; it
+  works because every bead is in the same database.
+
+## implement-issue overrides
+
+- **Step 1** — create one worktree **per participating repo**, each at
+  `wcc/<repo>/.worktrees/$BRANCH_NAME`, running the skill's existing fetch and branch logic
+  inside that repo. There is no single parent worktree.
+- **Step 2a** — capture one `TEST-BASELINE` note per repo on the parent, each labelled with
+  its repo name.
+- **Step 3a** — read each bead's `repo` metadata and hand the engineer that repo's root plus
+  the shared `$BRANCH_NAME`. The engineer's own `REPO_ROOT` resolution and
+  `ai/$BRANCH_NAME/<bead-id>-<slug>` convention then work unchanged, because the parent
+  branch exists in every repo.
+- **Step 3c** — rebase each bead's branch inside **its own** repo's worktree. Never rebase
+  across repos.
+- **Step 5** — cut one PR per repo that has commits. Record the lead's URL as `pr` so
+  `review-issues` keeps working unchanged, and **every** PR URL as a space-separated `prs`
+  list. Each URL already contains its repo name, so no per-repo key is needed — metadata
+  keys must match `[a-zA-Z_][a-zA-Z0-9_.]*`, which rules out hyphenated repo names:
+
+  ```bash
+  bd -C "$LEAD_ROOT" update $PARENT_ID --add-label awaiting-merge \
+    --set-metadata pr="$LEAD_PR_URL" \
+    --set-metadata prs="$LEAD_PR_URL $OTHER_PR_URL"
+  ```
+
+  Every PR body carries the Jira link and the URLs of its sibling PRs.
+- **Step 5 cleanup** — sweep worktrees and `ai/*` branches in each repo separately.
+
+## review-issues overrides
+
+Sweep with `bd -C "$LEAD_ROOT"`. Resolve the PR list from `.metadata.prs` (falling back to
+`.metadata.pr` for single-repo tickets) and process each URL — `gh pr view <url>` resolves
+owner and repo from a full URL, so no `-R` is needed. Close the parent only when **all** PRs
+have merged; when some have merged and others are still open, leave it `awaiting-merge` and
+report the split.
+
+## Library and consumer ordering
+
+When a ticket spans a `wcc-lib-*` package and a repo consuming it, make the consumer's beads
+depend on the library's (`bd dep add <consumer-bead> <lib-bead>`). Do **not** bump the
+consumer's `PackageReference` or sequence the merges yourself: open the library PR, then stop
+and hand off to a human with the version the consumer will need. Package publication and
+merge order are human decisions.
+
+## Guardrails
+
+- Never run `git init`, `bd init`, `git commit`, or create worktrees at the workspace root.
+- Every file edit happens inside a worktree under `wcc/<repo>/.worktrees/$BRANCH_NAME`.
+- `wcc-authorizationas` has both `current/` and `next/` trees — confirm which one a bead
+  targets before editing.
+- Never push `ai/*` branches, in any repo.
+
+## Reporting
+
+One Jira comment and one final summary for the whole ticket, grouped by repo:
+
+```
+<KEY> — <title>
+Lead: <lead-repo>   Branch: <branch-name> (same name in every repo)
+
+<repo>: <bead ids> → <PR url | not started>
+<repo>: <bead ids> → <PR url | not started>
+```
