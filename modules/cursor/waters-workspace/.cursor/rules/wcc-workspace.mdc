@@ -1,0 +1,15 @@
+---
+alwaysApply: false
+---
+
+# Waters Connect Cloud Context Guidance
+
+
+You are operating in a multi-repository workspace. To understand dependencies and summarize code accurately without blowing past your token budget:
+
+1. Prioritize reading the `graphify-out/GRAPH_REPORT.md` file inside the target project directory before querying raw source files.
+2. Use absolute/relative paths from the workspace root (e.g., `wcc/project-A/...`) to safely execute cross-repo summaries.
+3. If structural details are missing, invoke the `graphify` slash command or run a shell query against the localized workspace index.
+4. Only include source materials from repositories in the `wcc` subdirectory. Ignore repositories or files outside of this workspace unless explicitly requested.
+
+## Interacting with the wcc-ai-guidance repository skills and workflows

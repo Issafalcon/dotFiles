@@ -1,0 +1,7 @@
+# ~/repos/.cursorignore
+**/node_modules/
+**/dist/
+**/.git/
+**/build/
+**/obj/
+**/bin/
