@@ -27,9 +27,10 @@ gui:
   commandLogSize: 8
 git:
   # https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
-  pagers:
+  diffRenderers:
     - colorArg: always
       useConfig: true
+      type: rawGit
   merging:
     manualCommit: false
     args: ""

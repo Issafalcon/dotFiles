@@ -12,3 +12,6 @@ functions
 module.yaml
 uninstall.sh
 module.go
+
+# Folders with local only stuff
+waters-workspace

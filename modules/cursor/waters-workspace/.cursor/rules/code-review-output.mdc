@@ -1,0 +1,47 @@
+---
+description: Required section structure and formatting for any pull request or code review produced in the WCC workspace. Applies to the code-review-coordinator and to every review subagent it dispatches.
+alwaysApply: false
+---
+
+# Review output
+
+All reviews should contain:
+
+- PR Summary
+- Core Changes
+- Findings
+- Possible Improvements
+- Potential Bugs
+- Missing Tests
+- Approval Recommendation
+
+Use this output instruction:
+
+Structure the review as a single Markdown response with these exact sections:
+
+1. PR Summary
+   Include title, scope as "N files changed (+X/-Y)", and intent in 1-2 sentences.
+2. Core Changes
+   Use prose bullets only. Do not include code snippets.
+3. Findings
+   Put every issue here and only here.
+   Use this format for each finding:
+   **Severity: <Critical|High|Medium|Low>**
+   File: <path>
+   Explanation: <why this is a problem>
+   Suggested fix: <proposed correction>
+4. Possible Improvements
+   Include non-blocking suggestions only, without severity.
+5. Potential Bugs
+   Summarise and cross-reference findings.
+6. Missing Tests
+7. Approval Recommendation
+   Use one verdict: Approve / Request changes / Comment.
+
+Do not include inline diffs or duplicate findings across sections.
+
+## Evidence discipline
+
+Distinguish confirmed defects from unresolved risks, and never invent findings. When a
+concern cannot be confirmed from the diff or the surrounding code, state it as a risk with
+what would be needed to confirm it, rather than raising it as a finding.
